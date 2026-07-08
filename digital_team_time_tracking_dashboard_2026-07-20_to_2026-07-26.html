@@ -1,0 +1,1471 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Digital Team Time Tracking Dashboard</title>
+  <style>
+.dla-date-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+.dla-date-field input {
+  flex: 1 1 auto;
+  min-width: 0;
+  cursor: pointer;
+}
+.dla-date-trigger,
+.dla-date-clear {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line-strong, #cbd5e1);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text, #0f172a);
+  padding: 0;
+}
+.dla-date-trigger:hover,
+.dla-date-clear:hover {
+  background: var(--surface-raised, #f8fafc);
+}
+.dla-date-clear {
+  width: 28px;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.dla-date-field input.invalid-date {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 1px #fecaca;
+}
+.dla-date-popup {
+  position: fixed;
+  z-index: 10050;
+  width: 280px;
+  padding: 12px;
+  border: 1px solid var(--line-strong, #cbd5e1);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
+  color: var(--text, #0f172a);
+}
+.dla-date-popup-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.dla-date-popup-title {
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+.dla-date-popup-nav {
+  display: inline-flex;
+  gap: 4px;
+}
+.dla-date-popup-nav button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+.dla-date-popup-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.dla-date-popup-grid .dla-cal-wd {
+  text-align: center;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--muted, #64748b);
+  padding: 2px 0 6px;
+}
+.dla-date-popup-grid button {
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+}
+.dla-date-popup-grid button:hover:not(:disabled) {
+  background: var(--surface-raised, #f1f5f9);
+}
+.dla-date-popup-grid button.is-selected {
+  background: var(--accent, #0f766e);
+  color: #fff;
+}
+.dla-date-popup-grid button.is-today {
+  box-shadow: inset 0 0 0 1px var(--accent, #0f766e);
+}
+.dla-date-popup-grid button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.dla-date-popup-grid button.is-outside {
+  color: var(--muted, #94a3b8);
+}
+
+:root {
+  color-scheme: light;
+  --bg: #f4f6f8;
+  --panel: #ffffff;
+  --surface-raised: #f8fafc;
+  --ink: #0f172a;
+  --muted: #475569;
+  --line: #e2e8f0;
+  --accent: #0f766e;
+  --accent-strong: #115e59;
+  --accent-soft: #ccfbf1;
+  --hero-bg: #134e4a;
+  --shadow: 0 4px 14px rgba(15, 23, 42, 0.07);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --radius: 10px;
+  --radius-lg: 12px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --transition: 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+:root {
+  --deep: var(--hero-bg);
+  --teal: var(--accent);
+  --teal-soft: var(--accent-soft);
+  --red: #dc2626;
+  --red-soft: #fee2e2;
+  --gold: #ca8a04;
+  --gold-soft: #fef9c3;
+  --blue: #2563eb;
+  --compliance-ok-bg: #ecfdf5;
+  --compliance-ok-border: #86efac;
+  --compliance-miss-bg: #fef2f2;
+  --compliance-miss-border: #fecaca;
+  --compliance-offday-bg: #f1f5f9;
+  --compliance-offday-border: #e2e8f0;
+  --compliance-pending-bg: #f8fafc;
+  --compliance-pending-border: #cbd5e1;
+  --compliance-leave-bg: #e0f2fe;
+  --compliance-leave-border: #7dd3fc;
+  --compliance-leave-half-bg: #f0f9ff;
+}
+body { margin: 0; color: var(--ink); background: var(--bg); }
+.hero {
+  padding: 24px 26px 18px;
+  background: var(--hero-bg);
+  color: #fff;
+}
+.hero h1 { margin: 0 0 8px; font-size: 1.75rem; font-weight: 700; text-wrap: balance; }
+.hero p { margin: 0; color: #e2e8f0; line-height: 1.45; font-size: 0.9375rem; }
+.shell { width: calc(100% - 32px); max-width: none; margin: 0 auto; padding: 18px 0; }
+.toolbar {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+  align-items: end;
+}
+.control label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.control input, .control select, .action-button {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  padding: 0 12px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.control input:focus, .control select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.action-button { font-weight: 600; background: var(--panel); }
+.action-button:hover { background: var(--surface-raised); }
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 34px;
+  margin-bottom: 14px;
+  align-items: center;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  box-shadow: var(--shadow-sm);
+}
+.chip button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+  padding: 0;
+}
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.card, .panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+.card { padding: 16px; }
+.kpi-label {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.kpi-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.kpi-sub { margin-top: 8px; color: var(--muted); font-size: 0.75rem; }
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+  gap: 14px;
+  align-items: start;
+}
+.top-stack { display: grid; gap: 14px; margin-bottom: 14px; }
+.panel { padding: 16px; min-width: 0; }
+.stack { display: grid; gap: 14px; }
+.split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.analysis-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.bottom-stack { display: grid; gap: 14px; margin-top: 14px; }
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+.panel h2 { margin: 0; font-size: 1.125rem; font-weight: 600; }
+.panel-note { color: var(--muted); font-size: 0.75rem; }
+.legend-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  vertical-align: middle;
+  margin-right: 3px;
+  border: 1px solid transparent;
+}
+.legend-swatch.ok { background: var(--compliance-ok-bg); border-color: var(--compliance-ok-border); }
+.legend-swatch.miss { background: var(--compliance-miss-bg); border-color: var(--compliance-miss-border); }
+.legend-swatch.leave { background: var(--compliance-leave-bg); border-color: var(--compliance-leave-border); }
+.legend-swatch.leave-half {
+  background: var(--compliance-leave-half-bg);
+  border-color: var(--compliance-leave-border);
+  border-style: dashed;
+}
+.legend-swatch.offday { background: var(--compliance-offday-bg); border-color: var(--compliance-offday-border); }
+.legend-swatch.pending { background: var(--compliance-pending-bg); border-color: var(--compliance-pending-border); }
+.empty { color: var(--muted); font-size: 0.8125rem; padding: 12px 0; }
+.bar-list { display: grid; gap: 8px; }
+.bar-row {
+  display: grid;
+  grid-template-columns: minmax(90px, 1.1fr) minmax(140px, 2.4fr) 84px;
+  gap: 10px;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--ink);
+  text-align: left;
+}
+.bar-row.active .bar-label { color: var(--deep); font-weight: 600; }
+.bar-track {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+.bar-fill { height: 100%; border-radius: 999px; background: var(--teal); }
+.bar-fill.blue { background: var(--blue); }
+.bar-fill.gold { background: var(--gold); }
+.bar-label, .bar-value {
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.project-table, .entry-table, .ticket-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+.entry-table { min-width: 1180px; }
+.table-wrap {
+  overflow: auto;
+  max-height: 520px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+}
+th, td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-raised);
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  z-index: 1;
+}
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.active-row { background: var(--accent-soft); }
+tr.clickable { cursor: pointer; transition: background var(--transition); }
+tr.clickable:hover { background: var(--surface-raised); }
+.compliance-wrap { overflow-x: hidden; overflow-y: visible; }
+.compliance {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 3px;
+  min-width: 0;
+}
+.compliance col.user-col { width: 72px; }
+.compliance th {
+  position: static;
+  border: 0;
+  background: transparent;
+  padding: 0 0 3px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.625rem;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: normal;
+}
+.compliance td { border: 0; padding: 0; background: transparent; }
+.cell-button {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 5px 3px;
+  text-align: center;
+  background: var(--panel);
+  box-shadow: var(--shadow-sm);
+  transition: outline-color var(--transition);
+  overflow: hidden;
+}
+.cell-button.ok {
+  background: var(--compliance-ok-bg);
+  border-color: var(--compliance-ok-border);
+}
+.cell-button.miss {
+  background: var(--compliance-miss-bg);
+  border-color: var(--compliance-miss-border);
+}
+.cell-button.offday {
+  background: var(--compliance-offday-bg);
+  border-color: var(--compliance-offday-border);
+}
+.cell-button.pending {
+  background: var(--compliance-pending-bg);
+  border-color: var(--compliance-pending-border);
+}
+.cell-button.leave {
+  background: var(--compliance-leave-bg);
+  border-color: var(--compliance-leave-border);
+}
+.cell-button.leave .cell-hours,
+.cell-button.leave .cell-gap { color: #0369a1; }
+.cell-button.leave.half {
+  background: var(--compliance-leave-half-bg);
+  border-color: var(--compliance-leave-border);
+  border-style: dashed;
+}
+.cell-button.active { outline: 2px solid var(--accent); outline-offset: 1px; }
+.cell-hours {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+.cell-gap {
+  margin-top: 2px;
+  font-size: 0.5625rem;
+  line-height: 1.05;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+@media (min-width: 1600px) {
+  .compliance col.user-col { width: 84px; }
+  .cell-button { min-height: 52px; padding: 6px 4px; }
+  .cell-hours { font-size: 0.875rem; }
+  .cell-gap { font-size: 0.625rem; }
+}
+.pie-shell {
+  display: grid;
+  grid-template-columns: minmax(180px, 220px) minmax(180px, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+.project-combo {
+  display: grid;
+  grid-template-columns: minmax(420px, 0.86fr) minmax(320px, 1fr);
+  gap: 10px;
+  align-items: start;
+  margin-top: 8px;
+}
+.pie-area { display: flex; justify-content: center; }
+.pie-area svg { width: min(100%, 210px); height: auto; }
+.pie-center-main { font-size: 1.125rem; font-weight: 700; }
+.pie-center-sub { font-size: 0.625rem; fill: var(--muted); }
+.legend { display: grid; gap: 5px; }
+.legend button {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+  gap: 6px;
+  align-items: center;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: var(--radius);
+  padding: 5px 7px;
+  text-align: left;
+  box-shadow: var(--shadow-sm);
+  font-size: 0.75rem;
+  transition: border-color var(--transition);
+}
+.legend button.active { border-color: var(--accent); }
+.swatch { width: 10px; height: 10px; border-radius: 3px; }
+.project-combo .table-wrap { max-height: 240px; border-radius: var(--radius); }
+.project-combo .project-table { font-size: 0.75rem; }
+.project-combo th,
+.project-combo td { padding: 6px 8px; }
+.detail-grid { display: grid; gap: 8px; }
+.detail-box {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  padding: 10px 12px;
+}
+.detail-label {
+  color: var(--muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.detail-value { margin-top: 4px; overflow-wrap: anywhere; font-size: 0.875rem; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 3px 8px;
+  background: var(--surface-raised);
+  font-size: 0.75rem;
+}
+.forecast-snippet-wrap { width: calc(100% - 32px); max-width: none; margin: 0 auto; padding: 0; }
+.forecast-disclaimer {
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+@media (max-width: 1240px) {
+  .layout, .split, .pie-shell, .project-combo, .analysis-grid { grid-template-columns: 1fr; }
+  .toolbar { grid-template-columns: repeat(3, minmax(150px, 1fr)); }
+}
+@media (max-width: 760px) {
+  .hero { padding: 22px 16px 14px; }
+  .hero h1 { font-size: 1.4375rem; }
+  .shell { padding: 12px; }
+  .toolbar, .kpis { grid-template-columns: 1fr; }
+  .bar-row { grid-template-columns: 1fr; gap: 4px; }
+}
+
+  </style>
+  <style id="dla-full-frame-style">
+html, body {
+  width: 100% !important;
+  max-width: none !important;
+  overflow-x: hidden !important;
+}
+body {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.wrap, .shell, .main, .container, .dashboard, .dashboard-shell, .page, main,
+.app-main, .content, .report, .report-shell {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.card, .panel, .section, .project-section, .chart-panel, .table-section {
+  max-width: none !important;
+}
+</style>
+</head>
+<body>
+  <div id="app"></div>
+  <script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-08T13:17:13","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["dahn.nguyen","hu.dam"],"2026-07-21":["dahn.nguyen","hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
+  <script>
+  (function () {
+    function fmtIsoDate(iso) {
+  const day = String(iso || "").slice(0, 10);
+  if (day.length < 10 || day[4] !== "-") return String(iso || "");
+  return day.slice(8, 10) + "/" + day.slice(5, 7) + "/" + day.slice(0, 4);
+}
+function fmtIsoDateTime(iso) {
+  const text = String(iso || "");
+  const day = text.slice(0, 10);
+  if (day.length < 10 || day[4] !== "-") return text;
+  const time = text.length >= 16 ? text.slice(11, 16) : "";
+  return fmtIsoDate(day) + (time ? " " + time : "");
+}
+function parseDdMmYyyy(text) {
+  const raw = String(text || "").trim();
+  const match = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!match) return null;
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  const year = Number(match[3]);
+  if (month < 1 || month > 12 || day < 1 || day > 31 || year < 1900) return null;
+  const probe = new Date(year, month - 1, day);
+  if (probe.getFullYear() !== year || probe.getMonth() !== month - 1 || probe.getDate() !== day) return null;
+  return String(year).padStart(4, "0") + "-" + String(month).padStart(2, "0") + "-" + String(day).padStart(2, "0");
+}
+function setDateInputDisplay(el, iso) {
+  if (!el) return;
+  const day = String(iso || "").slice(0, 10);
+  el.dataset.isoValue = day.length === 10 && day[4] === "-" ? day : "";
+  el.value = el.dataset.isoValue ? fmtIsoDate(el.dataset.isoValue) : "";
+  el.classList.remove("invalid-date");
+}
+function readDateInputIso(el) {
+  if (!el) return "";
+  const parsed = parseDdMmYyyy(el.value);
+  if (parsed) {
+    el.dataset.isoValue = parsed;
+    el.value = fmtIsoDate(parsed);
+    el.classList.remove("invalid-date");
+    return parsed;
+  }
+  if (el.value.trim()) {
+    el.classList.add("invalid-date");
+    return "";
+  }
+  el.dataset.isoValue = "";
+  el.classList.remove("invalid-date");
+  return "";
+}
+function loadDashboardPrefs(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+function saveDashboardPrefs(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // Private mode or quota exceeded — ignore.
+  }
+}
+const DLA_CAL_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const DLA_CAL_WD = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const DlaDatePicker = (function () {
+  let popup = null;
+  let anchor = null;
+  let state = null;
+  function ensurePopup() {
+    if (popup) return popup;
+    popup = document.createElement("div");
+    popup.className = "dla-date-popup";
+    popup.hidden = true;
+    popup.addEventListener("mousedown", (event) => event.stopPropagation());
+    document.body.appendChild(popup);
+    document.addEventListener("mousedown", (event) => {
+      if (!popup || popup.hidden) return;
+      if (popup.contains(event.target)) return;
+      if (anchor && (anchor.contains(event.target) || anchor === event.target)) return;
+      close();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") close();
+    });
+    return popup;
+  }
+  function isoToLocalDate(iso) {
+    const parts = String(iso || "").slice(0, 10).split("-").map(Number);
+    if (parts.length !== 3 || parts.some((part) => !Number.isFinite(part))) return new Date(NaN);
+    return new Date(parts[0], parts[1] - 1, parts[2]);
+  }
+  function localIsoFromDate(dt) {
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth() + 1).padStart(2, "0");
+    const d = String(dt.getDate()).padStart(2, "0");
+    return y + "-" + m + "-" + d;
+  }
+  function compareIso(a, b) {
+    return String(a || "").localeCompare(String(b || ""));
+  }
+  function render() {
+    const el = ensurePopup();
+    if (!state) return;
+    const first = new Date(state.viewYear, state.viewMonth, 1);
+    const startOffset = (first.getDay() + 6) % 7;
+    const start = new Date(state.viewYear, state.viewMonth, 1 - startOffset);
+    const todayIso = localIsoFromDate(new Date());
+    let cells = DLA_CAL_WD.map((label) => '<div class="dla-cal-wd">' + label + "</div>").join("");
+    for (let i = 0; i < 42; i += 1) {
+      const day = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+      const iso = localIsoFromDate(day);
+      const outside = day.getMonth() !== state.viewMonth;
+      const disabled = (state.min && compareIso(iso, state.min) < 0) || (state.max && compareIso(iso, state.max) > 0);
+      const classes = [];
+      if (outside) classes.push("is-outside");
+      if (iso === state.selectedIso) classes.push("is-selected");
+      if (iso === todayIso) classes.push("is-today");
+      cells += '<button type="button" data-iso="' + iso + '"' + (disabled ? " disabled" : "") + ' class="' + classes.join(" ") + '">' + day.getDate() + "</button>";
+    }
+    el.innerHTML =
+      '<div class="dla-date-popup-head">' +
+      '<div class="dla-date-popup-title">' + DLA_CAL_MONTHS[state.viewMonth] + " " + state.viewYear + "</div>" +
+      '<div class="dla-date-popup-nav">' +
+      '<button type="button" data-nav="-1" aria-label="Previous month">&lsaquo;</button>' +
+      '<button type="button" data-nav="1" aria-label="Next month">&rsaquo;</button>' +
+      "</div></div>" +
+      '<div class="dla-date-popup-grid">' + cells + "</div>";
+    el.querySelectorAll("[data-nav]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.viewMonth += Number(btn.dataset.nav);
+        if (state.viewMonth < 0) { state.viewMonth = 11; state.viewYear -= 1; }
+        if (state.viewMonth > 11) { state.viewMonth = 0; state.viewYear += 1; }
+        render();
+      });
+    });
+    el.querySelectorAll("[data-iso]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (btn.disabled) return;
+        const iso = btn.dataset.iso;
+        if (state.onSelect) state.onSelect(iso);
+        close();
+      });
+    });
+  }
+  function positionPopup() {
+    if (!popup || !anchor || popup.hidden) return;
+    const rect = anchor.getBoundingClientRect();
+    const margin = 8;
+    let top = rect.bottom + margin;
+    let left = rect.left;
+    popup.style.top = top + "px";
+    popup.style.left = left + "px";
+    const bounds = popup.getBoundingClientRect();
+    if (bounds.right > window.innerWidth - margin) {
+      left = Math.max(margin, window.innerWidth - bounds.width - margin);
+      popup.style.left = left + "px";
+    }
+    if (bounds.bottom > window.innerHeight - margin) {
+      top = Math.max(margin, rect.top - bounds.height - margin);
+      popup.style.top = top + "px";
+    }
+  }
+  function open(input, config) {
+    anchor = input;
+    const seed = config && config.iso ? config.iso : localIsoFromDate(new Date());
+    const seedDate = isoToLocalDate(seed);
+    state = {
+      viewYear: seedDate.getFullYear(),
+      viewMonth: seedDate.getMonth(),
+      selectedIso: (config && config.iso) || "",
+      min: (config && config.min) || "",
+      max: (config && config.max) || "",
+      onSelect: (config && config.onSelect) || null,
+    };
+    render();
+    const el = ensurePopup();
+    el.hidden = false;
+    positionPopup();
+  }
+  function close() {
+    if (popup) popup.hidden = true;
+    state = null;
+    anchor = null;
+  }
+  return { open, close };
+})();
+function bindDdMmDatePicker(input, onChange, options) {
+  if (!input || input.dataset.dlaDatePicker === "1") return;
+  options = options || {};
+  input.dataset.dlaDatePicker = "1";
+  input.readOnly = true;
+  input.setAttribute("autocomplete", "off");
+  input.setAttribute("spellcheck", "false");
+  input.setAttribute("placeholder", options.placeholder || "dd/mm/yyyy");
+  if (!input.parentElement || !input.parentElement.classList.contains("dla-date-field")) {
+    const wrap = document.createElement("div");
+    wrap.className = "dla-date-field";
+    input.parentNode.insertBefore(wrap, input);
+    wrap.appendChild(input);
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "dla-date-trigger";
+    trigger.setAttribute("aria-label", "Open calendar");
+    trigger.innerHTML = "&#128197;";
+    wrap.appendChild(trigger);
+    if (options.clearable !== false) {
+      const clearBtn = document.createElement("button");
+      clearBtn.type = "button";
+      clearBtn.className = "dla-date-clear";
+      clearBtn.setAttribute("aria-label", "Clear date");
+      clearBtn.textContent = "×";
+      clearBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setDateInputDisplay(input, "");
+        if (typeof onChange === "function") onChange("");
+      });
+      wrap.appendChild(clearBtn);
+    }
+    trigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      openDdMmDatePicker(input, onChange, options);
+    });
+  }
+  input.addEventListener("click", () => openDdMmDatePicker(input, onChange, options));
+}
+function openDdMmDatePicker(input, onChange, options) {
+  options = options || {};
+  const current = readDateInputIso(input) || options.defaultIso || "";
+  DlaDatePicker.open(input, {
+    iso: current || localIsoFromDate(new Date()),
+    min: options.min || "",
+    max: options.max || "",
+    onSelect: (iso) => {
+      setDateInputDisplay(input, iso);
+      if (typeof onChange === "function") onChange(iso);
+    },
+  });
+}
+function localIsoFromDate(dt) {
+  const y = dt.getFullYear();
+  const m = String(dt.getMonth() + 1).padStart(2, "0");
+  const d = String(dt.getDate()).padStart(2, "0");
+  return y + "-" + m + "-" + d;
+}
+function bindDdMmDateInput(el, onChange, options) {
+  bindDdMmDatePicker(el, onChange, options);
+}
+    const DATA = JSON.parse(document.getElementById("dashboard-data").textContent);
+    const FILTER_PREFS_KEY = "dla-tt-filters:" + (DATA.month?.label || "default");
+    const TARGET = Number(DATA.workdayTargetHours || 7.5);
+    const FILTER_DEFAULTS = { user: "all", project: "all", day: "all", ticket: "all", search: "" };
+
+    function asNumber(value) {
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function fmtHours(value) {
+      return asNumber(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function fmtInt(value) {
+      return Math.round(asNumber(value)).toLocaleString("en-US");
+    }
+
+    function fmtPct(value) {
+      return asNumber(value).toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%";
+    }
+
+    function esc(value) {
+      return String(value == null ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function readFilters() {
+      const next = Object.assign({}, FILTER_DEFAULTS);
+      const saved = loadDashboardPrefs(FILTER_PREFS_KEY);
+      if (saved && typeof saved === "object") {
+        Object.keys(FILTER_DEFAULTS).forEach((key) => {
+          if (saved[key] != null && saved[key] !== "") next[key] = String(saved[key]);
+        });
+      }
+      const params = new URLSearchParams(window.location.search);
+      Object.keys(next).forEach((key) => {
+        if (params.has(key)) next[key] = params.get(key) || FILTER_DEFAULTS[key];
+      });
+      return next;
+    }
+
+    function writeFilters(filters) {
+      saveDashboardPrefs(FILTER_PREFS_KEY, filters);
+      const params = new URLSearchParams();
+      Object.keys(filters).forEach((key) => {
+        const value = filters[key];
+        if (value && value !== FILTER_DEFAULTS[key]) params.set(key, value);
+      });
+      const query = params.toString();
+      history.replaceState(null, "", location.pathname + (query ? "?" + query : ""));
+    }
+
+    const HOURS_MATCH_EPSILON = 0.004;
+
+    function normalizeDayKey(value) {
+      if (value == null || value === "") return "";
+      return String(value).slice(0, 10);
+    }
+
+    function isoDateToLocalDate(iso) {
+      const parts = normalizeDayKey(iso).split("-").map(Number);
+      if (parts.length !== 3 || parts.some((part) => !Number.isFinite(part))) {
+        return new Date(NaN);
+      }
+      return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+
+    function localIsoFromDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return year + "-" + month + "-" + day;
+    }
+
+    function isoDateAddDays(iso, days) {
+      const cursor = isoDateToLocalDate(iso);
+      cursor.setDate(cursor.getDate() + days);
+      return localIsoFromDate(cursor);
+    }
+
+    function monthDates() {
+      const dates = [];
+      let current = normalizeDayKey(DATA.month.start);
+      const end = normalizeDayKey(DATA.month.end);
+      while (current && end && current < end) {
+        const cursor = isoDateToLocalDate(current);
+        dates.push({
+          day: current,
+          weekday: cursor.getDay()
+        });
+        current = isoDateAddDays(current, 1);
+      }
+      return dates;
+    }
+
+    function isExactTargetHours(hours) {
+      return Math.abs(asNumber(hours) - TARGET) < HOURS_MATCH_EPSILON;
+    }
+
+    function compactDate(iso) {
+      return fmtIsoDate(iso);
+    }
+
+    function searchText(row) {
+      return [
+        row.day,
+        row.project_name,
+        row.ticket_summary,
+        row.logged_by_username,
+        row.logged_by_name,
+        row.category,
+        row.info,
+        row.bug_id
+      ].filter(Boolean).join(" ").toLowerCase();
+    }
+
+    function matches(row, filters) {
+      if (filters.user !== "all" && row.logged_by_username !== filters.user) return false;
+      if (filters.project !== "all" && row.project_name !== filters.project) return false;
+      if (filters.day !== "all" && normalizeDayKey(row.day) !== filters.day) return false;
+      if (filters.ticket !== "all" && String(row.bug_id) !== String(filters.ticket)) return false;
+      if (filters.search.trim() && !searchText(row).includes(filters.search.trim().toLowerCase())) return false;
+      return true;
+    }
+
+    function uniqueOptions(rows, key, labelKey) {
+      const seen = new Map();
+      rows.forEach((row) => {
+        const value = row[key];
+        if (value == null || value === "") return;
+        if (!seen.has(String(value))) seen.set(String(value), row[labelKey] || String(value));
+      });
+      return Array.from(seen.entries())
+        .map(([value, label]) => ({ value, label }))
+        .sort((a, b) => String(a.label).localeCompare(String(b.label)));
+    }
+
+    function groupBy(rows, keyFn, amountFn) {
+      const map = new Map();
+      rows.forEach((row) => {
+        const meta = keyFn(row);
+        if (!meta || meta.value == null || meta.value === "") return;
+        const key = String(meta.value);
+        const current = map.get(key) || { value: key, raw: meta.raw || key, label: meta.label || key, amount: 0, count: 0 };
+        current.amount += asNumber(amountFn(row));
+        current.count += 1;
+        map.set(key, current);
+      });
+      return Array.from(map.values());
+    }
+
+    function ticketRows(rows) {
+      const map = new Map();
+      rows.forEach((row) => {
+        const key = String(row.bug_id || "");
+        if (!key) return;
+        const current = map.get(key) || {
+          bugId: key,
+          project: row.project_name || "",
+          summary: row.ticket_summary || "",
+          hours: 0,
+          entries: 0,
+          users: new Set()
+        };
+        current.hours += asNumber(row.hours);
+        current.entries += 1;
+        if (row.logged_by_username) current.users.add(row.logged_by_username);
+        map.set(key, current);
+      });
+      return Array.from(map.values())
+        .map((row) => Object.assign({}, row, { userCount: row.users.size }))
+        .sort((a, b) => b.hours - a.hours || String(a.bugId).localeCompare(String(b.bugId)));
+    }
+
+    function projectRows(rows) {
+      const total = rows.reduce((sum, row) => sum + asNumber(row.hours), 0);
+      return groupBy(
+        rows,
+        (row) => ({ value: row.project_name || "No project", label: row.project_name || "No project" }),
+        (row) => row.hours
+      )
+        .map((row) => Object.assign({}, row, { percent: total ? row.amount / total * 100 : 0 }))
+        .sort((a, b) => b.amount - a.amount || String(a.label).localeCompare(String(b.label)));
+    }
+
+    function alphaProjectRows(rows) {
+      return rows.slice().sort((a, b) => String(a.label).localeCompare(String(b.label)));
+    }
+
+    function memberRows(rows) {
+      return groupBy(
+        rows,
+        (row) => ({ value: row.logged_by_username, raw: row.logged_by_username, label: row.logged_by_name || row.logged_by_username }),
+        (row) => row.hours
+      ).sort((a, b) => b.amount - a.amount || String(a.label).localeCompare(String(b.label)));
+    }
+
+    function dayRows(rows) {
+      return groupBy(
+        rows,
+        (row) => {
+          const day = normalizeDayKey(row.day);
+          return { value: day, raw: day, label: compactDate(day) };
+        },
+        (row) => row.hours
+      ).sort((a, b) => String(a.value).localeCompare(String(b.value)));
+    }
+
+    function isLeaveDay(username, day) {
+      const ld = DATA.leaveDays;
+      if (!ld) return false;
+      const users = ld[day];
+      if (!users) return false;
+      return Array.isArray(users) ? users.indexOf(username) >= 0 : false;
+    }
+
+    function isHalfDayLeave(username, day) {
+      const hd = DATA.halfDayLeaves;
+      if (!hd) return false;
+      const users = hd[day];
+      if (!users) return false;
+      return Array.isArray(users) ? users.indexOf(username) >= 0 : false;
+    }
+
+    function specialOffdayLabel(day) {
+      const special = DATA.specialOffDays || {};
+      return special[day] || "";
+    }
+
+    function complianceSnapshotDay(rows) {
+      const candidates = [];
+      const generated = normalizeDayKey(DATA.generatedAt);
+      if (generated) candidates.push(generated);
+      rows.forEach((row) => {
+        const day = normalizeDayKey(row.day);
+        if (day) candidates.push(day);
+      });
+      candidates.sort();
+      return candidates.length ? candidates[candidates.length - 1] : normalizeDayKey(DATA.month.start);
+    }
+
+    function complianceGapLabel(hours, isOffday, isLeave, isHalfLeave, isPending, offdayLabel) {
+      if (isLeave) return "Leave Day";
+      if (isHalfLeave) return "Half-day Leave";
+      if (isOffday) return offdayLabel || "Weekend";
+      if (isPending) return "Not due yet";
+      if (isExactTargetHours(hours)) return "Exactly " + fmtHours(TARGET) + "h";
+      if (hours <= 0) return "No hours logged";
+      if (hours > TARGET) return "Over by " + fmtHours(hours - TARGET);
+      return "Short by " + fmtHours(TARGET - hours);
+    }
+
+    function complianceRows(rows, members, workdays, complianceThroughDay) {
+      const byUserDay = new Map();
+      rows.forEach((row) => {
+        const day = normalizeDayKey(row.day);
+        if (!row.logged_by_username || !day) return;
+        const key = row.logged_by_username + "|" + day;
+        byUserDay.set(key, asNumber(byUserDay.get(key)) + asNumber(row.hours));
+      });
+      return members.map((member) => {
+        const days = workdays.map((meta) => {
+          const offdayLabel = specialOffdayLabel(meta.day);
+          const isOffday = meta.weekday === 0 || meta.weekday === 6 || Boolean(offdayLabel);
+          const isLeave = isLeaveDay(member.username, meta.day);
+          const isHalfLeave = isHalfDayLeave(member.username, meta.day);
+          const isPending = meta.day > complianceThroughDay;
+          const hours = asNumber(byUserDay.get(member.username + "|" + meta.day));
+          const onTarget = isOffday || isLeave || isHalfLeave || isPending || isExactTargetHours(hours);
+          return {
+            day: meta.day,
+            weekday: meta.weekday,
+            isOffday,
+            isLeave,
+            isHalfLeave,
+            isPending,
+            hours,
+            onTarget,
+            offdayLabel,
+            gapLabel: complianceGapLabel(hours, isOffday, isLeave, isHalfLeave, isPending, offdayLabel)
+          };
+        });
+        return {
+          username: member.username,
+          name: member.realname || member.username,
+          totalHours: days.reduce((sum, item) => sum + item.hours, 0),
+          offTargetHours: days.reduce((sum, item) => {
+            if (item.isOffday || item.isLeave || item.isHalfLeave || item.isPending || item.onTarget) return sum;
+            return sum + Math.abs(item.hours - TARGET);
+          }, 0),
+          days
+        };
+      });
+    }
+
+    const PIE_COLORS = ["#1d857d", "#3f6fb5", "#c4702b", "#7f8f3a", "#9b4f7e", "#4d7f99", "#aa5c5c", "#b29028", "#5e8c63", "#6a6bb4"];
+
+    function polar(cx, cy, radius, angle) {
+      return { x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle) };
+    }
+
+    function pieSlicePath(cx, cy, radius, startAngle, endAngle) {
+      const start = polar(cx, cy, radius, startAngle);
+      const end = polar(cx, cy, radius, endAngle);
+      const largeArc = endAngle - startAngle > Math.PI ? 1 : 0;
+      return [
+        "M", cx, cy,
+        "L", start.x, start.y,
+        "A", radius, radius, 0, largeArc, 1, end.x, end.y,
+        "Z"
+      ].join(" ");
+    }
+
+    function render() {
+      const app = document.getElementById("app");
+      const filters = readFilters();
+      const entries = DATA.timeEntries.filter((row) => matches(row, filters));
+      const totalHours = entries.reduce((sum, row) => sum + asNumber(row.hours), 0);
+      const projects = alphaProjectRows(projectRows(entries));
+      const projectTableRows = projects;
+      const members = memberRows(entries);
+      const days = dayRows(entries);
+      const tickets = ticketRows(entries);
+      const allCalendarDays = monthDates();
+      const complianceThroughDay = complianceSnapshotDay(DATA.timeEntries);
+      const compliance = complianceRows(DATA.timeEntries, DATA.members, allCalendarDays, complianceThroughDay);
+      const activeMembers = new Set(entries.map((row) => row.logged_by_username).filter(Boolean)).size;
+      const options = {
+        users: uniqueOptions(DATA.members.map((row) => ({ username: row.username, label: row.realname || row.username })), "username", "label"),
+        projects: uniqueOptions(DATA.timeEntries, "project_name", "project_name"),
+        days: allCalendarDays.map((meta) => ({ value: meta.day, label: compactDate(meta.day) }))
+      };
+      const selectedTicket = filters.ticket !== "all" ? String(filters.ticket) : "";
+      const selectedEntries = selectedTicket ? entries.filter((row) => String(row.bug_id) === selectedTicket) : [];
+      const detailBase = selectedEntries[0] || tickets.find((row) => String(row.bugId) === selectedTicket) || null;
+
+      const activeFilterKeys = Object.keys(filters).filter((key) => filters[key] && filters[key] !== FILTER_DEFAULTS[key]);
+      const maxProject = Math.max(1, ...projects.map((row) => row.amount));
+      const maxMember = Math.max(1, ...members.map((row) => row.amount));
+      const maxDay = Math.max(1, ...days.map((row) => row.amount));
+
+      const forecastWorkloadHtml = (() => {
+        const fw = DATA.forecastWorkload;
+        if (!fw) return "";
+        const cols = fw.columns || [];
+        const prev = fw.previewRows || [];
+        const head = cols.length ? `<tr>${cols.map((c) => `<th>${esc(c)}</th>`).join("")}</tr>` : "";
+        const colSpan = Math.max(1, cols.length);
+        const body = prev.length
+          ? prev.map((row) => `<tr>${cols.map((c) => `<td>${esc(row[c] != null ? row[c] : "")}</td>`).join("")}</tr>`).join("")
+          : `<tr><td colspan="${colSpan}" class="empty">No rows in CSV preview.</td></tr>`;
+        return `
+        <section class="forecast-snippet-wrap">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Forecast workload (CSV)</h2>
+              <div class="panel-note">${esc(fw.sourcePath || "")}</div>
+            </div>
+            <p class="forecast-disclaimer">Supplementary model output for planning only; not a commitment or booking instruction. Confirm with the forecasting pipeline and owning team before acting on these figures.</p>
+            <div class="table-wrap" style="max-height:240px">
+              <table class="entry-table" style="min-width:360px">
+                <thead>${head}</thead>
+                <tbody>${body}</tbody>
+              </table>
+            </div>
+          </div>
+        </section>`;
+      })();
+
+      let pieSlices = "";
+      let pieLegend = "";
+      if (projects.length) {
+        let angle = -Math.PI / 2;
+        projects.forEach((row, index) => {
+          const span = totalHours ? (row.amount / totalHours) * Math.PI * 2 : 0;
+          const end = angle + span;
+          const color = PIE_COLORS[index % PIE_COLORS.length];
+          const active = filters.project === row.value;
+          pieSlices += `<path data-project="${esc(row.value)}" d="${pieSlicePath(140, 140, active ? 108 : 100, angle, end)}" fill="${color}" stroke="white" stroke-width="2" style="cursor:pointer;opacity:${active || filters.project === "all" ? 1 : 0.78}"></path>`;
+          pieLegend += `<button type="button" data-project="${esc(row.value)}" class="${active ? "active" : ""}"><span class="swatch" style="background:${color}"></span><span>${esc(row.label)}</span><span>${fmtPct(row.percent)}</span></button>`;
+          angle = end;
+        });
+      }
+
+      function filterChipLabel(key, value) {
+        if (key === "day" && value && value !== "all") return fmtIsoDate(value);
+        return value;
+      }
+
+      app.innerHTML = `
+        <header class="hero">
+          <h1>Digital Team Time Tracking Dashboard</h1>
+          <p>Period: ${esc(DATA.month.period_display || (DATA.month.start + " to before " + DATA.month.end))}. Generated from live Mantis time tracking at ${esc(fmtIsoDateTime(DATA.generatedAt))}.</p>
+        </header>
+        ${forecastWorkloadHtml}
+        <main class="shell">
+          <section class="toolbar">
+            <div class="control">
+              <label>User</label>
+              <select id="filter-user">
+                <option value="all">All users</option>
+                ${options.users.map((opt) => `<option value="${esc(opt.value)}" ${filters.user === opt.value ? "selected" : ""}>${esc(opt.label)}</option>`).join("")}
+              </select>
+            </div>
+            <div class="control">
+              <label>Project</label>
+              <select id="filter-project">
+                <option value="all">All projects</option>
+                ${options.projects.map((opt) => `<option value="${esc(opt.value)}" ${filters.project === opt.value ? "selected" : ""}>${esc(opt.label)}</option>`).join("")}
+              </select>
+            </div>
+            <div class="control">
+              <label>Day</label>
+              <input type="text" id="filter-day" readonly placeholder="All workdays" autocomplete="off" />
+            </div>
+            <div class="control">
+              <label>Ticket</label>
+              <input id="filter-ticket" value="${filters.ticket === "all" ? "" : esc(filters.ticket)}" placeholder="Ticket ID">
+            </div>
+            <div class="control">
+              <label>Search</label>
+              <input id="filter-search" value="${esc(filters.search)}" placeholder="Project, ticket, note...">
+            </div>
+            <button type="button" class="action-button" id="reset-filters">Reset filters</button>
+          </section>
+
+          <section class="chips">
+            ${activeFilterKeys.length ? activeFilterKeys.map((key) => `<span class="chip">${esc(key)}: ${esc(filterChipLabel(key, filters[key]))}<button type="button" data-clear="${esc(key)}">x</button></span>`).join("") : `<span class="empty">No active filters. Click any chart, project row, compliance cell, or ticket row to drill down.</span>`}
+          </section>
+
+          <section class="kpis">
+            <div class="card"><div class="kpi-label">Total Hours</div><div class="kpi-value">${fmtHours(totalHours)}</div><div class="kpi-sub">${fmtInt(entries.length)} filtered time entries</div></div>
+            <div class="card"><div class="kpi-label">Projects Worked</div><div class="kpi-value">${fmtInt(projects.length)}</div><div class="kpi-sub">Projects with booked hours</div></div>
+            <div class="card"><div class="kpi-label">Tickets Worked</div><div class="kpi-value">${fmtInt(tickets.length)}</div><div class="kpi-sub">Tickets behind filtered hours</div></div>
+            <div class="card"><div class="kpi-label">Active Members</div><div class="kpi-value">${fmtInt(activeMembers)}</div><div class="kpi-sub">Out of ${fmtInt(DATA.summary.matched_members)}</div></div>
+            <div class="card"><div class="kpi-label">Off-target Hours</div><div class="kpi-value">${fmtHours(compliance.reduce((sum, row) => sum + row.offTargetHours, 0))}</div><div class="kpi-sub">Total deviation from ${fmtHours(TARGET)}h per workday</div></div>
+          </section>
+
+          <section class="top-stack">
+            <section class="panel">
+              <div class="panel-head">
+                <h2>Daily 7.5h Compliance by Member</h2>
+                <div class="panel-note">
+                  <span class="legend-swatch ok"></span> = exactly ${fmtHours(TARGET)}h &nbsp;
+                  <span class="legend-swatch miss"></span> = not exactly ${fmtHours(TARGET)}h &nbsp;
+                  <span class="legend-swatch leave"></span> = Leave Day &nbsp;
+                  <span class="legend-swatch leave-half"></span> = Half Leave &nbsp;
+                  <span class="legend-swatch offday"></span> = Weekend / Public Holiday &nbsp;
+                  <span class="legend-swatch pending"></span> = Pending future workday
+                </div>
+              </div>
+              <div class="compliance-wrap">
+                <table class="compliance">
+                  <colgroup>
+                    <col class="user-col">
+                    ${allCalendarDays.map(() => `<col class="day-col">`).join("")}
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      ${allCalendarDays.map((meta) => `<th>${compactDate(meta.day)}</th>`).join("")}
+                    </tr>
+                  </thead>
+                  <tbody>
+                      ${compliance.map((row) => `<tr><th>${esc(row.name)}</th>${row.days.map((item) => {
+                        const active = filters.user === row.username && filters.day === item.day;
+                        const cellClass = item.isLeave ? "leave" : (item.isHalfLeave ? "leave half" : (item.isOffday ? "offday" : (item.isPending ? "pending" : (item.onTarget ? "ok" : "miss"))));
+                        const cellLabel = item.isLeave ? "Leave Day" : (item.isHalfLeave ? (item.hours > 0 ? fmtHours(item.hours) : "Half Leave") : (item.isOffday ? "—" : (item.isPending ? "Pending" : (item.hours <= 0 ? "No hours" : fmtHours(item.hours)))));
+                        const gapText = item.isHalfLeave ? "Half-day Leave" : esc(item.gapLabel);
+                        return `<td><button type="button" class="cell-button ${cellClass} ${active ? "active" : ""}" data-user-day="${esc(row.username)}|${esc(item.day)}"><div class="cell-hours">${cellLabel}</div><div class="cell-gap">${gapText}</div></button></td>`;
+                      }).join("")}</tr>`).join("")}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </section>
+
+          <section class="layout">
+            <div class="stack">
+              <section class="panel">
+                <div class="panel-head">
+                  <h2>Project Hours Share</h2>
+                  <div class="panel-note">${projects.length ? "Pie chart, legend, and project table are linked" : "No data"}</div>
+                </div>
+                ${projects.length ? `
+                  <div class="project-combo">
+                    <div>
+                      <div class="pie-shell">
+                        <div class="pie-area">
+                          <svg viewBox="0 0 280 280" aria-label="Project hours pie chart">
+                            ${pieSlices}
+                            <circle cx="140" cy="140" r="58" fill="white"></circle>
+                            <text x="140" y="134" text-anchor="middle" class="pie-center-main">${fmtHours(totalHours)}</text>
+                            <text x="140" y="156" text-anchor="middle" class="pie-center-sub">team hours</text>
+                          </svg>
+                        </div>
+                        <div class="legend">${pieLegend}</div>
+                      </div>
+                    </div>
+                    <div class="table-wrap">
+                      <table class="project-table">
+                        <thead><tr><th>Project</th><th class="num">Hours</th><th class="num">%</th></tr></thead>
+                        <tbody>
+                          ${projectTableRows.map((row) => `<tr class="clickable ${filters.project === row.value ? "active-row" : ""}" data-project-row="${esc(row.value)}"><td>${esc(row.label)}</td><td class="num">${fmtHours(row.amount)}</td><td class="num">${fmtPct(row.percent)}</td></tr>`).join("")}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>` : `<div class="empty">No project hours in the current filter scope.</div>`}
+              </section>
+
+              <section class="panel">
+                <div class="panel-head">
+                  <h2>Workload Breakdown</h2>
+                  <div class="panel-note">Member, workday, and ticket views stay synced with the same filters</div>
+                </div>
+                <div class="analysis-grid">
+                  <div>
+                    <div class="panel-head">
+                      <h2>By Team Member</h2>
+                      <div class="panel-note">Click a member bar</div>
+                    </div>
+                    <div class="bar-list">
+                      ${members.length ? members.map((row) => `<button type="button" class="bar-row ${filters.user === row.raw ? "active" : ""}" data-user="${esc(row.raw)}"><div class="bar-label">${esc(row.label)}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.max(2, row.amount / maxMember * 100).toFixed(2)}%"></div></div><div class="bar-value">${fmtHours(row.amount)}</div></button>`).join("") : `<div class="empty">No member hours in scope.</div>`}
+                    </div>
+                  </div>
+                  <div>
+                    <div class="panel-head">
+                      <h2>By Workday</h2>
+                      <div class="panel-note">Click a day bar</div>
+                    </div>
+                    <div class="bar-list">
+                      ${days.length ? days.map((row) => `<button type="button" class="bar-row ${filters.day === row.raw ? "active" : ""}" data-day="${esc(row.raw)}"><div class="bar-label">${esc(row.label)}</div><div class="bar-track"><div class="bar-fill blue" style="width:${Math.max(2, row.amount / maxDay * 100).toFixed(2)}%"></div></div><div class="bar-value">${fmtHours(row.amount)}</div></button>`).join("") : `<div class="empty">No workdays in scope.</div>`}
+                    </div>
+                  </div>
+                  <div>
+                    <div class="panel-head">
+                      <h2>By Ticket</h2>
+                      <div class="panel-note">Click a ticket row</div>
+                    </div>
+                    <div class="table-wrap">
+                      <table class="ticket-table">
+                        <thead><tr><th>Ticket</th><th>Project</th><th>Summary</th><th class="num">Hours</th></tr></thead>
+                        <tbody>
+                          ${tickets.length ? tickets.slice(0, 20).map((row) => `<tr class="clickable ${selectedTicket === String(row.bugId) ? "active-row" : ""}" data-ticket="${esc(row.bugId)}"><td>#${esc(row.bugId)}</td><td>${esc(row.project)}</td><td>${esc(row.summary)}</td><td class="num">${fmtHours(row.hours)}</td></tr>`).join("") : `<tr><td colspan="4" class="empty">No tickets in scope.</td></tr>`}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <aside class="stack">
+              <section class="panel">
+                <div class="panel-head">
+                  <h2>Ticket Detail</h2>
+                  <div class="panel-note">${selectedTicket ? "Selected from the current filters" : "Pick a ticket from any chart or table"}</div>
+                </div>
+                ${detailBase ? `
+                  <div class="detail-grid">
+                    <div class="detail-box"><div class="detail-label">Ticket</div><div class="detail-value">#${esc(detailBase.bugId || detailBase.bug_id || "")}</div></div>
+                    <div class="detail-box"><div class="detail-label">Project</div><div class="detail-value">${esc(detailBase.project || detailBase.project_name || "")}</div></div>
+                    <div class="detail-box"><div class="detail-label">Summary</div><div class="detail-value">${esc(detailBase.summary || detailBase.ticket_summary || "")}</div></div>
+                    <div class="detail-box"><div class="detail-label">Hours in scope</div><div class="detail-value">${fmtHours(selectedEntries.reduce((sum, row) => sum + asNumber(row.hours), 0) || detailBase.hours || 0)}</div></div>
+                    <div class="detail-box"><div class="detail-label">People logging to this ticket</div><div class="detail-value">${esc(Array.from(new Set(selectedEntries.map((row) => row.logged_by_name || row.logged_by_username).filter(Boolean))).join(", ") || "-")}</div></div>
+                    <div class="detail-box"><div class="detail-label">Entries in scope</div><div class="detail-value">${fmtInt(selectedEntries.length || detailBase.entries || 0)}</div></div>
+                  </div>
+                ` : `<div class="empty">No ticket selected yet.</div>`}
+              </section>
+
+            </aside>
+          </section>
+
+          <section class="bottom-stack">
+            <section class="panel">
+              <div class="panel-head">
+                <h2>Time Tracking Details</h2>
+                <div class="panel-note">Every filtered Mantis time entry. Click a row to lock the ticket detail.</div>
+              </div>
+              <div class="table-wrap">
+                <table class="entry-table">
+                  <thead>
+                    <tr>
+                      <th>Day</th>
+                      <th>User</th>
+                      <th>Ticket</th>
+                      <th>Project</th>
+                      <th class="num">Hours</th>
+                      <th>Category</th>
+                      <th>Info</th>
+                      <th>Created</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${entries.length ? entries.map((row) => `<tr class="clickable ${selectedTicket && String(row.bug_id) === selectedTicket ? "active-row" : ""}" data-ticket="${esc(row.bug_id || "")}"><td>${esc(fmtIsoDate(row.day))}</td><td>${esc(row.logged_by_name || row.logged_by_username)}</td><td>${row.bug_id ? "#" + esc(row.bug_id) : ""}</td><td>${esc(row.project_name)}</td><td class="num">${fmtHours(row.hours)}</td><td>${esc(row.category)}</td><td>${esc(row.info)}</td><td>${esc(fmtIsoDateTime(row.created_timestamp))}</td></tr>`).join("") : `<tr><td colspan="8" class="empty">No time entries match the current filters.</td></tr>`}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </section>
+        </main>
+      `;
+
+      function setFilter(key, value) {
+        const next = Object.assign({}, filters, { [key]: value });
+        writeFilters(next);
+        render();
+      }
+
+      document.getElementById("filter-user").addEventListener("change", (event) => setFilter("user", event.target.value));
+      document.getElementById("filter-project").addEventListener("change", (event) => setFilter("project", event.target.value));
+      const dayInput = document.getElementById("filter-day");
+      setDateInputDisplay(dayInput, filters.day === "all" ? "" : filters.day);
+      bindDdMmDatePicker(dayInput, (iso) => setFilter("day", iso || "all"), {
+        placeholder: "All workdays",
+        min: normalizeDayKey(DATA.month.start),
+        max: normalizeDayKey(isoDateAddDays(DATA.month.end, -1)),
+      });
+      document.getElementById("filter-ticket").addEventListener("change", (event) => setFilter("ticket", event.target.value.trim() || "all"));
+      document.getElementById("filter-search").addEventListener("input", (event) => setFilter("search", event.target.value));
+      document.getElementById("reset-filters").addEventListener("click", () => { writeFilters(FILTER_DEFAULTS); render(); });
+      app.querySelectorAll("[data-clear]").forEach((node) => node.addEventListener("click", () => setFilter(node.dataset.clear, FILTER_DEFAULTS[node.dataset.clear])));
+      app.querySelectorAll("[data-project]").forEach((node) => node.addEventListener("click", () => setFilter("project", filters.project === node.dataset.project ? "all" : node.dataset.project)));
+      app.querySelectorAll("[data-project-row]").forEach((node) => node.addEventListener("click", () => setFilter("project", filters.project === node.dataset.projectRow ? "all" : node.dataset.projectRow)));
+      app.querySelectorAll("[data-user]").forEach((node) => node.addEventListener("click", () => setFilter("user", filters.user === node.dataset.user ? "all" : node.dataset.user)));
+      app.querySelectorAll("[data-day]").forEach((node) => node.addEventListener("click", () => setFilter("day", filters.day === node.dataset.day ? "all" : node.dataset.day)));
+      app.querySelectorAll("[data-user-day]").forEach((node) => node.addEventListener("click", () => {
+        const [user, day] = node.dataset.userDay.split("|");
+        const next = Object.assign({}, filters, {
+          user: filters.user === user && filters.day === day ? "all" : user,
+          day: filters.user === user && filters.day === day ? "all" : day
+        });
+        writeFilters(next);
+        render();
+      }));
+      app.querySelectorAll("[data-ticket]").forEach((node) => node.addEventListener("click", () => setFilter("ticket", filters.ticket === node.dataset.ticket ? "all" : node.dataset.ticket || "all")));
+    }
+
+    render();
+  })();
+  </script>
+</body>
+</html>

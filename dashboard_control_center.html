@@ -1,0 +1,937 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard Control Center</title>
+  <style>
+    .dla-date-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+.dla-date-field input {
+  flex: 1 1 auto;
+  min-width: 0;
+  cursor: pointer;
+}
+.dla-date-trigger,
+.dla-date-clear {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line-strong, #cbd5e1);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text, #0f172a);
+  padding: 0;
+}
+.dla-date-trigger:hover,
+.dla-date-clear:hover {
+  background: var(--surface-raised, #f8fafc);
+}
+.dla-date-clear {
+  width: 28px;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.dla-date-field input.invalid-date {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 1px #fecaca;
+}
+.dla-date-popup {
+  position: fixed;
+  z-index: 10050;
+  width: 280px;
+  padding: 12px;
+  border: 1px solid var(--line-strong, #cbd5e1);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
+  color: var(--text, #0f172a);
+}
+.dla-date-popup-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.dla-date-popup-title {
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+.dla-date-popup-nav {
+  display: inline-flex;
+  gap: 4px;
+}
+.dla-date-popup-nav button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+.dla-date-popup-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.dla-date-popup-grid .dla-cal-wd {
+  text-align: center;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--muted, #64748b);
+  padding: 2px 0 6px;
+}
+.dla-date-popup-grid button {
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+}
+.dla-date-popup-grid button:hover:not(:disabled) {
+  background: var(--surface-raised, #f1f5f9);
+}
+.dla-date-popup-grid button.is-selected {
+  background: var(--accent, #0f766e);
+  color: #fff;
+}
+.dla-date-popup-grid button.is-today {
+  box-shadow: inset 0 0 0 1px var(--accent, #0f766e);
+}
+.dla-date-popup-grid button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.dla-date-popup-grid button.is-outside {
+  color: var(--muted, #94a3b8);
+}
+    :root {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --text: #111827;
+      --muted: #64748b;
+      --line: #dbe3ee;
+      --line-strong: #c7d2df;
+      --primary: #2563eb;
+      --primary-soft: #dbeafe;
+      --teal: #0f766e;
+      --teal-soft: #ccfbf1;
+      --amber: #b45309;
+      --amber-soft: #fef3c7;
+      --red: #b91c1c;
+      --red-soft: #fee2e2;
+      --green: #15803d;
+      --green-soft: #dcfce7;
+      --sidebar: #eef3f9;
+      --shadow: 0 1px 2px rgba(15, 23, 42, .06);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--text); overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; }
+    .app { min-height: 100vh; display: grid; grid-template-columns: 320px minmax(0, 1fr); }
+    .sidebar { position: sticky; top: 0; height: 100vh; background: var(--sidebar); border-right: 1px solid var(--line); padding: 18px 14px; overflow-y: auto; }
+    .brand { display: flex; align-items: center; gap: 10px; padding: 8px 8px 18px; }
+    .brand-mark { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; background: #111827; color: #fff; font-weight: 800; }
+    .brand h1 { margin: 0; font-size: 15px; line-height: 1.2; }
+    .brand span { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .nav-title { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 14px 8px 8px; }
+    .nav-button { width: 100%; min-height: 36px; display: flex; align-items: center; justify-content: space-between; gap: 8px; border: 0; border-radius: 8px; background: transparent; color: #334155; padding: 8px 10px; cursor: pointer; text-align: left; }
+    .nav-button:hover, .nav-button.active { background: #fff; color: var(--text); box-shadow: var(--shadow); }
+    .nav-button .count { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+    .catalog-list { display: grid; gap: 6px; }
+    .catalog-item { width: 100%; min-width: 0; min-height: 54px; display: grid; gap: 4px; border: 1px solid transparent; border-radius: 8px; background: transparent; color: #334155; padding: 9px 10px; cursor: pointer; text-align: left; overflow: hidden; }
+    .catalog-item:hover, .catalog-item.active { background: #fff; color: var(--text); border-color: var(--line); box-shadow: var(--shadow); }
+    .catalog-item strong { font-size: 13px; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .catalog-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 11px; }
+    .catalog-file { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .content { min-width: 0; display: flex; flex-direction: column; }
+    .topbar { position: sticky; top: 0; z-index: 5; min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--line); background: rgba(246, 248, 251, .92); backdrop-filter: blur(10px); padding: 12px 22px; }
+    .topbar h2 { margin: 0; font-size: 18px; }
+    .topbar p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+    .top-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .main { width: 100%; max-width: none; min-width: 0; margin: 0; padding: 20px 22px 32px; display: grid; gap: 18px; }
+    .main > * { min-width: 0; max-width: 100%; }
+    .metric-grid { display: grid; gap: 12px; grid-template-columns: repeat(5, minmax(130px, 1fr)); }
+    .metric { min-height: 96px; background: linear-gradient(180deg, #fff, #f9fbff); border: 1px solid var(--line); border-radius: 8px; padding: 14px; box-shadow: var(--shadow); }
+    .metric .label { color: var(--muted); font-size: 12px; }
+    .metric .value { margin-top: 8px; font-size: 28px; line-height: 1; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .metric .note { margin-top: 8px; color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .toolbar { display: grid; grid-template-columns: minmax(240px, 1fr) 180px 160px auto; gap: 10px; align-items: center; }
+    .input, .select { width: 100%; height: 38px; border: 1px solid var(--line-strong); border-radius: 8px; background: #fff; color: var(--text); padding: 0 12px; outline: none; }
+    .input:focus, .select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, .12); }
+    .button { height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--line-strong); border-radius: 8px; background: #fff; color: var(--text); padding: 0 12px; cursor: pointer; white-space: nowrap; }
+    .button:hover { border-color: #94a3b8; background: #f8fafc; }
+    .button.primary { background: #111827; color: #fff; border-color: #111827; }
+    .button.icon { width: 36px; padding: 0; }
+    .viewer-select { width: auto; min-width: 180px; max-width: 260px; }
+    .viewer-range-tools { display: none; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .viewer-range-tools.active { display: flex; }
+    .date-input { width: 118px; height: 36px; border: 1px solid var(--line-strong); border-radius: 8px; background: #fff; color: var(--text); padding: 0 10px; font-variant-numeric: tabular-nums; }
+    .date-input.invalid-date { border-color: #dc2626; box-shadow: 0 0 0 1px #fecaca; }
+    .cw-select { width: 116px; min-width: 116px; }
+    .viewer-select.hidden { display: none; }
+    .viewer { min-width: 0; overflow: hidden; }
+    .viewer-head { padding: 14px; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--line); }
+    .viewer-title { min-width: 0; }
+    .viewer-title h3 { margin: 0; font-size: 16px; line-height: 1.25; }
+    .viewer-title p { margin: 5px 0 0; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+    .viewer-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .viewer-frame-wrap { height: calc(100vh - 260px); min-height: 640px; background: #fff; }
+    .viewer-frame { width: 100%; height: 100%; border: 0; display: block; background: #fff; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow); min-width: 0; }
+    .muted { color: var(--muted); }
+    .toast { position: fixed; right: 18px; bottom: 18px; min-width: 220px; max-width: 360px; background: #111827; color: #fff; border-radius: 8px; padding: 11px 13px; box-shadow: 0 18px 45px rgba(15,23,42,.22); opacity: 0; transform: translateY(8px); transition: .18s ease; pointer-events: none; z-index: 20; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    @media (max-width: 1180px) {
+      .metric-grid { grid-template-columns: repeat(3, minmax(130px, 1fr)); }
+    }
+    @media (max-width: 900px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; }
+      .metric-grid { grid-template-columns: 1fr; }
+      .toolbar { grid-template-columns: 1fr; }
+      .topbar { position: static; align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">DL</div>
+        <div>
+          <h1>Dashboard Control</h1>
+          <span>Memory-backed registry</span>
+        </div>
+      </div>
+      <div class="nav-title">Dashboard Catalog</div>
+      <nav class="catalog-list" id="dashboardCatalog"></nav>
+    </aside>
+    <div class="content">
+      <header class="topbar">
+        <div>
+          <h2>Dashboard Control Center</h2>
+          <p id="generatedText">Generated from local dashboard files and assistant memory.</p>
+        </div>
+        <div class="top-actions">
+          <a class="button" href=".">Open folder</a>
+          <button class="button icon" type="button" id="themeToggle" title="Toggle dark mode">◐</button>
+        </div>
+      </header>
+      <main class="main">
+        <section class="metric-grid" id="metrics"></section>
+        <section class="toolbar" aria-label="Filters">
+          <input class="input" id="searchBox" type="search" placeholder="Search dashboard, source, memory rule..." />
+          <select class="select" id="groupFilter"></select>
+          <select class="select" id="statusFilter">
+            <option value="all">All status</option>
+          </select>
+          <button class="button" type="button" id="resetButton">Reset</button>
+        </section>
+        <section class="card viewer" id="viewer">
+          <div class="viewer-head">
+            <div class="viewer-title">
+              <h3 id="viewerTitle">Select a dashboard</h3>
+              <p id="viewerMeta">Choose a dashboard from the left catalog.</p>
+            </div>
+            <div class="viewer-actions">
+              <select class="select viewer-select hidden" id="timeRangeSelect" title="Time frame"></select>
+              <div class="viewer-range-tools" id="timeRangeTools">
+                <input class="date-input" id="timeFrom" type="text" title="From date (dd/mm/yyyy)" autocomplete="off" spellcheck="false" inputmode="numeric" />
+                <input class="date-input" id="timeTo" type="text" title="To date (dd/mm/yyyy)" autocomplete="off" spellcheck="false" inputmode="numeric" />
+                <select class="select cw-select" id="timeCw" title="Calendar week"></select>
+                <button class="button" type="button" id="timeApply">Apply</button>
+              </div>
+              <a class="button primary" id="viewerOpen" href="#" target="_self">Open</a>
+              <button class="button" type="button" id="viewerPrint">Print PDF</button>
+              <button class="button" type="button" id="viewerCopyRefresh">Copy refresh</button>
+              <button class="button" type="button" id="viewerCopyFile">Copy file</button>
+            </div>
+          </div>
+          <div class="viewer-frame-wrap">
+            <iframe class="viewer-frame" id="dashboardFrame" title="Dashboard preview"></iframe>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script id="dashboard-data" type="application/json">{"generatedAt":"08/07/2026 15:20","dashboards":[{"title":"Annotation Digital Productivity","file":"annotation_digital_productivity_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/refresh_mantis_dashboard_cache.py --start 2025-01-01 --end YYYY-MM-DD; python scripts/extract_annotation_digital_productivity.py --project-id 396 --source cache; python scripts/build_annotation_productivity_dashboard.py --data-dir data/reports/annotation_digital_productivity --output dashboard_reports/annotation_digital_productivity_dashboard.html","source":"Mantis cache project 396 (after cache refresh)","memory":"Interactive tickets count only when note, status change, and handler change come from the same actor.","exists":true,"href":"annotation_digital_productivity_dashboard.html","bytes":940040,"size":"918.0 KB","modified":"2026-07-08T06:22:08.235954+00:00","modifiedDisplay":"08/07/2026 13:22","ageDays":0,"freshness":"fresh","dataSignal":"08/07/2026 13:17","registered":true},{"title":"Annotation Status by Member","file":"digital_team_annotation_status_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/build_annotation_member_ticket_dashboard_html.py --cutoff 2026-W28 --output dashboard_reports/digital_team_annotation_status_dashboard.html --source cache","source":"TIDP Master Rev6 + Mantis cache project 396 (stepwise uses same cache)","memory":"Scope is active TIDP family tickets currently handled by Digital Team members.","exists":true,"href":"digital_team_annotation_status_dashboard.html","bytes":420237,"size":"410.4 KB","modified":"2026-07-08T06:22:08.253703+00:00","modifiedDisplay":"08/07/2026 13:22","ageDays":0,"freshness":"fresh","dataSignal":"08/07/2026 13:17","registered":true},{"title":"Digital Team Time Tracking","file":"digital_team_time_tracking_dashboard_2026-07.html","group":"Time Tracking","owner":"Digital Team","status":"Primary","refresh":"python -m dashboard_assistant --month 2026-07 --team digital --react --limit 20 --strict-dq --source cache","source":"Mantis cache time tracking","memory":"Generalized time tracking dashboard: choose an available month/range in the viewer; run cache refresh then rebuild with --source cache before reporting.","exists":true,"href":"digital_team_time_tracking_dashboard_2026-07.html","bytes":144533,"size":"141.1 KB","modified":"2026-07-08T06:22:08.370233+00:00","modifiedDisplay":"08/07/2026 13:22","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-08T13:17:17","registered":true,"variants":[{"label":"20/07/2026 to 26/07/2026","file":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","href":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","sortKey":"2026-07-20_2026-07-26","start":"2026-07-20","end":"2026-07-26","cw":"2026-W30","exists":true,"bytes":60906,"size":"59.5 KB","modified":"2026-07-08T06:22:08.365704+00:00","modifiedDisplay":"08/07/2026 13:22","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-08T13:17:13"},{"label":"01/07/2026 to 31/07/2026","file":"digital_team_time_tracking_dashboard_2026-07.html","href":"digital_team_time_tracking_dashboard_2026-07.html","sortKey":"2026-07","start":"2026-07-01","end":"2026-07-31","cw":"2026-W27","exists":true,"bytes":144533,"size":"141.1 KB","modified":"2026-07-08T06:22:08.370233+00:00","modifiedDisplay":"08/07/2026 13:22","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-08T13:17:17"}],"variantCount":2,"rangeRefreshTemplate":"python -m dashboard_assistant --month {from}..{to} --team digital --react --limit 20 --strict-dq --source cache"},{"title":"Digital Team Work Current","file":"digital_team_work_dashboard_current.html","group":"Digital Team","owner":"Digital Team","status":"Operational","refresh":"python build_digital_dashboard.py --output dashboard_reports/digital_team_work_dashboard_current.html --source cache","source":"Mantis cache open work","memory":"Open ticket dashboard grouped by project with due assessment and status badges.","exists":true,"href":"digital_team_work_dashboard_current.html","bytes":20339803,"size":"19.4 MB","modified":"2026-07-08T06:22:09.467185+00:00","modifiedDisplay":"08/07/2026 13:22","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-08T13:17:32+07:00","registered":true},{"title":"Munich RE BEP/LOIN","file":"munich_re_bep_loin_dashboard.html","group":"Munich RE","owner":"Digital Team","status":"Primary","refresh":"python scripts/build_munich_re_bep_loin_dashboard.py","source":"MariaDB live (opt-out of P4 cache; not SQLite snapshot)","memory":"Use Mantis + 4project integration rules; embed useful attachments when available.","exists":false,"href":"munich_re_bep_loin_dashboard.html","bytes":0,"size":"Missing","modified":"","modifiedDisplay":"Missing","ageDays":null,"freshness":"missing","registered":true},{"title":"Munich RE Digital Team","file":"munich_re_digital_team_dashboard.html","group":"Munich RE","owner":"Digital Team","status":"Operational","refresh":"python scripts/build_munich_re_digital_team_dashboard.py --source cache","source":"Mantis cache Munich projects","memory":"Digital Team scoped Munich RE open work dashboard.","exists":true,"href":"munich_re_digital_team_dashboard.html","bytes":662574,"size":"647.0 KB","modified":"2026-07-08T06:22:12.053516+00:00","modifiedDisplay":"08/07/2026 13:22","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-08T13:18:25+07:00","registered":true},{"title":"Annotation Member Tickets","file":"digital_team_annotation_member_ticket_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Reference","refresh":"python scripts/build_annotation_member_ticket_dashboard_html.py --cutoff 2026-W28 --output dashboard_reports/digital_team_annotation_member_ticket_dashboard.html --source cache","source":"TIDP Master + Mantis cache project 396","memory":"Member-level annotation ticket report retained as a reference output.","exists":false,"href":"digital_team_annotation_member_ticket_dashboard.html","bytes":0,"size":"Missing","modified":"","modifiedDisplay":"Missing","ageDays":null,"freshness":"missing","registered":true},{"title":"Annotation TIDP Ticket Overview","file":"digital_team_annotation_ticket_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/build_annotation_tidp_dashboard_html.py --cutoff 2026-W28 --source cache --output dashboard_reports/digital_team_annotation_ticket_dashboard.html; python scripts/build_tidp_report_sheet1.py --cutoff 2026-W28 --source cache --output data/reports/TIDP_Report_Stepwise.xlsx --no-open","source":"TIDP Master Rev6 + Mantis cache project 396 (paired with stepwise Excel)","memory":"COO executive TIDP mirror; rebuild together with TIDP_Report_Stepwise.xlsx on refresh.","exists":true,"href":"digital_team_annotation_ticket_dashboard.html","bytes":982544,"size":"959.5 KB","modified":"2026-07-08T08:20:07.856407+00:00","modifiedDisplay":"08/07/2026 15:20","ageDays":0,"freshness":"fresh","dataSignal":"08/07/2026 14:15","registered":true},{"title":"Index","file":"index.html","group":"Other","owner":"Unregistered","status":"Discovered","refresh":"python scripts/refresh_all_dashboards.py","source":"Existing dashboard_reports HTML","memory":"Not yet registered in the dashboard control memory map.","exists":true,"href":"index.html","bytes":969,"size":"969 B","modified":"2026-07-08T08:20:09.199648+00:00","modifiedDisplay":"08/07/2026 15:20","ageDays":0,"freshness":"fresh","dataSignal":"","registered":false}],"groups":["Annotation","Digital Team","Munich RE","Other","Time Tracking"],"cache":{"generated_at":"2026-07-08T13:11:02+07:00","cache_schema_version":3,"source":"MariaDB/Mantis","database":"mantis","range":{"start":"2025-01-01","end":"2026-09-01"},"project_ids":[396,357,400,401],"digital_team_users":["hu.dam","ht.nguyen","dahn.nguyen","nd.huynh","kd.doan","lk.dang","qd.nguyen","qn.ha"],"files":{"sqlite":"data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite","manifest":"data/mantis_dashboard_cache/manifest.json","extracts":"data/mantis_dashboard_cache/extracts"},"tables":{"projects":4,"users":92,"tickets":15544,"time_entries":24211,"bug_history":175673,"bugnotes":19094,"work_dashboard_team_members":8,"work_dashboard_rows":733,"work_dashboard_notes":2996,"work_dashboard_history":24736,"annotation_p396_tickets":1920,"annotation_p396_history":15905,"annotation_p396_rename":142,"annotation_p396_note_authors":4308,"annotation_p396_users":407},"usage":{"refresh":"python scripts/refresh_mantis_dashboard_cache.py --start YYYY-MM-DD --end YYYY-MM-DD","sqlite":"Read data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite from dashboard builders."}},"cacheDisplay":"01/01/2025 to 01/09/2026","duplicateGroups":[{"key":"digital_team_time_tracking_dashboard","title":"Digital Team Time Tracking Dashboard","count":2,"variants":[{"file":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","label":"20/07/2026 to 26/07/2026","sortKey":"2026-07-20_2026-07-26","start":"2026-07-20","end":"2026-07-26","cw":"2026-W30","exists":true,"href":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","bytes":60906,"size":"59.5 KB","modified":"2026-07-08T06:22:08.365704+00:00","modifiedDisplay":"08/07/2026 13:22","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-08T13:17:13"},{"file":"digital_team_time_tracking_dashboard_2026-07.html","label":"01/07/2026 to 31/07/2026","sortKey":"2026-07","start":"2026-07-01","end":"2026-07-31","cw":"2026-W27","exists":true,"href":"digital_team_time_tracking_dashboard_2026-07.html","bytes":144533,"size":"141.1 KB","modified":"2026-07-08T06:22:08.370233+00:00","modifiedDisplay":"08/07/2026 13:22","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-08T13:17:17"}]}],"metrics":{"total":9,"registered":8,"fresh":7,"stale":0,"missing":2,"latest":"Index","cacheRows":285773},"templateSource":"https://github.com/shadcnstore/shadcn-dashboard-landing-template.git"}</script>
+  <script>
+    function fmtIsoDate(iso) {
+  const day = String(iso || "").slice(0, 10);
+  if (day.length < 10 || day[4] !== "-") return String(iso || "");
+  return day.slice(8, 10) + "/" + day.slice(5, 7) + "/" + day.slice(0, 4);
+}
+function fmtIsoDateTime(iso) {
+  const text = String(iso || "");
+  const day = text.slice(0, 10);
+  if (day.length < 10 || day[4] !== "-") return text;
+  const time = text.length >= 16 ? text.slice(11, 16) : "";
+  return fmtIsoDate(day) + (time ? " " + time : "");
+}
+function parseDdMmYyyy(text) {
+  const raw = String(text || "").trim();
+  const match = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!match) return null;
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  const year = Number(match[3]);
+  if (month < 1 || month > 12 || day < 1 || day > 31 || year < 1900) return null;
+  const probe = new Date(year, month - 1, day);
+  if (probe.getFullYear() !== year || probe.getMonth() !== month - 1 || probe.getDate() !== day) return null;
+  return String(year).padStart(4, "0") + "-" + String(month).padStart(2, "0") + "-" + String(day).padStart(2, "0");
+}
+function setDateInputDisplay(el, iso) {
+  if (!el) return;
+  const day = String(iso || "").slice(0, 10);
+  el.dataset.isoValue = day.length === 10 && day[4] === "-" ? day : "";
+  el.value = el.dataset.isoValue ? fmtIsoDate(el.dataset.isoValue) : "";
+  el.classList.remove("invalid-date");
+}
+function readDateInputIso(el) {
+  if (!el) return "";
+  const parsed = parseDdMmYyyy(el.value);
+  if (parsed) {
+    el.dataset.isoValue = parsed;
+    el.value = fmtIsoDate(parsed);
+    el.classList.remove("invalid-date");
+    return parsed;
+  }
+  if (el.value.trim()) {
+    el.classList.add("invalid-date");
+    return "";
+  }
+  el.dataset.isoValue = "";
+  el.classList.remove("invalid-date");
+  return "";
+}
+function loadDashboardPrefs(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+function saveDashboardPrefs(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // Private mode or quota exceeded — ignore.
+  }
+}
+const DLA_CAL_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const DLA_CAL_WD = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const DlaDatePicker = (function () {
+  let popup = null;
+  let anchor = null;
+  let state = null;
+  function ensurePopup() {
+    if (popup) return popup;
+    popup = document.createElement("div");
+    popup.className = "dla-date-popup";
+    popup.hidden = true;
+    popup.addEventListener("mousedown", (event) => event.stopPropagation());
+    document.body.appendChild(popup);
+    document.addEventListener("mousedown", (event) => {
+      if (!popup || popup.hidden) return;
+      if (popup.contains(event.target)) return;
+      if (anchor && (anchor.contains(event.target) || anchor === event.target)) return;
+      close();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") close();
+    });
+    return popup;
+  }
+  function isoToLocalDate(iso) {
+    const parts = String(iso || "").slice(0, 10).split("-").map(Number);
+    if (parts.length !== 3 || parts.some((part) => !Number.isFinite(part))) return new Date(NaN);
+    return new Date(parts[0], parts[1] - 1, parts[2]);
+  }
+  function localIsoFromDate(dt) {
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth() + 1).padStart(2, "0");
+    const d = String(dt.getDate()).padStart(2, "0");
+    return y + "-" + m + "-" + d;
+  }
+  function compareIso(a, b) {
+    return String(a || "").localeCompare(String(b || ""));
+  }
+  function render() {
+    const el = ensurePopup();
+    if (!state) return;
+    const first = new Date(state.viewYear, state.viewMonth, 1);
+    const startOffset = (first.getDay() + 6) % 7;
+    const start = new Date(state.viewYear, state.viewMonth, 1 - startOffset);
+    const todayIso = localIsoFromDate(new Date());
+    let cells = DLA_CAL_WD.map((label) => '<div class="dla-cal-wd">' + label + "</div>").join("");
+    for (let i = 0; i < 42; i += 1) {
+      const day = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+      const iso = localIsoFromDate(day);
+      const outside = day.getMonth() !== state.viewMonth;
+      const disabled = (state.min && compareIso(iso, state.min) < 0) || (state.max && compareIso(iso, state.max) > 0);
+      const classes = [];
+      if (outside) classes.push("is-outside");
+      if (iso === state.selectedIso) classes.push("is-selected");
+      if (iso === todayIso) classes.push("is-today");
+      cells += '<button type="button" data-iso="' + iso + '"' + (disabled ? " disabled" : "") + ' class="' + classes.join(" ") + '">' + day.getDate() + "</button>";
+    }
+    el.innerHTML =
+      '<div class="dla-date-popup-head">' +
+      '<div class="dla-date-popup-title">' + DLA_CAL_MONTHS[state.viewMonth] + " " + state.viewYear + "</div>" +
+      '<div class="dla-date-popup-nav">' +
+      '<button type="button" data-nav="-1" aria-label="Previous month">&lsaquo;</button>' +
+      '<button type="button" data-nav="1" aria-label="Next month">&rsaquo;</button>' +
+      "</div></div>" +
+      '<div class="dla-date-popup-grid">' + cells + "</div>";
+    el.querySelectorAll("[data-nav]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.viewMonth += Number(btn.dataset.nav);
+        if (state.viewMonth < 0) { state.viewMonth = 11; state.viewYear -= 1; }
+        if (state.viewMonth > 11) { state.viewMonth = 0; state.viewYear += 1; }
+        render();
+      });
+    });
+    el.querySelectorAll("[data-iso]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (btn.disabled) return;
+        const iso = btn.dataset.iso;
+        if (state.onSelect) state.onSelect(iso);
+        close();
+      });
+    });
+  }
+  function positionPopup() {
+    if (!popup || !anchor || popup.hidden) return;
+    const rect = anchor.getBoundingClientRect();
+    const margin = 8;
+    let top = rect.bottom + margin;
+    let left = rect.left;
+    popup.style.top = top + "px";
+    popup.style.left = left + "px";
+    const bounds = popup.getBoundingClientRect();
+    if (bounds.right > window.innerWidth - margin) {
+      left = Math.max(margin, window.innerWidth - bounds.width - margin);
+      popup.style.left = left + "px";
+    }
+    if (bounds.bottom > window.innerHeight - margin) {
+      top = Math.max(margin, rect.top - bounds.height - margin);
+      popup.style.top = top + "px";
+    }
+  }
+  function open(input, config) {
+    anchor = input;
+    const seed = config && config.iso ? config.iso : localIsoFromDate(new Date());
+    const seedDate = isoToLocalDate(seed);
+    state = {
+      viewYear: seedDate.getFullYear(),
+      viewMonth: seedDate.getMonth(),
+      selectedIso: (config && config.iso) || "",
+      min: (config && config.min) || "",
+      max: (config && config.max) || "",
+      onSelect: (config && config.onSelect) || null,
+    };
+    render();
+    const el = ensurePopup();
+    el.hidden = false;
+    positionPopup();
+  }
+  function close() {
+    if (popup) popup.hidden = true;
+    state = null;
+    anchor = null;
+  }
+  return { open, close };
+})();
+function bindDdMmDatePicker(input, onChange, options) {
+  if (!input || input.dataset.dlaDatePicker === "1") return;
+  options = options || {};
+  input.dataset.dlaDatePicker = "1";
+  input.readOnly = true;
+  input.setAttribute("autocomplete", "off");
+  input.setAttribute("spellcheck", "false");
+  input.setAttribute("placeholder", options.placeholder || "dd/mm/yyyy");
+  if (!input.parentElement || !input.parentElement.classList.contains("dla-date-field")) {
+    const wrap = document.createElement("div");
+    wrap.className = "dla-date-field";
+    input.parentNode.insertBefore(wrap, input);
+    wrap.appendChild(input);
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "dla-date-trigger";
+    trigger.setAttribute("aria-label", "Open calendar");
+    trigger.innerHTML = "&#128197;";
+    wrap.appendChild(trigger);
+    if (options.clearable !== false) {
+      const clearBtn = document.createElement("button");
+      clearBtn.type = "button";
+      clearBtn.className = "dla-date-clear";
+      clearBtn.setAttribute("aria-label", "Clear date");
+      clearBtn.textContent = "×";
+      clearBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setDateInputDisplay(input, "");
+        if (typeof onChange === "function") onChange("");
+      });
+      wrap.appendChild(clearBtn);
+    }
+    trigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      openDdMmDatePicker(input, onChange, options);
+    });
+  }
+  input.addEventListener("click", () => openDdMmDatePicker(input, onChange, options));
+}
+function openDdMmDatePicker(input, onChange, options) {
+  options = options || {};
+  const current = readDateInputIso(input) || options.defaultIso || "";
+  DlaDatePicker.open(input, {
+    iso: current || localIsoFromDate(new Date()),
+    min: options.min || "",
+    max: options.max || "",
+    onSelect: (iso) => {
+      setDateInputDisplay(input, iso);
+      if (typeof onChange === "function") onChange(iso);
+    },
+  });
+}
+function localIsoFromDate(dt) {
+  const y = dt.getFullYear();
+  const m = String(dt.getMonth() + 1).padStart(2, "0");
+  const d = String(dt.getDate()).padStart(2, "0");
+  return y + "-" + m + "-" + d;
+}
+function bindDdMmDateInput(el, onChange, options) {
+  bindDdMmDatePicker(el, onChange, options);
+}
+    const payload = JSON.parse(document.getElementById('dashboard-data').textContent);
+    const PREFS_KEY = 'dla-control-center-v1';
+    const state = { group: 'all', status: 'all', freshness: 'all', query: '', selectedFile: '', savedPerDashboard: {} };
+    const $ = (id) => document.getElementById(id);
+    const toast = $('toast');
+    const statusOrder = ['Primary', 'Operational', 'Reference', 'Discovered'];
+
+    function compareIso(a, b) {
+      return String(a || '').localeCompare(String(b || ''));
+    }
+
+    function saveControlCenterPrefs() {
+      const item = selectedDashboard();
+      const perDashboard = Object.assign({}, state.savedPerDashboard || {});
+      if (item?.variants?.length) {
+        perDashboard[item.file] = {
+          variantFile: item.currentVariantFile || '',
+          from: readDateInputIso($('timeFrom')),
+          to: readDateInputIso($('timeTo')),
+          cw: $('timeCw').value || ''
+        };
+      }
+      state.savedPerDashboard = perDashboard;
+      saveDashboardPrefs(PREFS_KEY, {
+        group: state.group,
+        status: state.status,
+        query: state.query,
+        selectedFile: state.selectedFile,
+        perDashboard
+      });
+    }
+
+    function restoreControlCenterPrefs() {
+      const prefs = loadDashboardPrefs(PREFS_KEY);
+      if (!prefs) return;
+      if (prefs.group) {
+        state.group = prefs.group;
+        $('groupFilter').value = prefs.group;
+      }
+      if (prefs.status) {
+        state.status = prefs.status;
+        $('statusFilter').value = prefs.status;
+      }
+      if (typeof prefs.query === 'string') {
+        state.query = prefs.query;
+        $('searchBox').value = prefs.query;
+      }
+      if (prefs.selectedFile) state.selectedFile = prefs.selectedFile;
+      if (prefs.perDashboard && typeof prefs.perDashboard === 'object') {
+        state.savedPerDashboard = prefs.perDashboard;
+        Object.entries(prefs.perDashboard).forEach(([file, cfg]) => {
+          const item = payload.dashboards.find(row => row.file === file);
+          if (item && cfg?.variantFile) item.currentVariantFile = cfg.variantFile;
+        });
+      }
+    }
+
+    function variantSpanDays(row) {
+      if (!row?.start || !row?.end) return Number.MAX_SAFE_INTEGER;
+      const start = new Date(row.start + 'T00:00:00');
+      const end = new Date(row.end + 'T00:00:00');
+      if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return Number.MAX_SAFE_INTEGER;
+      return Math.max(0, Math.round((end - start) / 86400000));
+    }
+
+    function findVariantForRange(item, from, to, cw) {
+      const variants = item?.variants || [];
+      if (!from || !to) return { variant: null, reason: 'missing-dates' };
+      if (compareIso(from, to) > 0) return { variant: null, reason: 'invalid-order' };
+
+      const exact = variants.find(row => row.start === from && row.end === to);
+      if (exact) return { variant: exact, mode: 'exact' };
+
+      if (cw) {
+        const cwMatches = variants.filter(row => row.cw === cw && compareIso(row.start, from) <= 0 && compareIso(row.end, to) >= 0);
+        if (cwMatches.length) {
+          cwMatches.sort((a, b) => variantSpanDays(a) - variantSpanDays(b));
+          return { variant: cwMatches[0], mode: 'cw-cover' };
+        }
+      }
+
+      const covering = variants.filter(row => row.start && row.end && compareIso(row.start, from) <= 0 && compareIso(row.end, to) >= 0);
+      if (covering.length) {
+        covering.sort((a, b) => variantSpanDays(a) - variantSpanDays(b));
+        return { variant: covering[0], mode: 'cover' };
+      }
+
+      return { variant: null, reason: 'no-file' };
+    }
+
+    function init() {
+      $('generatedText').textContent = `Generated ${payload.generatedAt} · Inspired by shadcn dashboard shell`;
+      renderMetrics();
+      renderFilters();
+      restoreControlCenterPrefs();
+      bindEvents();
+      bindDdMmDatePicker($('timeFrom'), saveControlCenterPrefs);
+      bindDdMmDatePicker($('timeTo'), saveControlCenterPrefs);
+      render();
+    }
+
+    function renderMetrics() {
+      const metrics = [
+        ['Dashboards', payload.metrics.total, 'HTML outputs found'],
+        ['Registered', payload.metrics.registered, 'Known in memory map'],
+        ['Fresh', payload.metrics.fresh, 'Updated within 3 days'],
+        ['Stale', payload.metrics.stale, 'Older than 14 days'],
+        ['Mantis Cache', compactNumber(payload.metrics.cacheRows), payload.cacheDisplay || 'Run refresh_mantis_dashboard_cache.py']
+      ];
+      $('metrics').innerHTML = metrics.map(([label, value, note]) => `
+        <article class="metric">
+          <div class="label">${escapeHtml(label)}</div>
+          <div class="value">${escapeHtml(String(value))}</div>
+          <div class="note">${escapeHtml(note)}</div>
+        </article>
+      `).join('');
+    }
+
+    function renderFilters() {
+      const groupOptions = ['all', ...payload.groups];
+      $('groupFilter').innerHTML = groupOptions.map(group => `<option value="${escapeAttr(group)}">${group === 'all' ? 'All groups' : escapeHtml(group)}</option>`).join('');
+      const statuses = [...new Set(payload.dashboards.map(d => d.status))].sort((a, b) => statusOrder.indexOf(a) - statusOrder.indexOf(b));
+      $('statusFilter').innerHTML += statuses.map(status => `<option value="${escapeAttr(status)}">${escapeHtml(status)}</option>`).join('');
+    }
+
+    function bindEvents() {
+      $('searchBox').addEventListener('input', (event) => { state.query = event.target.value.trim().toLowerCase(); render(); saveControlCenterPrefs(); });
+      $('groupFilter').addEventListener('change', (event) => { state.group = event.target.value; render(); saveControlCenterPrefs(); });
+      $('statusFilter').addEventListener('change', (event) => { state.status = event.target.value; render(); saveControlCenterPrefs(); });
+      $('resetButton').addEventListener('click', resetFilters);
+      $('dashboardCatalog').addEventListener('click', (event) => {
+        const button = event.target.closest('[data-file]');
+        if (!button) return;
+        selectDashboard(button.dataset.file);
+      });
+      $('viewerCopyRefresh').addEventListener('click', () => {
+        const refresh = selectedDashboard()?.refresh || '';
+        if (!refresh) {
+          showToast('No refresh command registered for this dashboard.');
+          return;
+        }
+        copyText(refresh);
+      });
+      $('viewerCopyFile').addEventListener('click', () => {
+        const file = selectedDashboard()?.file || '';
+        if (!file) {
+          showToast('No dashboard file selected.');
+          return;
+        }
+        copyText(file);
+      });
+      $('viewerPrint').addEventListener('click', printSelectedDashboard);
+      $('timeRangeSelect').addEventListener('change', (event) => {
+        const item = selectedDashboard();
+        const variant = (item?.variants || []).find(row => row.file === event.target.value);
+        if (!variant) return;
+        item.currentVariantFile = variant.file;
+        renderViewer();
+        saveControlCenterPrefs();
+      });
+      $('timeCw').addEventListener('change', (event) => {
+        const item = selectedDashboard();
+        if (!item?.variants?.length) return;
+        const cw = event.target.value;
+        if (!cw) return;
+        const from = readDateInputIso($('timeFrom'));
+        const to = readDateInputIso($('timeTo'));
+        const match = findVariantForRange(item, from, to, cw);
+        if (match.variant) {
+          item.currentVariantFile = match.variant.file;
+          renderViewer();
+          saveControlCenterPrefs();
+          return;
+        }
+        const cwOnly = item.variants.filter(row => row.cw === cw).sort((a, b) => compareIso(b.start, a.start));
+        if (cwOnly.length) {
+          item.currentVariantFile = cwOnly[0].file;
+          renderViewer();
+          saveControlCenterPrefs();
+        }
+      });
+      $('timeApply').addEventListener('click', applyTimeRange);
+      $('dashboardFrame').addEventListener('load', expandFrameContent);
+      $('themeToggle').addEventListener('click', toggleTheme);
+    }
+
+    function resetFilters() {
+      state.group = 'all';
+      state.status = 'all';
+      state.freshness = 'all';
+      state.query = '';
+      $('searchBox').value = '';
+      $('groupFilter').value = 'all';
+      $('statusFilter').value = 'all';
+      render();
+      saveControlCenterPrefs();
+    }
+
+    function filteredDashboards() {
+      return payload.dashboards.filter(item => {
+        if (state.group !== 'all' && item.group !== state.group) return false;
+        if (state.status !== 'all' && item.status !== state.status) return false;
+        if (state.freshness !== 'all' && item.freshness !== state.freshness) return false;
+        if (state.query) {
+          const haystack = [item.title, item.file, item.group, item.owner, item.source, item.memory, item.refresh].join(' ').toLowerCase();
+          if (!haystack.includes(state.query)) return false;
+        }
+        return true;
+      });
+    }
+
+    function render() {
+      const rows = filteredDashboards();
+      ensureSelection(rows);
+      renderCatalog(rows);
+      renderViewer();
+    }
+
+    function ensureSelection(rows) {
+      const stillVisible = rows.some(item => item.exists && item.file === state.selectedFile);
+      if (state.selectedFile && stillVisible) return;
+      const first = rows.find(item => item.exists);
+      state.selectedFile = first ? first.file : '';
+    }
+
+    function selectedDashboard() {
+      return payload.dashboards.find(item => item.file === state.selectedFile) || null;
+    }
+
+    function selectedVariant(item) {
+      if (!item?.variants?.length) return null;
+      return item.variants.find(row => row.file === item.currentVariantFile) || item.variants[0];
+    }
+
+    function renderCatalog(rows) {
+      $('dashboardCatalog').innerHTML = rows.map(item => {
+        const active = item.file === state.selectedFile ? 'active' : '';
+        const disabled = item.exists ? '' : 'disabled';
+        return `
+          <button class="catalog-item ${active}" data-file="${escapeAttr(item.file)}" ${disabled}>
+            <strong>${escapeHtml(item.title)}</strong>
+            <span class="catalog-meta">
+              <span class="catalog-file">${escapeHtml(item.group)}</span>
+              <span>${item.variants?.length ? `${item.variants.length} ranges` : escapeHtml(item.freshness)}</span>
+            </span>
+          </button>
+        `;
+      }).join('') || '<div class="empty">No dashboards match.</div>';
+    }
+
+    function selectDashboard(file) {
+      const item = payload.dashboards.find(row => row.file === file && row.exists);
+      if (!item) return;
+      state.selectedFile = file;
+      renderCatalog(filteredDashboards());
+      renderViewer();
+      saveControlCenterPrefs();
+    }
+
+    function renderViewer() {
+      const item = selectedDashboard();
+      if (!item) {
+        $('viewerTitle').textContent = 'No dashboard selected';
+        $('viewerMeta').textContent = 'Adjust filters or search.';
+        $('dashboardFrame').removeAttribute('src');
+        $('viewerOpen').removeAttribute('href');
+        return;
+      }
+      const variant = selectedVariant(item);
+      const frameItem = variant || item;
+      renderTimeRangeSelect(item, variant);
+      $('viewerTitle').textContent = item.title;
+      $('viewerMeta').textContent = `${frameItem.file} · ${item.group} · ${frameItem.modifiedDisplay} · ${frameItem.size}`;
+      $('dashboardFrame').src = frameItem.href;
+      $('viewerOpen').href = frameItem.href;
+      setTimeout(expandFrameContent, 250);
+      setTimeout(expandFrameContent, 900);
+    }
+
+    function renderTimeRangeSelect(item, variant) {
+      const select = $('timeRangeSelect');
+      if (!item?.variants?.length) {
+        select.classList.add('hidden');
+        $('timeRangeTools').classList.remove('active');
+        select.innerHTML = '';
+        return;
+      }
+      select.classList.remove('hidden');
+      select.innerHTML = item.variants.map(row => `<option value="${escapeAttr(row.file)}">${escapeHtml(row.label)}</option>`).join('');
+      select.value = (variant || item.variants[0]).file;
+      $('timeRangeTools').classList.add('active');
+      const base = variant || item.variants[0];
+      const saved = state.savedPerDashboard?.[item.file] || {};
+      setDateInputDisplay($('timeFrom'), saved.from || base.start || '');
+      setDateInputDisplay($('timeTo'), saved.to || base.end || '');
+      const weeks = [...new Set(item.variants.map(row => row.cw).filter(Boolean))].sort().reverse();
+      $('timeCw').innerHTML = '<option value="">CW</option>' + weeks.map(week => `<option value="${escapeAttr(week)}">${escapeHtml(week)}</option>`).join('');
+      $('timeCw').value = saved.cw || base.cw || '';
+    }
+
+    function printSelectedDashboard() {
+      const frame = $('dashboardFrame');
+      try {
+        frame.contentWindow.focus();
+        frame.contentWindow.print();
+      } catch {
+        showToast('Open the dashboard, then use browser Print to save PDF.');
+      }
+    }
+
+    function applyTimeRange() {
+      const item = selectedDashboard();
+      if (!item?.variants?.length) {
+        showToast('Date range controls only apply to Digital Team Time Tracking.');
+        return;
+      }
+      const from = readDateInputIso($('timeFrom'));
+      const to = readDateInputIso($('timeTo'));
+      const cw = $('timeCw').value;
+      if (!from || !to) {
+        showToast('Choose both From and To dates (dd/mm/yyyy).');
+        return;
+      }
+      if (compareIso(from, to) > 0) {
+        showToast('From date must be on or before To date.');
+        return;
+      }
+      const match = findVariantForRange(item, from, to, cw);
+      if (match.variant) {
+        item.currentVariantFile = match.variant.file;
+        renderViewer();
+        saveControlCenterPrefs();
+        if (match.mode === 'exact') {
+          showToast(`Loaded ${match.variant.label}`);
+        } else {
+          showToast(`Loaded ${match.variant.label} (closest available range covering ${fmtIsoDate(from)} to ${fmtIsoDate(to)})`);
+        }
+        return;
+      }
+      const template = item.rangeRefreshTemplate || 'python -m dashboard_assistant --month {from}..{to} --team digital --react --limit 20 --strict-dq';
+      copyText(template.replaceAll('{from}', from).replaceAll('{to}', to));
+      showToast(`No HTML for ${fmtIsoDate(from)} to ${fmtIsoDate(to)}. Refresh command copied — run it, then rebuild control center.`);
+    }
+
+    function expandFrameContent() {
+      const frame = $('dashboardFrame');
+      try {
+        const doc = frame.contentDocument || frame.contentWindow.document;
+        if (!doc || doc.getElementById('dla-full-frame-style')) return;
+        const style = doc.createElement('style');
+        style.id = 'dla-full-frame-style';
+        style.textContent = `
+          html, body { width: 100% !important; max-width: none !important; overflow-x: hidden !important; }
+          body { margin-left: 0 !important; margin-right: 0 !important; }
+          .wrap, .shell, .main, .container, .dashboard, .dashboard-shell, .page, main {
+            width: 100% !important;
+            max-width: none !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+          }
+          .card, .panel, .section, .project-section, .chart-panel {
+            max-width: none !important;
+          }
+        `;
+        doc.head.appendChild(style);
+      } catch {
+        // Cross-origin or protected frame. Local dashboards should allow this.
+      }
+    }
+
+    async function copyText(text) {
+      if (!text) {
+        showToast('Nothing to copy.');
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast('Copied to clipboard');
+      } catch {
+        showToast(text);
+      }
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 4200);
+    }
+
+    function toggleTheme() {
+      const root = document.documentElement;
+      const dark = root.dataset.theme !== 'dark';
+      root.dataset.theme = dark ? 'dark' : 'light';
+      if (dark) {
+        root.style.setProperty('--bg', '#0f172a');
+        root.style.setProperty('--panel', '#111827');
+        root.style.setProperty('--text', '#e5e7eb');
+        root.style.setProperty('--muted', '#94a3b8');
+        root.style.setProperty('--line', '#263447');
+        root.style.setProperty('--line-strong', '#334155');
+        root.style.setProperty('--sidebar', '#111827');
+      } else {
+        root.removeAttribute('style');
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
+    }
+    function escapeAttr(value) { return escapeHtml(value); }
+    function compactNumber(value) { return Number(value || 0).toLocaleString('en-US'); }
+    init();
+  </script>
+</body>
+</html>
