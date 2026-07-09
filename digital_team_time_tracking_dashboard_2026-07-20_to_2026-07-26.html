@@ -411,6 +411,7 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 }
 body { margin: 0; color: var(--ink); background: var(--bg); }
 #app { display: contents; min-height: 100vh; }
+#tt-root { display: contents; }
 .shell { width: calc(100% - 32px); max-width: none; margin: 0 auto; padding: 18px 0; }
 .shell.bento-grid { width: 100%; padding: 16px; max-width: 1840px; }
 .tt-toolbar { grid-column: span 12; }
@@ -804,7 +805,7 @@ body {
 </head>
 <body>
   <div id="app"></div>
-  <script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-09T13:03:36","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["dahn.nguyen","hu.dam"],"2026-07-21":["dahn.nguyen","hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
+  <script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-09T13:44:39","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["dahn.nguyen","hu.dam"],"2026-07-21":["dahn.nguyen","hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
   <script>
   (function () {
     function fmtIsoDate(iso) {
@@ -1066,11 +1067,11 @@ function bindDdMmDateInput(el, onChange, options) {
 }
 function loadLayout(dashboardId) {
   try {
-    for (const ver of [3, 2, 1]) {
+    for (const ver of [4, 3, 2, 1]) {
       const raw = localStorage.getItem(`dla-bento-layout:v${ver}:${dashboardId}`);
       if (!raw) continue;
       const parsed = JSON.parse(raw);
-      if (ver !== 3) saveDashboardPrefs(`dla-bento-layout:v3:${dashboardId}`, parsed);
+      parsed._loadedFromVersion = ver;
       return parsed;
     }
   } catch {
@@ -1086,7 +1087,7 @@ function saveDashboardPrefs(key, value) {
   }
 }
 const DlaBentoLayout = (() => {
-  const VERSION = 3;
+  const VERSION = 4;
   const COLS = 12;
   const mounted = new WeakMap();
 
@@ -1192,37 +1193,110 @@ const DlaBentoLayout = (() => {
     return Math.max(1, Math.min(COLS - cs + 1, c));
   }
 
-  function packLayoutFromVisual(grid, onlyMissing = true) {
-    const m = gridMetrics(grid);
-    const gridRect = grid.getBoundingClientRect();
-    const scrollTop = grid.scrollTop || 0;
-    const list = tiles(grid)
-      .filter((el) => !(onlyMissing && el.dataset.bentoCol))
-      .map((el) => {
-        const rect = el.getBoundingClientRect();
-        return {
-          el,
-          top: rect.top - gridRect.top + scrollTop,
-          left: rect.left - gridRect.left,
-          cs: Number(el.dataset.bentoColSpan || defaultSpan(el)),
-        };
-      })
-      .sort((a, b) => (a.top - b.top) || (a.left - b.left));
-
+  function packLayoutDefault(grid, onlyMissing = true) {
+    const list = sortedTiles(grid).filter((el) => !(onlyMissing && el.dataset.bentoCol));
     let row = 1;
-    let bandTop = -Infinity;
-    for (const item of list) {
-      if (item.top - bandTop > 36) {
-        if (bandTop !== -Infinity) row += 1;
-        bandTop = item.top;
+    let col = 1;
+    for (const el of list) {
+      const cs = Math.max(1, Math.min(COLS, Number(el.dataset.bentoColSpan || defaultSpan(el))));
+      const rs = defaultRowSpan(el);
+      if (cs >= COLS) {
+        if (col > 1) {
+          row += 1;
+          col = 1;
+        }
+        applyPlacement(el, { c: 1, cs: COLS, r: row, rs });
+        row += rs;
+        col = 1;
+        continue;
       }
-      const c = columnFromLeft(item.left, item.cs, m);
-      applyPlacement(item.el, { c, cs: item.cs, r: row, rs: 1 });
-      if (item.cs >= 12) {
+      if (col + cs - 1 > COLS) {
         row += 1;
-        bandTop = -Infinity;
+        col = 1;
+      }
+      applyPlacement(el, { c: col, cs, r: row, rs });
+      col += cs;
+      if (col > COLS) {
+        row += 1;
+        col = 1;
       }
     }
+  }
+
+  function sortedTiles(grid) {
+    return tiles(grid)
+      .map((el, idx) => ({
+        el,
+        idx,
+        order: Number(el.dataset.bentoOrder || 0),
+      }))
+      .sort((a, b) => (a.order - b.order) || (a.idx - b.idx))
+      .map((item) => item.el);
+  }
+
+  function defaultRowSpan(el) {
+    const rs = Number(el.dataset.bentoRowSpan || 0);
+    return rs > 0 ? rs : 1;
+  }
+
+  function packOrphans(grid) {
+    for (const el of tiles(grid).filter((t) => !t.dataset.bentoCol)) {
+      const cs = Math.max(1, Math.min(COLS, Number(el.dataset.bentoColSpan || defaultSpan(el))));
+      const rs = defaultRowSpan(el);
+      let placed = false;
+      for (let row = 1; row < 400 && !placed; row += 1) {
+        for (let col = 1; col <= COLS - cs + 1; col += 1) {
+          const test = { c: col, cs, r: row, rs };
+          if (!findOccupants(grid, el, test).length) {
+            applyPlacement(el, test);
+            placed = true;
+            break;
+          }
+        }
+      }
+      if (!placed) applyPlacement(el, { c: 1, cs, r: 1, rs });
+    }
+  }
+
+  function packLayoutFromVisual(grid, onlyMissing = true) {
+    packLayoutDefault(grid, onlyMissing);
+  }
+
+  function isLayoutCorrupt(layout) {
+    const items = Object.values(layout?.items || {});
+    if (items.length < 4) return false;
+    const atCol1 = items.filter((p) => Number(p.c || 1) === 1).length;
+    if (atCol1 / items.length >= 0.85) return true;
+    const rows = items.map((p) => Number(p.r || 1));
+    const smallSpans = items.filter((p) => Number(p.cs || 1) <= 4).length;
+    if (smallSpans >= 4) {
+      const uniqueRows = new Set(rows).size;
+      if (uniqueRows >= smallSpans * 0.8) return true;
+    }
+    return false;
+  }
+
+  function applyLayoutFromStorageOrDefault(grid, dashboardId) {
+    const saved = loadLayout(dashboardId);
+    if (saved?.items && !isLayoutCorrupt(saved)) {
+      applySaved(grid, saved);
+      if (saved._loadedFromVersion && saved._loadedFromVersion !== VERSION) {
+        const st = getState(grid);
+        if (st) persist(st);
+      }
+      return;
+    }
+    if (saved?.items && isLayoutCorrupt(saved)) {
+      try {
+        localStorage.removeItem(storageKey(dashboardId));
+        for (const ver of [3, 2, 1]) {
+          localStorage.removeItem(`dla-bento-layout:v${ver}:${dashboardId}`);
+        }
+      } catch {
+        // ignore
+      }
+    }
+    packLayoutDefault(grid, false);
   }
 
   function findRowForTop(grid, dragging, topPx) {
@@ -1335,7 +1409,7 @@ const DlaBentoLayout = (() => {
       if (saved) applyPlacement(el, saved);
     }
     const orphans = tiles(grid).filter((el) => !el.dataset.bentoCol);
-    if (orphans.length) packLayoutFromVisual(grid, true);
+    if (orphans.length) packOrphans(grid);
   }
 
   function metaToolbarHost(grid) {
@@ -1443,7 +1517,7 @@ const DlaBentoLayout = (() => {
     state.grid.classList.toggle("bento-layout-editing", on);
     if (on) {
       const saved = loadLayout(state.dashboardId);
-      if (!saved?.items) packLayoutFromVisual(state.grid, true);
+      if (!saved?.items) packLayoutDefault(state.grid, true);
       decorateTiles(state);
     } else {
       for (const el of tiles(state.grid)) el.classList.remove("bento-tile-dragging");
@@ -1670,7 +1744,7 @@ const DlaBentoLayout = (() => {
     ensureToolbar(grid, state, toolbarMode);
 
     const saved = loadLayout(dashboardId);
-    if (saved?.items) applySaved(grid, saved);
+    applyLayoutFromStorageOrDefault(grid, dashboardId);
     if (state.editing) decorateTiles(state);
     window.__dlaBentoReady = true;
     return state;
@@ -1683,12 +1757,7 @@ const DlaBentoLayout = (() => {
     mount(grid, Object.assign({ dashboardId: id }, options || {}));
     const state = getState(grid);
     if (!state) return;
-    const saved = loadLayout(id);
-    if (saved?.items) applySaved(grid, saved);
-    else if (!state.editing) {
-      const orphans = tiles(grid).filter((el) => !el.dataset.bentoCol);
-      if (orphans.length) packLayoutFromVisual(grid, true);
-    }
+    applyLayoutFromStorageOrDefault(grid, id);
     if (state.editing) decorateTiles(state);
     window.__dlaBentoReady = true;
   }
@@ -1700,12 +1769,7 @@ const DlaBentoLayout = (() => {
     const state = getState(grid) || mount(grid, Object.assign({ dashboardId: id }, options || {}));
     if (!state) return;
     state.dashboardId = id;
-    const saved = loadLayout(id);
-    if (saved?.items) applySaved(grid, saved);
-    else {
-      const orphans = tiles(grid).filter((el) => !el.dataset.bentoCol);
-      if (orphans.length) packLayoutFromVisual(grid, true);
-    }
+    applyLayoutFromStorageOrDefault(grid, id);
     if (state.editing) decorateTiles(state);
   }
 
@@ -1742,11 +1806,11 @@ const DlaBentoLayout = (() => {
     const state = getState(root) || mount(root, { dashboardId: root.dataset.bentoDashboard, toolbar: "none" });
     if (!state) return false;
     localStorage.removeItem(storageKey(state.dashboardId));
-    for (const ver of [2, 1]) {
+    for (const ver of [3, 2, 1]) {
       try { localStorage.removeItem(`dla-bento-layout:v${ver}:${state.dashboardId}`); } catch { /* ignore */ }
     }
     clearPlacements(state.grid);
-    packLayoutFromVisual(state.grid, false);
+    packLayoutDefault(state.grid, false);
     if (state.editing) decorateTiles(state);
     return true;
   }
