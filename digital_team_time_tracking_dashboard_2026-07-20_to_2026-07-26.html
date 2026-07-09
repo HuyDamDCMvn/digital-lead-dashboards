@@ -246,6 +246,112 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 .meta-warning { color: #b91c1c; font-weight: 600; font-size: 0.8125rem; margin: 8px 0 0; }
 
 
+.bento-grid.bento-layout-root {
+  position: relative;
+  grid-auto-rows: minmax(72px, auto);
+}
+.bento-grid.bento-layout-editing > [data-bento-id] {
+  outline: 2px dashed var(--accent, #0f766e);
+  outline-offset: -2px;
+  cursor: default;
+  touch-action: none;
+}
+.bento-grid.bento-layout-editing > [data-bento-id] .bento-drag-handle {
+  display: flex;
+}
+.bento-drag-handle {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  margin: -4px 0 8px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--accent-soft, #ccfbf1);
+  color: var(--accent-strong, #115e59);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: grab;
+  user-select: none;
+}
+.bento-drag-handle::before {
+  content: "⋮⋮";
+  font-size: 0.875rem;
+  line-height: 1;
+}
+.bento-drag-handle:active { cursor: grabbing; }
+.bento-resize-handle {
+  display: none;
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--accent, #0f766e);
+  cursor: nwse-resize;
+  opacity: 0.85;
+  z-index: 3;
+}
+.bento-grid.bento-layout-editing > [data-bento-id] {
+  position: relative;
+}
+.bento-grid.bento-layout-editing > [data-bento-id] .bento-resize-handle {
+  display: block;
+}
+.bento-layout-toolbar {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 1200;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: min(420px, calc(100vw - 24px));
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line, #e2e8f0);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14);
+  backdrop-filter: blur(8px);
+}
+.bento-layout-toolbar button {
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink, #0f172a);
+  padding: 7px 12px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.bento-layout-toolbar button:hover { background: var(--surface-raised, #f8fafc); }
+.bento-layout-toolbar button.primary {
+  background: var(--accent, #0f766e);
+  border-color: var(--accent, #0f766e);
+  color: #fff;
+}
+.bento-layout-drop-indicator {
+  position: absolute;
+  border: 2px solid var(--accent, #0f766e);
+  border-radius: 10px;
+  background: rgba(15, 118, 110, 0.08);
+  pointer-events: none;
+  z-index: 2;
+  display: none;
+}
+@media (max-width: 767px) {
+  .bento-layout-toolbar {
+    right: 10px;
+    left: 10px;
+    bottom: 10px;
+    justify-content: stretch;
+  }
+  .bento-layout-toolbar button { flex: 1 1 auto; }
+}
+
+
 :root {
   --deep: var(--hero-bg);
   --teal: var(--accent);
@@ -273,10 +379,7 @@ body { margin: 0; color: var(--ink); background: var(--bg); }
 .tt-toolbar { grid-column: span 12; }
 .tt-chips { grid-column: span 12; }
 .tt-kpis {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--bento-gap);
-  grid-column: span 12;
+  display: contents;
 }
 .tt-kpis > .card { grid-column: span 2; min-width: 0; }
 .tt-compliance-panel { grid-column: span 12; }
@@ -664,7 +767,7 @@ body {
 </head>
 <body>
   <div id="app"></div>
-  <script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-09T10:12:31","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["dahn.nguyen","hu.dam"],"2026-07-21":["dahn.nguyen","hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
+  <script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-09T10:31:49","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["dahn.nguyen","hu.dam"],"2026-07-21":["dahn.nguyen","hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
   <script>
   (function () {
     function fmtIsoDate(iso) {
@@ -916,6 +1019,318 @@ function localIsoFromDate(dt) {
 function bindDdMmDateInput(el, onChange, options) {
   bindDdMmDatePicker(el, onChange, options);
 }
+    function loadDashboardPrefs(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+function saveDashboardPrefs(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // ignore quota / private mode
+  }
+}
+const DlaBentoLayout = (() => {
+  const VERSION = 1;
+  const COLS = 12;
+  const mounted = new WeakMap();
+
+  function storageKey(dashboardId) {
+    return `dla-bento-layout:v${VERSION}:${dashboardId}`;
+  }
+
+  function tiles(grid) {
+    const out = [];
+    for (const child of grid.children) {
+      if (child.matches("[data-bento-id]")) {
+        out.push(child);
+        continue;
+      }
+      if (child.matches("[data-bento-host]") || child.id === "app") {
+        out.push(...Array.from(child.children).filter((el) => el.matches("[data-bento-id]")));
+      }
+    }
+    return out;
+  }
+
+  function defaultSpan(el) {
+    const attr = Number(el.dataset.bentoSpan || el.getAttribute("data-bento-span") || 0);
+    if (attr > 0) return Math.min(COLS, attr);
+    const match = String(el.className || "").match(/bento-span-(\d+)/);
+    if (match) return Math.min(COLS, Number(match[1]));
+    const cls = ["tt-project", "tt-detail", "tt-breakdown", "tt-compliance-panel"];
+    if (el.classList.contains("tt-compliance-panel") || el.classList.contains("tt-entries")) return 12;
+    if (el.classList.contains("tt-project")) return 7;
+    if (el.classList.contains("tt-detail")) return 5;
+    if (el.classList.contains("tt-breakdown")) return 4;
+    if (el.classList.contains("tt-toolbar") || el.classList.contains("tt-chips")) return 12;
+    return 6;
+  }
+
+  function readPlacement(el) {
+    const cs = getComputedStyle(el);
+    const col = Number(el.dataset.bentoCol || 0);
+    const span = Number(el.dataset.bentoColSpan || 0);
+    const row = Number(el.dataset.bentoRow || 0);
+    const rowSpan = Number(el.dataset.bentoRowSpan || 1);
+    if (col && span) {
+      return { c: col, cs: span, r: row || 1, rs: rowSpan || 1 };
+    }
+    const gc = cs.gridColumnStart;
+    const gspan = cs.gridColumnEnd;
+    const gr = cs.gridRowStart;
+    const grs = cs.gridRowEnd;
+    let c = 1;
+    let csVal = defaultSpan(el);
+    let r = 1;
+    let rs = 1;
+    if (gc && gc !== "auto") c = Number(gc);
+    if (gspan && gspan !== "auto" && String(gspan).includes("span")) {
+      csVal = Number(String(gspan).replace("span", "").trim()) || csVal;
+    }
+    if (gr && gr !== "auto") r = Number(gr);
+    if (grs && grs !== "auto" && String(grs).includes("span")) {
+      rs = Number(String(grs).replace("span", "").trim()) || 1;
+    }
+    return { c, cs: csVal, r, rs };
+  }
+
+  function applyPlacement(el, p) {
+    const c = Math.max(1, Math.min(COLS, Number(p.c || 1)));
+    const cs = Math.max(1, Math.min(COLS, Number(p.cs || defaultSpan(el))));
+    const safeC = Math.min(c, COLS - cs + 1);
+    const r = Math.max(1, Number(p.r || 1));
+    const rs = Math.max(1, Number(p.rs || 1));
+    el.style.gridColumn = `${safeC} / span ${cs}`;
+    el.style.gridRow = `${r} / span ${rs}`;
+    el.dataset.bentoCol = String(safeC);
+    el.dataset.bentoColSpan = String(cs);
+    el.dataset.bentoRow = String(r);
+    el.dataset.bentoRowSpan = String(rs);
+  }
+
+  function defaultLayout(grid) {
+    const items = {};
+    let row = 1;
+    for (const el of tiles(grid)) {
+      const cs = defaultSpan(el);
+      items[el.dataset.bentoId] = { c: 1, cs, r: row, rs: 1 };
+      row += 1;
+    }
+    return { version: VERSION, items };
+  }
+
+  function serialize(grid) {
+    const items = {};
+    for (const el of tiles(grid)) {
+      items[el.dataset.bentoId] = readPlacement(el);
+    }
+    return { version: VERSION, items };
+  }
+
+  function applySaved(grid, layout) {
+    const items = layout?.items || {};
+    let row = 1;
+    for (const el of tiles(grid)) {
+      const id = el.dataset.bentoId;
+      const saved = items[id];
+      if (saved) {
+        applyPlacement(el, saved);
+      } else {
+        applyPlacement(el, { c: 1, cs: defaultSpan(el), r: row, rs: 1 });
+        row += 1;
+      }
+    }
+  }
+
+  function ensureChrome(grid, state) {
+    if (state.toolbar) return;
+    const bar = document.createElement("div");
+    bar.className = "bento-layout-toolbar";
+    bar.innerHTML = `
+      <button type="button" data-bento-edit>Edit layout</button>
+      <button type="button" data-bento-reset hidden>Reset default</button>
+      <button type="button" data-bento-done class="primary" hidden>Done</button>
+    `;
+    const indicator = document.createElement("div");
+    indicator.className = "bento-layout-drop-indicator";
+    grid.appendChild(indicator);
+    document.body.appendChild(bar);
+    state.toolbar = bar;
+    state.indicator = indicator;
+
+    bar.querySelector("[data-bento-edit]").addEventListener("click", () => setEditing(state, true));
+    bar.querySelector("[data-bento-done]").addEventListener("click", () => setEditing(state, false));
+    bar.querySelector("[data-bento-reset]").addEventListener("click", () => {
+      localStorage.removeItem(storageKey(state.dashboardId));
+      applySaved(state.grid, defaultLayout(state.grid));
+      decorateTiles(state);
+      persist(state);
+    });
+  }
+
+  function decorateTiles(state) {
+    for (const el of tiles(state.grid)) {
+      if (!el.querySelector(".bento-drag-handle")) {
+        const handle = document.createElement("div");
+        handle.className = "bento-drag-handle";
+        handle.textContent = "Drag to move";
+        el.prepend(handle);
+      }
+      if (!el.querySelector(".bento-resize-handle")) {
+        const resize = document.createElement("div");
+        resize.className = "bento-resize-handle";
+        resize.title = "Drag to resize width";
+        el.appendChild(resize);
+      }
+    }
+  }
+
+  function persist(state) {
+    saveDashboardPrefs(storageKey(state.dashboardId), serialize(state.grid));
+  }
+
+  function setEditing(state, on) {
+    state.editing = on;
+    state.grid.classList.toggle("bento-layout-editing", on);
+    state.toolbar.querySelector("[data-bento-edit]").hidden = on;
+    state.toolbar.querySelector("[data-bento-reset]").hidden = !on;
+    state.toolbar.querySelector("[data-bento-done]").hidden = !on;
+    if (!on) persist(state);
+  }
+
+  function cellFromPoint(grid, clientX, clientY) {
+    const rect = grid.getBoundingClientRect();
+    const x = Math.max(0, Math.min(rect.width - 1, clientX - rect.left));
+    const y = Math.max(0, clientY - rect.top);
+    const colWidth = rect.width / COLS;
+    const c = Math.max(1, Math.min(COLS, Math.floor(x / colWidth) + 1));
+    const rowHeight = 72;
+    const r = Math.max(1, Math.floor(y / rowHeight) + 1);
+    return { c, r };
+  }
+
+  function showIndicator(state, p, cs) {
+    const rect = state.grid.getBoundingClientRect();
+    const colWidth = rect.width / COLS;
+    state.indicator.style.display = "block";
+    state.indicator.style.left = `${rect.left + (p.c - 1) * colWidth}px`;
+    state.indicator.style.top = `${rect.top + (p.r - 1) * 72}px`;
+    state.indicator.style.width = `${colWidth * cs}px`;
+    state.indicator.style.height = "68px";
+  }
+
+  function hideIndicator(state) {
+    if (state.indicator) state.indicator.style.display = "none";
+  }
+
+  function bindInteractions(state) {
+    if (state.bound) return;
+    state.bound = true;
+
+    function onPointerMove(ev) {
+      if (!state.dragging && !state.resizing) return;
+      if (state.dragging) {
+        const p = cellFromPoint(state.grid, ev.clientX, ev.clientY);
+        const cs = Number(state.dragging.dataset.bentoColSpan || defaultSpan(state.dragging));
+        showIndicator(state, p, cs);
+      }
+      if (state.resizing) {
+        const rect = state.grid.getBoundingClientRect();
+        const colWidth = rect.width / COLS;
+        const delta = ev.clientX - state.resizeStartX;
+        const next = Math.max(2, Math.min(COLS, Math.round(state.resizeStartSpan + delta / colWidth)));
+        applyPlacement(state.resizing, {
+          c: Number(state.resizing.dataset.bentoCol || 1),
+          cs: next,
+          r: Number(state.resizing.dataset.bentoRow || 1),
+          rs: Number(state.resizing.dataset.bentoRowSpan || 1),
+        });
+      }
+    }
+
+    function onPointerUp(ev) {
+      if (state.dragging) {
+        const p = cellFromPoint(state.grid, ev.clientX, ev.clientY);
+        const cs = Number(state.dragging.dataset.bentoColSpan || defaultSpan(state.dragging));
+        applyPlacement(state.dragging, {
+          c: p.c,
+          cs,
+          r: p.r,
+          rs: Number(state.dragging.dataset.bentoRowSpan || 1),
+        });
+        persist(state);
+      }
+      if (state.resizing) persist(state);
+      state.dragging = null;
+      state.resizing = null;
+      hideIndicator(state);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+    }
+
+    state.grid.addEventListener("pointerdown", (ev) => {
+      if (!state.editing) return;
+      const handle = ev.target.closest(".bento-resize-handle");
+      const drag = ev.target.closest(".bento-drag-handle");
+      const tile = ev.target.closest("[data-bento-id]");
+      if (!tile || !state.grid.contains(tile)) return;
+      if (handle) {
+        state.resizing = tile;
+        state.resizeStartX = ev.clientX;
+        state.resizeStartSpan = Number(tile.dataset.bentoColSpan || defaultSpan(tile));
+        ev.preventDefault();
+        window.addEventListener("pointermove", onPointerMove);
+        window.addEventListener("pointerup", onPointerUp);
+        return;
+      }
+      if (drag) {
+        state.dragging = tile;
+        ev.preventDefault();
+        window.addEventListener("pointermove", onPointerMove);
+        window.addEventListener("pointerup", onPointerUp);
+      }
+    });
+  }
+
+  function mount(grid, options) {
+    if (!grid) return null;
+    const dashboardId = options?.dashboardId || grid.dataset.bentoDashboard;
+    if (!dashboardId) return null;
+    grid.classList.add("bento-layout-root");
+    if (!grid.dataset.bentoDashboard) grid.dataset.bentoDashboard = dashboardId;
+
+    let state = mounted.get(grid);
+    if (!state) {
+      state = { grid, dashboardId, editing: false };
+      mounted.set(grid, state);
+      ensureChrome(grid, state);
+      bindInteractions(state);
+    }
+
+    const saved = loadDashboardPrefs(storageKey(dashboardId));
+    if (saved?.items) applySaved(grid, saved);
+    else applySaved(grid, defaultLayout(grid));
+    decorateTiles(state);
+    return state;
+  }
+
+  function apply(grid, dashboardId) {
+    const id = dashboardId || grid?.dataset?.bentoDashboard;
+    if (!grid || !id) return;
+    const state = mount(grid, { dashboardId: id });
+    if (!state) return;
+    const saved = loadDashboardPrefs(storageKey(id));
+    if (saved?.items) applySaved(grid, saved);
+    decorateTiles(state);
+  }
+
+  return { mount, apply, storageKey, VERSION };
+})();
     const DATA = JSON.parse(document.getElementById("dashboard-data").textContent);
     const FILTER_PREFS_KEY = "dla-tt-filters:" + (DATA.month?.label || "default");
     const TARGET = Number(DATA.workdayTargetHours || 7.5);
@@ -1310,8 +1725,8 @@ function bindDdMmDateInput(el, onChange, options) {
       }
 
       app.innerHTML = `
-        <main class="shell bento-grid">
-        <header class="meta-strip bento-span-12">
+        <main class="shell bento-grid" data-bento-dashboard="digital-team-time-tracking">
+        <header class="meta-strip bento-span-12" data-bento-id="tt-meta" data-bento-span="12">
           <div class="meta-strip-main">
             <div>
               <h1 class="meta-title">Digital Team Time Tracking Dashboard</h1>
@@ -1322,8 +1737,8 @@ function bindDdMmDateInput(el, onChange, options) {
             </div>
           </div>
         </header>
-        ${forecastWorkloadHtml ? `<div class="bento-span-12">${forecastWorkloadHtml}</div>` : ""}
-          <section class="toolbar tt-toolbar">
+        ${forecastWorkloadHtml ? `<div class="bento-span-12" data-bento-id="tt-forecast" data-bento-span="12">${forecastWorkloadHtml}</div>` : ""}
+          <section class="toolbar tt-toolbar" data-bento-id="tt-toolbar" data-bento-span="12">
             <div class="control">
               <label>User</label>
               <select id="filter-user">
@@ -1353,19 +1768,17 @@ function bindDdMmDateInput(el, onChange, options) {
             <button type="button" class="action-button" id="reset-filters">Reset filters</button>
           </section>
 
-          <section class="chips tt-chips">
+          <section class="chips tt-chips" data-bento-id="tt-chips" data-bento-span="12">
             ${activeFilterKeys.length ? activeFilterKeys.map((key) => `<span class="chip">${esc(key)}: ${esc(filterChipLabel(key, filters[key]))}<button type="button" data-clear="${esc(key)}">x</button></span>`).join("") : `<span class="empty">No active filters. Click any chart, project row, compliance cell, or ticket row to drill down.</span>`}
           </section>
 
-          <section class="tt-kpis">
-            <div class="card"><div class="kpi-label">Total Hours</div><div class="kpi-value">${fmtHours(totalHours)}</div><div class="kpi-sub">${fmtInt(entries.length)} filtered time entries</div></div>
-            <div class="card"><div class="kpi-label">Projects Worked</div><div class="kpi-value">${fmtInt(projects.length)}</div><div class="kpi-sub">Projects with booked hours</div></div>
-            <div class="card"><div class="kpi-label">Tickets Worked</div><div class="kpi-value">${fmtInt(tickets.length)}</div><div class="kpi-sub">Tickets behind filtered hours</div></div>
-            <div class="card"><div class="kpi-label">Active Members</div><div class="kpi-value">${fmtInt(activeMembers)}</div><div class="kpi-sub">Out of ${fmtInt(DATA.summary.matched_members)}</div></div>
-            <div class="card"><div class="kpi-label">Off-target Hours</div><div class="kpi-value">${fmtHours(compliance.reduce((sum, row) => sum + row.offTargetHours, 0))}</div><div class="kpi-sub">Total deviation from ${fmtHours(TARGET)}h per workday</div></div>
-          </section>
+            <div class="card" data-bento-id="tt-kpi-hours" data-bento-span="2"><div class="kpi-label">Total Hours</div><div class="kpi-value">${fmtHours(totalHours)}</div><div class="kpi-sub">${fmtInt(entries.length)} filtered time entries</div></div>
+            <div class="card" data-bento-id="tt-kpi-projects" data-bento-span="2"><div class="kpi-label">Projects Worked</div><div class="kpi-value">${fmtInt(projects.length)}</div><div class="kpi-sub">Projects with booked hours</div></div>
+            <div class="card" data-bento-id="tt-kpi-tickets" data-bento-span="2"><div class="kpi-label">Tickets Worked</div><div class="kpi-value">${fmtInt(tickets.length)}</div><div class="kpi-sub">Tickets behind filtered hours</div></div>
+            <div class="card" data-bento-id="tt-kpi-members" data-bento-span="2"><div class="kpi-label">Active Members</div><div class="kpi-value">${fmtInt(activeMembers)}</div><div class="kpi-sub">Out of ${fmtInt(DATA.summary.matched_members)}</div></div>
+            <div class="card" data-bento-id="tt-kpi-offtarget" data-bento-span="2"><div class="kpi-label">Off-target Hours</div><div class="kpi-value">${fmtHours(compliance.reduce((sum, row) => sum + row.offTargetHours, 0))}</div><div class="kpi-sub">Total deviation from ${fmtHours(TARGET)}h per workday</div></div>
 
-          <section class="panel tt-compliance-panel">
+          <section class="panel tt-compliance-panel" data-bento-id="tt-compliance" data-bento-span="12">
               <div class="panel-head">
                 <h2>Daily 7.5h Compliance by Member</h2>
                 <div class="panel-note">
@@ -1402,7 +1815,7 @@ function bindDdMmDateInput(el, onChange, options) {
               </div>
           </section>
 
-          <section class="panel tt-project">
+          <section class="panel tt-project" data-bento-id="tt-project" data-bento-span="7">
                 <div class="panel-head">
                   <h2>Project Hours Share</h2>
                   <div class="panel-note">${projects.length ? "Pie chart, legend, and project table are linked" : "No data"}</div>
@@ -1433,7 +1846,7 @@ function bindDdMmDateInput(el, onChange, options) {
                   </div>` : `<div class="empty">No project hours in the current filter scope.</div>`}
           </section>
 
-          <section class="panel tt-detail">
+          <section class="panel tt-detail" data-bento-id="tt-detail" data-bento-span="5">
                 <div class="panel-head">
                   <h2>Ticket Detail</h2>
                   <div class="panel-note">${selectedTicket ? "Selected from the current filters" : "Pick a ticket from any chart or table"}</div>
@@ -1450,7 +1863,7 @@ function bindDdMmDateInput(el, onChange, options) {
                 ` : `<div class="empty">No ticket selected yet.</div>`}
           </section>
 
-          <section class="panel tt-breakdown">
+          <section class="panel tt-breakdown" data-bento-id="tt-breakdown-member" data-bento-span="4">
             <div class="panel-head">
               <h2>By Team Member</h2>
               <div class="panel-note">Click a member bar</div>
@@ -1460,7 +1873,7 @@ function bindDdMmDateInput(el, onChange, options) {
             </div>
           </section>
 
-          <section class="panel tt-breakdown">
+          <section class="panel tt-breakdown" data-bento-id="tt-breakdown-day" data-bento-span="4">
             <div class="panel-head">
               <h2>By Workday</h2>
               <div class="panel-note">Click a day bar</div>
@@ -1470,7 +1883,7 @@ function bindDdMmDateInput(el, onChange, options) {
             </div>
           </section>
 
-          <section class="panel tt-breakdown">
+          <section class="panel tt-breakdown" data-bento-id="tt-breakdown-ticket" data-bento-span="4">
             <div class="panel-head">
               <h2>By Ticket</h2>
               <div class="panel-note">Click a ticket row</div>
@@ -1485,7 +1898,7 @@ function bindDdMmDateInput(el, onChange, options) {
             </div>
           </section>
 
-          <section class="panel tt-entries">
+          <section class="panel tt-entries" data-bento-id="tt-entries" data-bento-span="12">
               <div class="panel-head">
                 <h2>Time Tracking Details</h2>
                 <div class="panel-note">Every filtered Mantis time entry. Click a row to lock the ticket detail.</div>
@@ -1546,6 +1959,8 @@ function bindDdMmDateInput(el, onChange, options) {
         render();
       }));
       app.querySelectorAll("[data-ticket]").forEach((node) => node.addEventListener("click", () => setFilter("ticket", filters.ticket === node.dataset.ticket ? "all" : node.dataset.ticket || "all")));
+      const grid = app.querySelector(".bento-grid") || app;
+      DlaBentoLayout.apply(grid, "digital-team-time-tracking:" + (DATA.month?.label || "default"));
     }
 
     render();
