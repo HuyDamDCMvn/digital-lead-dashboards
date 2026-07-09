@@ -160,6 +160,92 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 }
 
 
+:root { --bento-gap: 14px; }
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--bento-gap);
+  align-items: start;
+}
+.bento-cell { min-width: 0; }
+.bento-span-12 { grid-column: span 12; }
+.bento-span-8 { grid-column: span 8; }
+.bento-span-6 { grid-column: span 6; }
+.bento-span-4 { grid-column: span 4; }
+.bento-span-3 { grid-column: span 3; }
+.bento-span-2 { grid-column: span 2; }
+.bento-nested {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--bento-gap);
+  width: 100%;
+  grid-column: span 12;
+  align-items: start;
+}
+@media (max-width: 1199px) {
+  .bento-span-8, .bento-span-6 { grid-column: span 12; }
+  .bento-span-4, .bento-span-3 { grid-column: span 6; }
+  .bento-span-2 { grid-column: span 4; }
+}
+@media (max-width: 767px) {
+  .bento-span-8, .bento-span-6, .bento-span-4, .bento-span-3, .bento-span-2 {
+    grid-column: span 12;
+  }
+}
+@media print {
+  .bento-grid, .bento-nested { display: block; }
+  .bento-grid > *, .bento-nested > * { break-inside: avoid; margin-bottom: 12px; }
+}
+
+
+.meta-strip {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 14px 18px;
+}
+.meta-strip-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+.meta-title {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-wrap: balance;
+  color: var(--ink);
+}
+.meta-sub { margin: 4px 0 0; color: var(--muted); font-size: 0.875rem; }
+.meta-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.meta-pill {
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.meta-strip .source-panel {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-raised);
+}
+.meta-warning { color: #b91c1c; font-weight: 600; font-size: 0.8125rem; margin: 8px 0 0; }
+
+
 :root {
   --deep: var(--hero-bg);
   --teal: var(--accent);
@@ -182,14 +268,23 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   --compliance-leave-half-bg: #f0f9ff;
 }
 body { margin: 0; color: var(--ink); background: var(--bg); }
-.hero {
-  padding: 24px 26px 18px;
-  background: var(--hero-bg);
-  color: #fff;
-}
-.hero h1 { margin: 0 0 8px; font-size: 1.75rem; font-weight: 700; text-wrap: balance; }
-.hero p { margin: 0; color: #e2e8f0; line-height: 1.45; font-size: 0.9375rem; }
 .shell { width: calc(100% - 32px); max-width: none; margin: 0 auto; padding: 18px 0; }
+.shell.bento-grid { width: 100%; padding: 16px; max-width: 1840px; }
+.tt-toolbar { grid-column: span 12; }
+.tt-chips { grid-column: span 12; }
+.tt-kpis {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--bento-gap);
+  grid-column: span 12;
+}
+.tt-kpis > .card { grid-column: span 2; min-width: 0; }
+.tt-compliance { grid-column: span 12; }
+.tt-main { grid-column: span 8; }
+.tt-aside { grid-column: span 4; position: sticky; top: 12px; }
+.tt-bottom { grid-column: span 12; }
+.top-stack { display: contents; }
+.layout { display: contents; }
 .toolbar {
   display: grid;
   grid-template-columns: repeat(6, minmax(150px, 1fr));
@@ -278,18 +373,11 @@ body { margin: 0; color: var(--ink); background: var(--bg); }
   font-variant-numeric: tabular-nums;
 }
 .kpi-sub { margin-top: 8px; color: var(--muted); font-size: 0.75rem; }
-.layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
-  gap: 14px;
-  align-items: start;
-}
-.top-stack { display: grid; gap: 14px; margin-bottom: 14px; }
 .panel { padding: 16px; min-width: 0; }
 .stack { display: grid; gap: 14px; }
 .split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .analysis-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-.bottom-stack { display: grid; gap: 14px; margin-top: 14px; }
+.bottom-stack { display: contents; }
 .panel-head {
   display: flex;
   justify-content: space-between;
@@ -534,14 +622,16 @@ tr.clickable:hover { background: var(--surface-raised); }
   margin: 0 0 12px;
 }
 @media (max-width: 1240px) {
+  .tt-kpis > .card { grid-column: span 4; }
+  .tt-main, .tt-aside { grid-column: span 12; }
+  .tt-aside { position: static; }
   .layout, .split, .pie-shell, .project-combo, .analysis-grid { grid-template-columns: 1fr; }
   .toolbar { grid-template-columns: repeat(3, minmax(150px, 1fr)); }
 }
 @media (max-width: 760px) {
-  .hero { padding: 22px 16px 14px; }
-  .hero h1 { font-size: 1.4375rem; }
   .shell { padding: 12px; }
   .toolbar, .kpis { grid-template-columns: 1fr; }
+  .tt-kpis > .card { grid-column: span 12; }
   .bar-row { grid-template-columns: 1fr; gap: 4px; }
 }
 
@@ -570,7 +660,7 @@ body {
 </head>
 <body>
   <div id="app"></div>
-  <script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-09T08:24:40","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["dahn.nguyen","hu.dam"],"2026-07-21":["dahn.nguyen","hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
+  <script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-09T10:00:38","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["dahn.nguyen","hu.dam"],"2026-07-21":["dahn.nguyen","hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
   <script>
   (function () {
     function fmtIsoDate(iso) {
@@ -1216,13 +1306,20 @@ function bindDdMmDateInput(el, onChange, options) {
       }
 
       app.innerHTML = `
-        <header class="hero">
-          <h1>Digital Team Time Tracking Dashboard</h1>
-          <p>Period: ${esc(DATA.month.period_display || (DATA.month.start + " to before " + DATA.month.end))}. Generated from live Mantis time tracking at ${esc(fmtIsoDateTime(DATA.generatedAt))}.</p>
+        <main class="shell bento-grid">
+        <header class="meta-strip bento-span-12">
+          <div class="meta-strip-main">
+            <div>
+              <h1 class="meta-title">Digital Team Time Tracking Dashboard</h1>
+              <p class="meta-sub">Period: ${esc(DATA.month.period_display || (DATA.month.start + " to before " + DATA.month.end))}</p>
+            </div>
+            <div class="meta-pills">
+              <span class="meta-pill">Generated ${esc(fmtIsoDateTime(DATA.generatedAt))}</span>
+            </div>
+          </div>
         </header>
-        ${forecastWorkloadHtml}
-        <main class="shell">
-          <section class="toolbar">
+        ${forecastWorkloadHtml ? `<div class="bento-span-12">${forecastWorkloadHtml}</div>` : ""}
+          <section class="toolbar tt-toolbar">
             <div class="control">
               <label>User</label>
               <select id="filter-user">
@@ -1252,11 +1349,11 @@ function bindDdMmDateInput(el, onChange, options) {
             <button type="button" class="action-button" id="reset-filters">Reset filters</button>
           </section>
 
-          <section class="chips">
+          <section class="chips tt-chips">
             ${activeFilterKeys.length ? activeFilterKeys.map((key) => `<span class="chip">${esc(key)}: ${esc(filterChipLabel(key, filters[key]))}<button type="button" data-clear="${esc(key)}">x</button></span>`).join("") : `<span class="empty">No active filters. Click any chart, project row, compliance cell, or ticket row to drill down.</span>`}
           </section>
 
-          <section class="kpis">
+          <section class="tt-kpis">
             <div class="card"><div class="kpi-label">Total Hours</div><div class="kpi-value">${fmtHours(totalHours)}</div><div class="kpi-sub">${fmtInt(entries.length)} filtered time entries</div></div>
             <div class="card"><div class="kpi-label">Projects Worked</div><div class="kpi-value">${fmtInt(projects.length)}</div><div class="kpi-sub">Projects with booked hours</div></div>
             <div class="card"><div class="kpi-label">Tickets Worked</div><div class="kpi-value">${fmtInt(tickets.length)}</div><div class="kpi-sub">Tickets behind filtered hours</div></div>
@@ -1264,7 +1361,7 @@ function bindDdMmDateInput(el, onChange, options) {
             <div class="card"><div class="kpi-label">Off-target Hours</div><div class="kpi-value">${fmtHours(compliance.reduce((sum, row) => sum + row.offTargetHours, 0))}</div><div class="kpi-sub">Total deviation from ${fmtHours(TARGET)}h per workday</div></div>
           </section>
 
-          <section class="top-stack">
+          <section class="top-stack tt-compliance">
             <section class="panel">
               <div class="panel-head">
                 <h2>Daily 7.5h Compliance by Member</h2>
@@ -1304,7 +1401,7 @@ function bindDdMmDateInput(el, onChange, options) {
           </section>
 
           <section class="layout">
-            <div class="stack">
+            <div class="stack tt-main">
               <section class="panel">
                 <div class="panel-head">
                   <h2>Project Hours Share</h2>
@@ -1378,7 +1475,7 @@ function bindDdMmDateInput(el, onChange, options) {
               </section>
             </div>
 
-            <aside class="stack">
+            <aside class="stack tt-aside">
               <section class="panel">
                 <div class="panel-head">
                   <h2>Ticket Detail</h2>
@@ -1399,7 +1496,7 @@ function bindDdMmDateInput(el, onChange, options) {
             </aside>
           </section>
 
-          <section class="bottom-stack">
+          <section class="bottom-stack tt-bottom">
             <section class="panel">
               <div class="panel-head">
                 <h2>Time Tracking Details</h2>
