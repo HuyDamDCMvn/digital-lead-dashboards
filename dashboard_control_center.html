@@ -116,110 +116,211 @@
   color: var(--muted, #94a3b8);
 }
     
+
 .bento-grid.bento-layout-root {
+
   position: relative;
+
   grid-auto-rows: minmax(72px, auto);
+
 }
+
 .bento-grid.bento-layout-editing > [data-bento-id] {
+
   outline: 2px dashed var(--accent, #0f766e);
+
   outline-offset: -2px;
+
   cursor: default;
+
   touch-action: none;
+
 }
+
 .bento-grid.bento-layout-editing > [data-bento-id] .bento-drag-handle {
+
   display: flex;
+
 }
+
 .bento-drag-handle {
+
   display: none;
+
   align-items: center;
+
   gap: 6px;
+
   margin: -4px 0 8px;
+
   padding: 4px 8px;
+
   border-radius: 6px;
+
   background: var(--accent-soft, #ccfbf1);
+
   color: var(--accent-strong, #115e59);
+
   font-size: 0.6875rem;
+
   font-weight: 700;
+
   letter-spacing: 0.04em;
+
   text-transform: uppercase;
+
   cursor: grab;
+
   user-select: none;
+
 }
+
 .bento-drag-handle::before {
+
   content: "⋮⋮";
+
   font-size: 0.875rem;
+
   line-height: 1;
+
 }
+
 .bento-drag-handle:active { cursor: grabbing; }
+
 .bento-resize-handle {
+
   display: none;
+
   position: absolute;
+
   right: 6px;
+
   bottom: 6px;
+
   width: 14px;
+
   height: 14px;
+
   border-radius: 3px;
+
   background: var(--accent, #0f766e);
+
   cursor: nwse-resize;
+
   opacity: 0.85;
+
   z-index: 3;
+
 }
+
 .bento-grid.bento-layout-editing > [data-bento-id] {
+
   position: relative;
+
 }
+
 .bento-grid.bento-layout-editing > [data-bento-id] .bento-resize-handle {
+
   display: block;
+
 }
+
 .bento-layout-toolbar {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 2147482000;
-  display: flex;
+
+  display: inline-flex;
+
   flex-wrap: wrap;
-  gap: 8px;
-  max-width: min(420px, calc(100vw - 24px));
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 2px solid var(--accent, #0f766e);
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.22);
-  backdrop-filter: blur(8px);
+
+  gap: 6px;
+
+  align-items: center;
+
 }
+
+.bento-layout-toolbar.meta-inline {
+
+  margin-left: auto;
+
+}
+
 .bento-layout-toolbar button {
+
   border: 1px solid var(--line, #e2e8f0);
+
   border-radius: 8px;
+
   background: #fff;
+
   color: var(--ink, #0f172a);
-  padding: 7px 12px;
+
+  padding: 6px 11px;
+
   font-size: 0.8125rem;
+
   font-weight: 600;
+
   cursor: pointer;
+
+  white-space: nowrap;
+
 }
+
 .bento-layout-toolbar button:hover { background: var(--surface-raised, #f8fafc); }
+
 .bento-layout-toolbar button.primary {
+
   background: var(--accent, #0f766e);
+
   border-color: var(--accent, #0f766e);
+
   color: #fff;
+
 }
+
+.bento-layout-toolbar button.layout-edit-btn {
+
+  background: #0f766e;
+
+  border-color: #0f766e;
+
+  color: #fff;
+
+}
+
+.bento-layout-toolbar button.layout-edit-btn:hover { background: #115e59; }
+
 .bento-layout-drop-indicator {
+
   position: absolute;
+
   border: 2px solid var(--accent, #0f766e);
+
   border-radius: 10px;
+
   background: rgba(15, 118, 110, 0.08);
+
   pointer-events: none;
+
   z-index: 2;
+
   display: none;
+
 }
+
 @media (max-width: 767px) {
-  .bento-layout-toolbar {
-    right: 10px;
-    left: 10px;
-    bottom: 10px;
-    justify-content: stretch;
+
+  .bento-layout-toolbar.meta-inline {
+
+    margin-left: 0;
+
+    width: 100%;
+
+    justify-content: flex-end;
+
   }
-  .bento-layout-toolbar button { flex: 1 1 auto; }
+
 }
+
 
     :root {
       color-scheme: light;
@@ -290,26 +391,6 @@
     .viewer-title p { margin: 5px 0 0; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
     .viewer-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
     .viewer-frame-wrap { height: calc(100vh - 260px); min-height: 640px; background: #fff; position: relative; }
-    .viewer-layout-fab {
-      position: absolute;
-      right: 16px;
-      bottom: 16px;
-      z-index: 12;
-      height: 40px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 0;
-      border-radius: 999px;
-      background: #0f766e;
-      color: #fff;
-      padding: 0 16px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 10px 28px rgba(15, 118, 110, 0.35);
-    }
-    .viewer-layout-fab:hover { background: #115e59; }
     .button.layout-edit {
       background: #0f766e;
       border-color: #0f766e;
@@ -369,6 +450,8 @@
                 <button class="button" type="button" id="timeApply">Apply</button>
               </div>
               <button class="button layout-edit" type="button" id="viewerEditLayout" title="Edit dashboard tile layout">Edit layout</button>
+              <button class="button" type="button" id="viewerLayoutReset" hidden>Reset default</button>
+              <button class="button primary" type="button" id="viewerLayoutDone" hidden>Done</button>
               <a class="button primary" id="viewerOpen" href="#" target="_self">Open</a>
               <button class="button" type="button" id="viewerPrint">Print PDF</button>
               <button class="button" type="button" id="viewerCopyRefresh">Copy refresh</button>
@@ -377,335 +460,826 @@
           </div>
           <div class="viewer-frame-wrap">
             <iframe class="viewer-frame" id="dashboardFrame" title="Dashboard preview"></iframe>
-            <button type="button" class="viewer-layout-fab" id="viewerEditLayoutFab" title="Drag and resize dashboard tiles">Edit layout</button>
           </div>
         </section>
       </main>
     </div>
   </div>
   <div class="toast" id="toast"></div>
-  <script id="dashboard-data" type="application/json">{"generatedAt":"09/07/2026 10:55","dashboards":[{"title":"Annotation Digital Productivity","file":"annotation_digital_productivity_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/refresh_mantis_dashboard_cache.py --start 2025-01-01 --end YYYY-MM-DD; python scripts/extract_annotation_digital_productivity.py --project-id 396 --source cache; python scripts/build_annotation_productivity_dashboard.py --data-dir data/reports/annotation_digital_productivity --output dashboard_reports/annotation_digital_productivity_dashboard.html","source":"Mantis cache project 396 (after cache refresh)","memory":"Interactive tickets count only when note, status change, and handler change come from the same actor.","exists":true,"href":"annotation_digital_productivity_dashboard.html","bytes":966822,"size":"944.2 KB","modified":"2026-07-09T03:52:17.945929+00:00","modifiedDisplay":"09/07/2026 10:52","ageDays":0,"freshness":"fresh","dataSignal":"09/07/2026 10:43","registered":true},{"title":"Annotation Status by Member","file":"digital_team_annotation_status_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/build_annotation_member_ticket_dashboard_html.py --cutoff 2026-W28 --output dashboard_reports/digital_team_annotation_status_dashboard.html --source cache","source":"TIDP Master Rev6 + Mantis cache project 396 (stepwise uses same cache)","memory":"Scope is active TIDP family tickets currently handled by Digital Team members.","exists":true,"href":"digital_team_annotation_status_dashboard.html","bytes":461510,"size":"450.7 KB","modified":"2026-07-09T03:33:24.103042+00:00","modifiedDisplay":"09/07/2026 10:33","ageDays":0,"freshness":"fresh","dataSignal":"09/07/2026 10:33","registered":true},{"title":"Digital Team Time Tracking","file":"digital_team_time_tracking_dashboard_2026-07.html","group":"Time Tracking","owner":"Digital Team","status":"Primary","refresh":"python -m dashboard_assistant --month 2026-07 --team digital --react --limit 20 --strict-dq --source cache","source":"Mantis cache time tracking","memory":"Generalized time tracking dashboard: choose an available month/range in the viewer; run cache refresh then rebuild with --source cache before reporting.","exists":true,"href":"digital_team_time_tracking_dashboard_2026-07.html","bytes":176103,"size":"172.0 KB","modified":"2026-07-09T03:33:24.330335+00:00","modifiedDisplay":"09/07/2026 10:33","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-09T10:31:53","registered":true,"variants":[{"label":"20/07/2026 to 26/07/2026","file":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","href":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","sortKey":"2026-07-20_2026-07-26","start":"2026-07-20","end":"2026-07-26","cw":"2026-W30","exists":true,"bytes":77988,"size":"76.2 KB","modified":"2026-07-09T03:52:18.119251+00:00","modifiedDisplay":"09/07/2026 10:52","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-09T10:52:17"},{"label":"01/07/2026 to 31/07/2026","file":"digital_team_time_tracking_dashboard_2026-07.html","href":"digital_team_time_tracking_dashboard_2026-07.html","sortKey":"2026-07","start":"2026-07-01","end":"2026-07-31","cw":"2026-W27","exists":true,"bytes":176103,"size":"172.0 KB","modified":"2026-07-09T03:33:24.330335+00:00","modifiedDisplay":"09/07/2026 10:33","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-09T10:31:53"}],"variantCount":2,"rangeRefreshTemplate":"python -m dashboard_assistant --month {from}..{to} --team digital --react --limit 20 --strict-dq --source cache"},{"title":"Digital Team Work Current","file":"digital_team_work_dashboard_current.html","group":"Digital Team","owner":"Digital Team","status":"Operational","refresh":"python build_digital_dashboard.py --output dashboard_reports/digital_team_work_dashboard_current.html --source cache","source":"Mantis cache open work","memory":"Open ticket dashboard grouped by project with due assessment and status badges.","exists":true,"href":"digital_team_work_dashboard_current.html","bytes":20246697,"size":"19.3 MB","modified":"2026-07-09T03:43:48.983007+00:00","modifiedDisplay":"09/07/2026 10:43","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-09T10:43:46+07:00","registered":true},{"title":"Annotation Member Tickets","file":"digital_team_annotation_member_ticket_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Reference","refresh":"python scripts/build_annotation_member_ticket_dashboard_html.py --cutoff 2026-W28 --output dashboard_reports/digital_team_annotation_member_ticket_dashboard.html --source cache","source":"TIDP Master + Mantis cache project 396","memory":"Member-level annotation ticket report retained as a reference output.","exists":true,"href":"digital_team_annotation_member_ticket_dashboard.html","bytes":435907,"size":"425.7 KB","modified":"2026-07-09T03:33:24.031501+00:00","modifiedDisplay":"09/07/2026 10:33","ageDays":0,"freshness":"fresh","dataSignal":"09/07/2026 10:33","registered":true},{"title":"Annotation TIDP Ticket Overview","file":"digital_team_annotation_ticket_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/build_annotation_tidp_dashboard_html.py --cutoff 2026-W28 --source cache --output dashboard_reports/digital_team_annotation_ticket_dashboard.html; python scripts/build_tidp_report_sheet1.py --cutoff 2026-W28 --source cache --output data/reports/TIDP_Report_Stepwise.xlsx --no-open","source":"TIDP Master Rev6 + Mantis cache project 396 (paired with stepwise Excel)","memory":"COO executive TIDP mirror; rebuild together with TIDP_Report_Stepwise.xlsx on refresh.","exists":true,"href":"digital_team_annotation_ticket_dashboard.html","bytes":981315,"size":"958.3 KB","modified":"2026-07-09T03:33:24.228599+00:00","modifiedDisplay":"09/07/2026 10:33","ageDays":0,"freshness":"fresh","dataSignal":"09/07/2026 10:33","registered":true}],"groups":["Annotation","Digital Team","Time Tracking"],"cache":{"generated_at":"2026-07-09T10:30:27+07:00","cache_schema_version":3,"source":"MariaDB/Mantis","database":"mantis","range":{"start":"2025-01-01","end":"2026-09-01"},"project_ids":[396,357,400,401],"digital_team_users":["hu.dam","ht.nguyen","dahn.nguyen","nd.huynh","kd.doan","lk.dang","qd.nguyen","qn.ha"],"files":{"sqlite":"data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite","manifest":"data/mantis_dashboard_cache/manifest.json","extracts":"data/mantis_dashboard_cache/extracts"},"tables":{"projects":4,"users":92,"tickets":15555,"time_entries":24295,"bug_history":176627,"bugnotes":19215,"work_dashboard_team_members":8,"work_dashboard_rows":726,"work_dashboard_notes":2984,"work_dashboard_history":24630,"annotation_p396_tickets":1920,"annotation_p396_history":16100,"annotation_p396_rename":143,"annotation_p396_note_authors":4367,"annotation_p396_users":407},"usage":{"refresh":"python scripts/refresh_mantis_dashboard_cache.py --start YYYY-MM-DD --end YYYY-MM-DD","sqlite":"Read data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite from dashboard builders."}},"cacheDisplay":"01/01/2025 to 01/09/2026","duplicateGroups":[{"key":"digital_team_time_tracking_dashboard","title":"Digital Team Time Tracking Dashboard","count":2,"variants":[{"file":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","label":"20/07/2026 to 26/07/2026","sortKey":"2026-07-20_2026-07-26","start":"2026-07-20","end":"2026-07-26","cw":"2026-W30","exists":true,"href":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","bytes":77988,"size":"76.2 KB","modified":"2026-07-09T03:52:18.119251+00:00","modifiedDisplay":"09/07/2026 10:52","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-09T10:52:17"},{"file":"digital_team_time_tracking_dashboard_2026-07.html","label":"01/07/2026 to 31/07/2026","sortKey":"2026-07","start":"2026-07-01","end":"2026-07-31","cw":"2026-W27","exists":true,"href":"digital_team_time_tracking_dashboard_2026-07.html","bytes":176103,"size":"172.0 KB","modified":"2026-07-09T03:33:24.330335+00:00","modifiedDisplay":"09/07/2026 10:33","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-09T10:31:53"}]}],"metrics":{"total":6,"registered":6,"fresh":6,"stale":0,"missing":0,"latest":"Annotation Digital Productivity","cacheRows":287073},"templateSource":"https://github.com/shadcnstore/shadcn-dashboard-landing-template.git"}</script>
+  <script id="dashboard-data" type="application/json">{"generatedAt":"09/07/2026 10:59","dashboards":[{"title":"Annotation Digital Productivity","file":"annotation_digital_productivity_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/refresh_mantis_dashboard_cache.py --start 2025-01-01 --end YYYY-MM-DD; python scripts/extract_annotation_digital_productivity.py --project-id 396 --source cache; python scripts/build_annotation_productivity_dashboard.py --data-dir data/reports/annotation_digital_productivity --output dashboard_reports/annotation_digital_productivity_dashboard.html","source":"Mantis cache project 396 (after cache refresh)","memory":"Interactive tickets count only when note, status change, and handler change come from the same actor.","exists":true,"href":"annotation_digital_productivity_dashboard.html","bytes":970404,"size":"947.7 KB","modified":"2026-07-09T03:59:35.114185+00:00","modifiedDisplay":"09/07/2026 10:59","ageDays":0,"freshness":"fresh","dataSignal":"09/07/2026 10:59","registered":true},{"title":"Annotation Status by Member","file":"digital_team_annotation_status_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/build_annotation_member_ticket_dashboard_html.py --cutoff 2026-W28 --output dashboard_reports/digital_team_annotation_status_dashboard.html --source cache","source":"TIDP Master Rev6 + Mantis cache project 396 (stepwise uses same cache)","memory":"Scope is active TIDP family tickets currently handled by Digital Team members.","exists":true,"href":"digital_team_annotation_status_dashboard.html","bytes":465423,"size":"454.5 KB","modified":"2026-07-09T03:59:35.249716+00:00","modifiedDisplay":"09/07/2026 10:59","ageDays":0,"freshness":"fresh","dataSignal":"09/07/2026 10:59","registered":true},{"title":"Digital Team Time Tracking","file":"digital_team_time_tracking_dashboard_2026-07.html","group":"Time Tracking","owner":"Digital Team","status":"Primary","refresh":"python -m dashboard_assistant --month 2026-07 --team digital --react --limit 20 --strict-dq --source cache","source":"Mantis cache time tracking","memory":"Generalized time tracking dashboard: choose an available month/range in the viewer; run cache refresh then rebuild with --source cache before reporting.","exists":true,"href":"digital_team_time_tracking_dashboard_2026-07.html","bytes":180016,"size":"175.8 KB","modified":"2026-07-09T03:59:35.483987+00:00","modifiedDisplay":"09/07/2026 10:59","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-09T10:59:34","registered":true,"variants":[{"label":"20/07/2026 to 26/07/2026","file":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","href":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","sortKey":"2026-07-20_2026-07-26","start":"2026-07-20","end":"2026-07-26","cw":"2026-W30","exists":true,"bytes":77988,"size":"76.2 KB","modified":"2026-07-09T03:52:18.119251+00:00","modifiedDisplay":"09/07/2026 10:52","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-09T10:52:17"},{"label":"01/07/2026 to 31/07/2026","file":"digital_team_time_tracking_dashboard_2026-07.html","href":"digital_team_time_tracking_dashboard_2026-07.html","sortKey":"2026-07","start":"2026-07-01","end":"2026-07-31","cw":"2026-W27","exists":true,"bytes":180016,"size":"175.8 KB","modified":"2026-07-09T03:59:35.483987+00:00","modifiedDisplay":"09/07/2026 10:59","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-09T10:59:34"}],"variantCount":2,"rangeRefreshTemplate":"python -m dashboard_assistant --month {from}..{to} --team digital --react --limit 20 --strict-dq --source cache"},{"title":"Digital Team Work Current","file":"digital_team_work_dashboard_current.html","group":"Digital Team","owner":"Digital Team","status":"Operational","refresh":"python build_digital_dashboard.py --output dashboard_reports/digital_team_work_dashboard_current.html --source cache","source":"Mantis cache open work","memory":"Open ticket dashboard grouped by project with due assessment and status badges.","exists":true,"href":"digital_team_work_dashboard_current.html","bytes":20250279,"size":"19.3 MB","modified":"2026-07-09T03:59:36.788038+00:00","modifiedDisplay":"09/07/2026 10:59","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-09T10:59:17+07:00","registered":true},{"title":"Annotation Member Tickets","file":"digital_team_annotation_member_ticket_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Reference","refresh":"python scripts/build_annotation_member_ticket_dashboard_html.py --cutoff 2026-W28 --output dashboard_reports/digital_team_annotation_member_ticket_dashboard.html --source cache","source":"TIDP Master + Mantis cache project 396","memory":"Member-level annotation ticket report retained as a reference output.","exists":true,"href":"digital_team_annotation_member_ticket_dashboard.html","bytes":439356,"size":"429.1 KB","modified":"2026-07-09T03:59:35.181337+00:00","modifiedDisplay":"09/07/2026 10:59","ageDays":0,"freshness":"fresh","dataSignal":"09/07/2026 10:59","registered":true},{"title":"Annotation TIDP Ticket Overview","file":"digital_team_annotation_ticket_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/build_annotation_tidp_dashboard_html.py --cutoff 2026-W28 --source cache --output dashboard_reports/digital_team_annotation_ticket_dashboard.html; python scripts/build_tidp_report_sheet1.py --cutoff 2026-W28 --source cache --output data/reports/TIDP_Report_Stepwise.xlsx --no-open","source":"TIDP Master Rev6 + Mantis cache project 396 (paired with stepwise Excel)","memory":"COO executive TIDP mirror; rebuild together with TIDP_Report_Stepwise.xlsx on refresh.","exists":true,"href":"digital_team_annotation_ticket_dashboard.html","bytes":985228,"size":"962.1 KB","modified":"2026-07-09T03:59:35.365868+00:00","modifiedDisplay":"09/07/2026 10:59","ageDays":0,"freshness":"fresh","dataSignal":"09/07/2026 10:59","registered":true}],"groups":["Annotation","Digital Team","Time Tracking"],"cache":{"generated_at":"2026-07-09T10:30:27+07:00","cache_schema_version":3,"source":"MariaDB/Mantis","database":"mantis","range":{"start":"2025-01-01","end":"2026-09-01"},"project_ids":[396,357,400,401],"digital_team_users":["hu.dam","ht.nguyen","dahn.nguyen","nd.huynh","kd.doan","lk.dang","qd.nguyen","qn.ha"],"files":{"sqlite":"data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite","manifest":"data/mantis_dashboard_cache/manifest.json","extracts":"data/mantis_dashboard_cache/extracts"},"tables":{"projects":4,"users":92,"tickets":15555,"time_entries":24295,"bug_history":176627,"bugnotes":19215,"work_dashboard_team_members":8,"work_dashboard_rows":726,"work_dashboard_notes":2984,"work_dashboard_history":24630,"annotation_p396_tickets":1920,"annotation_p396_history":16100,"annotation_p396_rename":143,"annotation_p396_note_authors":4367,"annotation_p396_users":407},"usage":{"refresh":"python scripts/refresh_mantis_dashboard_cache.py --start YYYY-MM-DD --end YYYY-MM-DD","sqlite":"Read data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite from dashboard builders."}},"cacheDisplay":"01/01/2025 to 01/09/2026","duplicateGroups":[{"key":"digital_team_time_tracking_dashboard","title":"Digital Team Time Tracking Dashboard","count":2,"variants":[{"file":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","label":"20/07/2026 to 26/07/2026","sortKey":"2026-07-20_2026-07-26","start":"2026-07-20","end":"2026-07-26","cw":"2026-W30","exists":true,"href":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","bytes":77988,"size":"76.2 KB","modified":"2026-07-09T03:52:18.119251+00:00","modifiedDisplay":"09/07/2026 10:52","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-09T10:52:17"},{"file":"digital_team_time_tracking_dashboard_2026-07.html","label":"01/07/2026 to 31/07/2026","sortKey":"2026-07","start":"2026-07-01","end":"2026-07-31","cw":"2026-W27","exists":true,"href":"digital_team_time_tracking_dashboard_2026-07.html","bytes":180016,"size":"175.8 KB","modified":"2026-07-09T03:59:35.483987+00:00","modifiedDisplay":"09/07/2026 10:59","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-09T10:59:34"}]}],"metrics":{"total":6,"registered":6,"fresh":6,"stale":0,"missing":0,"latest":"Digital Team Work Current","cacheRows":287073},"templateSource":"https://github.com/shadcnstore/shadcn-dashboard-landing-template.git"}</script>
   <script>
     function loadDashboardPrefs(key) {
+
   try {
+
     const raw = localStorage.getItem(key);
+
     return raw ? JSON.parse(raw) : null;
+
   } catch {
+
     return null;
+
   }
+
 }
+
 function saveDashboardPrefs(key, value) {
+
   try {
+
     localStorage.setItem(key, JSON.stringify(value));
+
   } catch {
+
     // ignore quota / private mode
+
   }
+
 }
+
 const DlaBentoLayout = (() => {
+
   const VERSION = 1;
+
   const COLS = 12;
+
   const mounted = new WeakMap();
 
+
+
   function storageKey(dashboardId) {
+
     return `dla-bento-layout:v${VERSION}:${dashboardId}`;
+
   }
+
+
+
+  function inIframe() {
+
+    try {
+
+      return window.self !== window.top;
+
+    } catch {
+
+      return true;
+
+    }
+
+  }
+
+
+
+  function resolveToolbarMode(options) {
+
+    const mode = options?.toolbar;
+
+    if (mode === "none" || mode === "meta") return mode;
+
+    return inIframe() ? "none" : "meta";
+
+  }
+
+
 
   function tiles(grid) {
+
     const out = [];
+
     for (const child of grid.children) {
+
       if (child.matches("[data-bento-id]")) {
+
         out.push(child);
+
         continue;
+
       }
+
       if (child.matches("[data-bento-host]") || child.id === "app") {
+
         out.push(...Array.from(child.children).filter((el) => el.matches("[data-bento-id]")));
+
       }
+
     }
+
     return out;
+
   }
+
+
 
   function defaultSpan(el) {
+
     const attr = Number(el.dataset.bentoSpan || el.getAttribute("data-bento-span") || 0);
+
     if (attr > 0) return Math.min(COLS, attr);
+
     const match = String(el.className || "").match(/bento-span-(\d+)/);
+
     if (match) return Math.min(COLS, Number(match[1]));
-    const cls = ["tt-project", "tt-detail", "tt-breakdown", "tt-compliance-panel"];
+
     if (el.classList.contains("tt-compliance-panel") || el.classList.contains("tt-entries")) return 12;
+
     if (el.classList.contains("tt-project")) return 7;
+
     if (el.classList.contains("tt-detail")) return 5;
+
     if (el.classList.contains("tt-breakdown")) return 4;
+
     if (el.classList.contains("tt-toolbar") || el.classList.contains("tt-chips")) return 12;
+
     return 6;
+
   }
+
+
 
   function readPlacement(el) {
+
     const cs = getComputedStyle(el);
+
     const col = Number(el.dataset.bentoCol || 0);
+
     const span = Number(el.dataset.bentoColSpan || 0);
+
     const row = Number(el.dataset.bentoRow || 0);
+
     const rowSpan = Number(el.dataset.bentoRowSpan || 1);
+
     if (col && span) {
+
       return { c: col, cs: span, r: row || 1, rs: rowSpan || 1 };
+
     }
+
     const gc = cs.gridColumnStart;
+
     const gspan = cs.gridColumnEnd;
+
     const gr = cs.gridRowStart;
+
     const grs = cs.gridRowEnd;
+
     let c = 1;
+
     let csVal = defaultSpan(el);
+
     let r = 1;
+
     let rs = 1;
+
     if (gc && gc !== "auto") c = Number(gc);
+
     if (gspan && gspan !== "auto" && String(gspan).includes("span")) {
+
       csVal = Number(String(gspan).replace("span", "").trim()) || csVal;
+
     }
+
     if (gr && gr !== "auto") r = Number(gr);
+
     if (grs && grs !== "auto" && String(grs).includes("span")) {
+
       rs = Number(String(grs).replace("span", "").trim()) || 1;
+
     }
+
     return { c, cs: csVal, r, rs };
+
   }
+
+
 
   function applyPlacement(el, p) {
+
     const c = Math.max(1, Math.min(COLS, Number(p.c || 1)));
+
     const cs = Math.max(1, Math.min(COLS, Number(p.cs || defaultSpan(el))));
+
     const safeC = Math.min(c, COLS - cs + 1);
+
     const r = Math.max(1, Number(p.r || 1));
+
     const rs = Math.max(1, Number(p.rs || 1));
+
     el.style.gridColumn = `${safeC} / span ${cs}`;
+
     el.style.gridRow = `${r} / span ${rs}`;
+
     el.dataset.bentoCol = String(safeC);
+
     el.dataset.bentoColSpan = String(cs);
+
     el.dataset.bentoRow = String(r);
+
     el.dataset.bentoRowSpan = String(rs);
+
   }
+
+
 
   function defaultLayout(grid) {
+
     const items = {};
+
     let row = 1;
+
     for (const el of tiles(grid)) {
+
       const cs = defaultSpan(el);
+
       items[el.dataset.bentoId] = { c: 1, cs, r: row, rs: 1 };
+
       row += 1;
+
     }
+
     return { version: VERSION, items };
+
   }
+
+
 
   function serialize(grid) {
+
     const items = {};
+
     for (const el of tiles(grid)) {
+
       items[el.dataset.bentoId] = readPlacement(el);
+
     }
+
     return { version: VERSION, items };
+
   }
+
+
 
   function applySaved(grid, layout) {
+
     const items = layout?.items || {};
+
     let row = 1;
+
     for (const el of tiles(grid)) {
+
       const id = el.dataset.bentoId;
+
       const saved = items[id];
+
       if (saved) {
+
         applyPlacement(el, saved);
+
       } else {
+
         applyPlacement(el, { c: 1, cs: defaultSpan(el), r: row, rs: 1 });
+
         row += 1;
+
       }
+
     }
+
   }
 
-  function ensureChrome(grid, state) {
-    if (state.toolbar) return;
-    const bar = document.createElement("div");
-    bar.className = "bento-layout-toolbar";
-    bar.innerHTML = `
-      <button type="button" data-bento-edit>Edit layout</button>
-      <button type="button" data-bento-reset hidden>Reset default</button>
-      <button type="button" data-bento-done class="primary" hidden>Done</button>
-    `;
+
+
+  function metaToolbarHost(grid) {
+
+    const scope = grid.closest(".bento-grid") || grid.parentElement || grid;
+
+    const strip = scope.querySelector(":scope > .meta-strip") || scope.querySelector(".meta-strip");
+
+    if (!strip) return null;
+
+    let main = strip.querySelector(".meta-strip-main");
+
+    if (!main) {
+
+      main = document.createElement("div");
+
+      main.className = "meta-strip-main";
+
+      strip.prepend(main);
+
+    }
+
+    main.style.display = "flex";
+
+    main.style.alignItems = "flex-start";
+
+    main.style.justifyContent = "space-between";
+
+    main.style.gap = "12px";
+
+    main.style.width = "100%";
+
+    return main;
+
+  }
+
+
+
+  function ensureIndicator(grid, state) {
+
+    if (state.indicator) return;
+
     const indicator = document.createElement("div");
+
     indicator.className = "bento-layout-drop-indicator";
+
     grid.appendChild(indicator);
-    document.body.appendChild(bar);
-    state.toolbar = bar;
+
     state.indicator = indicator;
 
-    bar.querySelector("[data-bento-edit]").addEventListener("click", () => setEditing(state, true));
-    bar.querySelector("[data-bento-done]").addEventListener("click", () => setEditing(state, false));
-    bar.querySelector("[data-bento-reset]").addEventListener("click", () => {
-      localStorage.removeItem(storageKey(state.dashboardId));
-      applySaved(state.grid, defaultLayout(state.grid));
-      decorateTiles(state);
-      persist(state);
-    });
   }
+
+
+
+  function ensureToolbar(grid, state, mode) {
+
+    ensureIndicator(grid, state);
+
+    if (mode === "none") {
+
+      state.toolbarMode = "none";
+
+      state.toolbar = null;
+
+      return;
+
+    }
+
+    if (state.toolbar && state.toolbarMode === mode) return;
+
+    if (state.toolbar) state.toolbar.remove();
+
+
+
+    const bar = document.createElement("div");
+
+    bar.className = "bento-layout-toolbar meta-inline";
+
+    bar.innerHTML = `
+
+      <button type="button" class="layout-edit-btn" data-bento-edit>Edit layout</button>
+
+      <button type="button" data-bento-reset hidden>Reset default</button>
+
+      <button type="button" data-bento-done class="primary" hidden>Done</button>
+
+    `;
+
+    const host = metaToolbarHost(grid);
+
+    if (host) {
+
+      host.appendChild(bar);
+
+    } else {
+
+      bar.style.margin = "8px 0 0";
+
+      grid.parentElement?.insertBefore(bar, grid) || grid.prepend(bar);
+
+    }
+
+    state.toolbar = bar;
+
+    state.toolbarMode = mode;
+
+
+
+    bar.querySelector("[data-bento-edit]").addEventListener("click", () => setEditing(state, true));
+
+    bar.querySelector("[data-bento-done]").addEventListener("click", () => setEditing(state, false));
+
+    bar.querySelector("[data-bento-reset]").addEventListener("click", () => resetLayout(state.grid));
+
+  }
+
+
 
   function decorateTiles(state) {
+
     for (const el of tiles(state.grid)) {
+
       if (!el.querySelector(".bento-drag-handle")) {
+
         const handle = document.createElement("div");
+
         handle.className = "bento-drag-handle";
+
         handle.textContent = "Drag to move";
+
         el.prepend(handle);
+
       }
+
       if (!el.querySelector(".bento-resize-handle")) {
+
         const resize = document.createElement("div");
+
         resize.className = "bento-resize-handle";
+
         resize.title = "Drag to resize width";
+
         el.appendChild(resize);
+
       }
+
     }
+
   }
+
+
 
   function persist(state) {
+
     saveDashboardPrefs(storageKey(state.dashboardId), serialize(state.grid));
+
   }
+
+
+
+  function syncToolbarButtons(state) {
+
+    if (!state.toolbar) return;
+
+    const on = state.editing;
+
+    const edit = state.toolbar.querySelector("[data-bento-edit]");
+
+    const reset = state.toolbar.querySelector("[data-bento-reset]");
+
+    const done = state.toolbar.querySelector("[data-bento-done]");
+
+    if (edit) edit.hidden = on;
+
+    if (reset) reset.hidden = !on;
+
+    if (done) done.hidden = !on;
+
+  }
+
+
 
   function setEditing(state, on) {
+
     state.editing = on;
+
     state.grid.classList.toggle("bento-layout-editing", on);
-    state.toolbar.querySelector("[data-bento-edit]").hidden = on;
-    state.toolbar.querySelector("[data-bento-reset]").hidden = !on;
-    state.toolbar.querySelector("[data-bento-done]").hidden = !on;
+
+    syncToolbarButtons(state);
+
     if (!on) persist(state);
+
   }
+
+
 
   function cellFromPoint(grid, clientX, clientY) {
+
     const rect = grid.getBoundingClientRect();
+
     const x = Math.max(0, Math.min(rect.width - 1, clientX - rect.left));
+
     const y = Math.max(0, clientY - rect.top);
+
     const colWidth = rect.width / COLS;
+
     const c = Math.max(1, Math.min(COLS, Math.floor(x / colWidth) + 1));
+
     const rowHeight = 72;
+
     const r = Math.max(1, Math.floor(y / rowHeight) + 1);
+
     return { c, r };
+
   }
+
+
 
   function showIndicator(state, p, cs) {
+
     const rect = state.grid.getBoundingClientRect();
+
     const colWidth = rect.width / COLS;
+
     state.indicator.style.display = "block";
+
     state.indicator.style.left = `${rect.left + (p.c - 1) * colWidth}px`;
+
     state.indicator.style.top = `${rect.top + (p.r - 1) * 72}px`;
+
     state.indicator.style.width = `${colWidth * cs}px`;
+
     state.indicator.style.height = "68px";
+
   }
+
+
 
   function hideIndicator(state) {
+
     if (state.indicator) state.indicator.style.display = "none";
+
   }
+
+
 
   function bindInteractions(state) {
+
     if (state.bound) return;
+
     state.bound = true;
 
+
+
     function onPointerMove(ev) {
+
       if (!state.dragging && !state.resizing) return;
+
       if (state.dragging) {
+
         const p = cellFromPoint(state.grid, ev.clientX, ev.clientY);
+
         const cs = Number(state.dragging.dataset.bentoColSpan || defaultSpan(state.dragging));
+
         showIndicator(state, p, cs);
+
       }
+
       if (state.resizing) {
+
         const rect = state.grid.getBoundingClientRect();
+
         const colWidth = rect.width / COLS;
+
         const delta = ev.clientX - state.resizeStartX;
+
         const next = Math.max(2, Math.min(COLS, Math.round(state.resizeStartSpan + delta / colWidth)));
+
         applyPlacement(state.resizing, {
+
           c: Number(state.resizing.dataset.bentoCol || 1),
+
           cs: next,
+
           r: Number(state.resizing.dataset.bentoRow || 1),
+
           rs: Number(state.resizing.dataset.bentoRowSpan || 1),
+
         });
+
       }
+
     }
+
+
 
     function onPointerUp(ev) {
+
       if (state.dragging) {
+
         const p = cellFromPoint(state.grid, ev.clientX, ev.clientY);
+
         const cs = Number(state.dragging.dataset.bentoColSpan || defaultSpan(state.dragging));
+
         applyPlacement(state.dragging, {
+
           c: p.c,
+
           cs,
+
           r: p.r,
+
           rs: Number(state.dragging.dataset.bentoRowSpan || 1),
+
         });
+
         persist(state);
+
       }
+
       if (state.resizing) persist(state);
+
       state.dragging = null;
+
       state.resizing = null;
+
       hideIndicator(state);
+
       window.removeEventListener("pointermove", onPointerMove);
+
       window.removeEventListener("pointerup", onPointerUp);
+
     }
+
+
 
     state.grid.addEventListener("pointerdown", (ev) => {
+
       if (!state.editing) return;
+
       const handle = ev.target.closest(".bento-resize-handle");
+
       const drag = ev.target.closest(".bento-drag-handle");
+
       const tile = ev.target.closest("[data-bento-id]");
+
       if (!tile || !state.grid.contains(tile)) return;
+
       if (handle) {
+
         state.resizing = tile;
+
         state.resizeStartX = ev.clientX;
+
         state.resizeStartSpan = Number(tile.dataset.bentoColSpan || defaultSpan(tile));
+
         ev.preventDefault();
+
         window.addEventListener("pointermove", onPointerMove);
+
         window.addEventListener("pointerup", onPointerUp);
+
         return;
+
       }
+
       if (drag) {
+
         state.dragging = tile;
+
         ev.preventDefault();
+
         window.addEventListener("pointermove", onPointerMove);
+
         window.addEventListener("pointerup", onPointerUp);
+
       }
+
     });
+
   }
+
+
+
+  function getState(grid) {
+
+    return mounted.get(grid) || null;
+
+  }
+
+
 
   function mount(grid, options) {
+
     if (!grid) return null;
+
     const dashboardId = options?.dashboardId || grid.dataset.bentoDashboard;
+
     if (!dashboardId) return null;
+
     grid.classList.add("bento-layout-root");
+
     if (!grid.dataset.bentoDashboard) grid.dataset.bentoDashboard = dashboardId;
 
+
+
+    const toolbarMode = resolveToolbarMode(options);
+
     let state = mounted.get(grid);
+
     if (!state) {
+
       state = { grid, dashboardId, editing: false };
+
       mounted.set(grid, state);
-      ensureChrome(grid, state);
+
       bindInteractions(state);
+
     }
 
+    state.dashboardId = dashboardId;
+
+    ensureToolbar(grid, state, toolbarMode);
+
+
+
     const saved = loadDashboardPrefs(storageKey(dashboardId));
+
     if (saved?.items) applySaved(grid, saved);
+
     else applySaved(grid, defaultLayout(grid));
+
     decorateTiles(state);
+
     return state;
+
   }
+
+
 
   function apply(grid, dashboardId) {
+
     const id = dashboardId || grid?.dataset?.bentoDashboard;
+
     if (!grid || !id) return;
+
     const state = mount(grid, { dashboardId: id });
+
     if (!state) return;
+
     const saved = loadDashboardPrefs(storageKey(id));
+
     if (saved?.items) applySaved(grid, saved);
+
     decorateTiles(state);
+
   }
+
+
 
   function openEditor(grid) {
+
     const root = grid || document.querySelector("[data-bento-dashboard]");
+
     if (!root) return false;
+
     const id = root.dataset.bentoDashboard;
+
     const state = mount(root, { dashboardId: id });
+
     if (state) setEditing(state, true);
+
     return Boolean(state);
+
   }
 
-  return { mount, apply, openEditor, storageKey, VERSION };
+
+
+  function closeEditor(grid) {
+
+    const root = grid || document.querySelector("[data-bento-dashboard]");
+
+    if (!root) return false;
+
+    const state = getState(root);
+
+    if (!state) return false;
+
+    setEditing(state, false);
+
+    return true;
+
+  }
+
+
+
+  function resetLayout(grid) {
+
+    const root = grid || document.querySelector("[data-bento-dashboard]");
+
+    if (!root) return false;
+
+    const state = getState(root) || mount(root, { dashboardId: root.dataset.bentoDashboard });
+
+    if (!state) return false;
+
+    localStorage.removeItem(storageKey(state.dashboardId));
+
+    applySaved(state.grid, defaultLayout(state.grid));
+
+    decorateTiles(state);
+
+    persist(state);
+
+    return true;
+
+  }
+
+
+
+  function isEditing(grid) {
+
+    const state = getState(grid || document.querySelector("[data-bento-dashboard]"));
+
+    return Boolean(state?.editing);
+
+  }
+
+
+
+  return { mount, apply, openEditor, closeEditor, resetLayout, isEditing, getState, storageKey, VERSION };
+
 })();
     function fmtIsoDate(iso) {
   const day = String(iso || "").slice(0, 10);
@@ -1064,7 +1638,8 @@ function bindDdMmDateInput(el, onChange, options) {
       });
       $('viewerPrint').addEventListener('click', printSelectedDashboard);
       $('viewerEditLayout').addEventListener('click', triggerIframeLayoutEdit);
-      $('viewerEditLayoutFab').addEventListener('click', triggerIframeLayoutEdit);
+      $('viewerLayoutDone').addEventListener('click', () => finishIframeLayoutEdit(true));
+      $('viewerLayoutReset').addEventListener('click', () => resetIframeLayout());
       $('dashboardFrame').addEventListener('load', () => {
         setTimeout(expandFrameContent, 120);
       });
@@ -1154,21 +1729,27 @@ function bindDdMmDateInput(el, onChange, options) {
       saveControlCenterPrefs();
     }
 
-    function triggerIframeLayoutEdit() {
-      const frame = $('dashboardFrame');
+    function syncViewerLayoutControls(editing) {
+      $('viewerEditLayout').hidden = editing;
+      $('viewerLayoutDone').hidden = !editing;
+      $('viewerLayoutReset').hidden = !editing;
+    }
+
+    function iframeLayoutGrid() {
       try {
-        const doc = frame.contentDocument;
-        const win = frame.contentWindow;
-        if (win?.DlaBentoLayout?.openEditor) {
-          const grid = doc?.querySelector('[data-bento-dashboard]');
-          if (grid && win.DlaBentoLayout.openEditor(grid)) {
-            showToast('Layout editor enabled — drag tiles inside the preview.');
-            return;
-          }
-        }
-        const editBtn = doc?.querySelector('[data-bento-edit]');
-        if (editBtn) {
-          editBtn.click();
+        const doc = $('dashboardFrame').contentDocument;
+        return doc?.querySelector('[data-bento-dashboard]') || null;
+      } catch {
+        return null;
+      }
+    }
+
+    function triggerIframeLayoutEdit() {
+      try {
+        const win = $('dashboardFrame').contentWindow;
+        const grid = iframeLayoutGrid();
+        if (win?.DlaBentoLayout?.openEditor && grid && win.DlaBentoLayout.openEditor(grid)) {
+          syncViewerLayoutControls(true);
           showToast('Layout editor enabled — drag tiles inside the preview.');
           return;
         }
@@ -1176,6 +1757,29 @@ function bindDdMmDateInput(el, onChange, options) {
         // cross-origin or not ready
       }
       showToast('Refresh the preview or open the dashboard in a new tab to edit layout.');
+    }
+
+    function finishIframeLayoutEdit() {
+      try {
+        const win = $('dashboardFrame').contentWindow;
+        const grid = iframeLayoutGrid();
+        if (grid && win?.DlaBentoLayout?.closeEditor) win.DlaBentoLayout.closeEditor(grid);
+      } catch {
+        // ignore
+      }
+      syncViewerLayoutControls(false);
+      showToast('Layout saved on this browser.');
+    }
+
+    function resetIframeLayout() {
+      try {
+        const win = $('dashboardFrame').contentWindow;
+        const grid = iframeLayoutGrid();
+        if (grid && win?.DlaBentoLayout?.resetLayout) win.DlaBentoLayout.resetLayout(grid);
+        showToast('Layout reset to default.');
+      } catch {
+        showToast('Could not reset layout in preview.');
+      }
     }
 
     function renderViewer() {
@@ -1194,6 +1798,7 @@ function bindDdMmDateInput(el, onChange, options) {
       $('viewerMeta').textContent = `${frameItem.file} · ${item.group} · ${frameItem.modifiedDisplay} · ${frameItem.size}`;
       $('dashboardFrame').src = frameItem.href;
       $('viewerOpen').href = frameItem.href;
+      syncViewerLayoutControls(false);
       setTimeout(expandFrameContent, 250);
       setTimeout(expandFrameContent, 900);
     }
