@@ -246,110 +246,211 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 .meta-warning { color: #b91c1c; font-weight: 600; font-size: 0.8125rem; margin: 8px 0 0; }
 
 
+
 .bento-grid.bento-layout-root {
+
   position: relative;
+
   grid-auto-rows: minmax(72px, auto);
+
 }
+
 .bento-grid.bento-layout-editing > [data-bento-id] {
+
   outline: 2px dashed var(--accent, #0f766e);
+
   outline-offset: -2px;
+
   cursor: default;
+
   touch-action: none;
+
 }
+
 .bento-grid.bento-layout-editing > [data-bento-id] .bento-drag-handle {
+
   display: flex;
+
 }
+
 .bento-drag-handle {
+
   display: none;
+
   align-items: center;
+
   gap: 6px;
+
   margin: -4px 0 8px;
+
   padding: 4px 8px;
+
   border-radius: 6px;
+
   background: var(--accent-soft, #ccfbf1);
+
   color: var(--accent-strong, #115e59);
+
   font-size: 0.6875rem;
+
   font-weight: 700;
+
   letter-spacing: 0.04em;
+
   text-transform: uppercase;
+
   cursor: grab;
+
   user-select: none;
+
 }
+
 .bento-drag-handle::before {
+
   content: "⋮⋮";
+
   font-size: 0.875rem;
+
   line-height: 1;
+
 }
+
 .bento-drag-handle:active { cursor: grabbing; }
+
 .bento-resize-handle {
+
   display: none;
+
   position: absolute;
+
   right: 6px;
+
   bottom: 6px;
+
   width: 14px;
+
   height: 14px;
+
   border-radius: 3px;
+
   background: var(--accent, #0f766e);
+
   cursor: nwse-resize;
+
   opacity: 0.85;
+
   z-index: 3;
+
 }
+
 .bento-grid.bento-layout-editing > [data-bento-id] {
+
   position: relative;
+
 }
+
 .bento-grid.bento-layout-editing > [data-bento-id] .bento-resize-handle {
+
   display: block;
+
 }
+
 .bento-layout-toolbar {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 2147482000;
-  display: flex;
+
+  display: inline-flex;
+
   flex-wrap: wrap;
-  gap: 8px;
-  max-width: min(420px, calc(100vw - 24px));
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 2px solid var(--accent, #0f766e);
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.22);
-  backdrop-filter: blur(8px);
+
+  gap: 6px;
+
+  align-items: center;
+
 }
+
+.bento-layout-toolbar.meta-inline {
+
+  margin-left: auto;
+
+}
+
 .bento-layout-toolbar button {
+
   border: 1px solid var(--line, #e2e8f0);
+
   border-radius: 8px;
+
   background: #fff;
+
   color: var(--ink, #0f172a);
-  padding: 7px 12px;
+
+  padding: 6px 11px;
+
   font-size: 0.8125rem;
+
   font-weight: 600;
+
   cursor: pointer;
+
+  white-space: nowrap;
+
 }
+
 .bento-layout-toolbar button:hover { background: var(--surface-raised, #f8fafc); }
+
 .bento-layout-toolbar button.primary {
+
   background: var(--accent, #0f766e);
+
   border-color: var(--accent, #0f766e);
+
   color: #fff;
+
 }
+
+.bento-layout-toolbar button.layout-edit-btn {
+
+  background: #0f766e;
+
+  border-color: #0f766e;
+
+  color: #fff;
+
+}
+
+.bento-layout-toolbar button.layout-edit-btn:hover { background: #115e59; }
+
 .bento-layout-drop-indicator {
+
   position: absolute;
+
   border: 2px solid var(--accent, #0f766e);
+
   border-radius: 10px;
+
   background: rgba(15, 118, 110, 0.08);
+
   pointer-events: none;
+
   z-index: 2;
+
   display: none;
+
 }
+
 @media (max-width: 767px) {
-  .bento-layout-toolbar {
-    right: 10px;
-    left: 10px;
-    bottom: 10px;
-    justify-content: stretch;
+
+  .bento-layout-toolbar.meta-inline {
+
+    margin-left: 0;
+
+    width: 100%;
+
+    justify-content: flex-end;
+
   }
-  .bento-layout-toolbar button { flex: 1 1 auto; }
+
 }
+
 
 
 :root {
@@ -767,7 +868,7 @@ body {
 </head>
 <body>
   <div id="app"></div>
-  <script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-09T10:52:17","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["dahn.nguyen","hu.dam"],"2026-07-21":["dahn.nguyen","hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
+  <script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-09T11:00:00","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["dahn.nguyen","hu.dam"],"2026-07-21":["dahn.nguyen","hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
   <script>
   (function () {
     function fmtIsoDate(iso) {
@@ -1020,325 +1121,817 @@ function bindDdMmDateInput(el, onChange, options) {
   bindDdMmDatePicker(el, onChange, options);
 }
     function loadDashboardPrefs(key) {
+
   try {
+
     const raw = localStorage.getItem(key);
+
     return raw ? JSON.parse(raw) : null;
+
   } catch {
+
     return null;
+
   }
+
 }
+
 function saveDashboardPrefs(key, value) {
+
   try {
+
     localStorage.setItem(key, JSON.stringify(value));
+
   } catch {
+
     // ignore quota / private mode
+
   }
+
 }
+
 const DlaBentoLayout = (() => {
+
   const VERSION = 1;
+
   const COLS = 12;
+
   const mounted = new WeakMap();
 
+
+
   function storageKey(dashboardId) {
+
     return `dla-bento-layout:v${VERSION}:${dashboardId}`;
+
   }
+
+
+
+  function inIframe() {
+
+    try {
+
+      return window.self !== window.top;
+
+    } catch {
+
+      return true;
+
+    }
+
+  }
+
+
+
+  function resolveToolbarMode(options) {
+
+    const mode = options?.toolbar;
+
+    if (mode === "none" || mode === "meta") return mode;
+
+    return inIframe() ? "none" : "meta";
+
+  }
+
+
 
   function tiles(grid) {
+
     const out = [];
+
     for (const child of grid.children) {
+
       if (child.matches("[data-bento-id]")) {
+
         out.push(child);
+
         continue;
+
       }
+
       if (child.matches("[data-bento-host]") || child.id === "app") {
+
         out.push(...Array.from(child.children).filter((el) => el.matches("[data-bento-id]")));
+
       }
+
     }
+
     return out;
+
   }
+
+
 
   function defaultSpan(el) {
+
     const attr = Number(el.dataset.bentoSpan || el.getAttribute("data-bento-span") || 0);
+
     if (attr > 0) return Math.min(COLS, attr);
+
     const match = String(el.className || "").match(/bento-span-(\d+)/);
+
     if (match) return Math.min(COLS, Number(match[1]));
-    const cls = ["tt-project", "tt-detail", "tt-breakdown", "tt-compliance-panel"];
+
     if (el.classList.contains("tt-compliance-panel") || el.classList.contains("tt-entries")) return 12;
+
     if (el.classList.contains("tt-project")) return 7;
+
     if (el.classList.contains("tt-detail")) return 5;
+
     if (el.classList.contains("tt-breakdown")) return 4;
+
     if (el.classList.contains("tt-toolbar") || el.classList.contains("tt-chips")) return 12;
+
     return 6;
+
   }
+
+
 
   function readPlacement(el) {
+
     const cs = getComputedStyle(el);
+
     const col = Number(el.dataset.bentoCol || 0);
+
     const span = Number(el.dataset.bentoColSpan || 0);
+
     const row = Number(el.dataset.bentoRow || 0);
+
     const rowSpan = Number(el.dataset.bentoRowSpan || 1);
+
     if (col && span) {
+
       return { c: col, cs: span, r: row || 1, rs: rowSpan || 1 };
+
     }
+
     const gc = cs.gridColumnStart;
+
     const gspan = cs.gridColumnEnd;
+
     const gr = cs.gridRowStart;
+
     const grs = cs.gridRowEnd;
+
     let c = 1;
+
     let csVal = defaultSpan(el);
+
     let r = 1;
+
     let rs = 1;
+
     if (gc && gc !== "auto") c = Number(gc);
+
     if (gspan && gspan !== "auto" && String(gspan).includes("span")) {
+
       csVal = Number(String(gspan).replace("span", "").trim()) || csVal;
+
     }
+
     if (gr && gr !== "auto") r = Number(gr);
+
     if (grs && grs !== "auto" && String(grs).includes("span")) {
+
       rs = Number(String(grs).replace("span", "").trim()) || 1;
+
     }
+
     return { c, cs: csVal, r, rs };
+
   }
+
+
 
   function applyPlacement(el, p) {
+
     const c = Math.max(1, Math.min(COLS, Number(p.c || 1)));
+
     const cs = Math.max(1, Math.min(COLS, Number(p.cs || defaultSpan(el))));
+
     const safeC = Math.min(c, COLS - cs + 1);
+
     const r = Math.max(1, Number(p.r || 1));
+
     const rs = Math.max(1, Number(p.rs || 1));
+
     el.style.gridColumn = `${safeC} / span ${cs}`;
+
     el.style.gridRow = `${r} / span ${rs}`;
+
     el.dataset.bentoCol = String(safeC);
+
     el.dataset.bentoColSpan = String(cs);
+
     el.dataset.bentoRow = String(r);
+
     el.dataset.bentoRowSpan = String(rs);
+
   }
+
+
 
   function defaultLayout(grid) {
+
     const items = {};
+
     let row = 1;
+
     for (const el of tiles(grid)) {
+
       const cs = defaultSpan(el);
+
       items[el.dataset.bentoId] = { c: 1, cs, r: row, rs: 1 };
+
       row += 1;
+
     }
+
     return { version: VERSION, items };
+
   }
+
+
 
   function serialize(grid) {
+
     const items = {};
+
     for (const el of tiles(grid)) {
+
       items[el.dataset.bentoId] = readPlacement(el);
+
     }
+
     return { version: VERSION, items };
+
   }
+
+
 
   function applySaved(grid, layout) {
+
     const items = layout?.items || {};
+
     let row = 1;
+
     for (const el of tiles(grid)) {
+
       const id = el.dataset.bentoId;
+
       const saved = items[id];
+
       if (saved) {
+
         applyPlacement(el, saved);
+
       } else {
+
         applyPlacement(el, { c: 1, cs: defaultSpan(el), r: row, rs: 1 });
+
         row += 1;
+
       }
+
     }
+
   }
 
-  function ensureChrome(grid, state) {
-    if (state.toolbar) return;
-    const bar = document.createElement("div");
-    bar.className = "bento-layout-toolbar";
-    bar.innerHTML = `
-      <button type="button" data-bento-edit>Edit layout</button>
-      <button type="button" data-bento-reset hidden>Reset default</button>
-      <button type="button" data-bento-done class="primary" hidden>Done</button>
-    `;
+
+
+  function metaToolbarHost(grid) {
+
+    const scope = grid.closest(".bento-grid") || grid.parentElement || grid;
+
+    const strip = scope.querySelector(":scope > .meta-strip") || scope.querySelector(".meta-strip");
+
+    if (!strip) return null;
+
+    let main = strip.querySelector(".meta-strip-main");
+
+    if (!main) {
+
+      main = document.createElement("div");
+
+      main.className = "meta-strip-main";
+
+      strip.prepend(main);
+
+    }
+
+    main.style.display = "flex";
+
+    main.style.alignItems = "flex-start";
+
+    main.style.justifyContent = "space-between";
+
+    main.style.gap = "12px";
+
+    main.style.width = "100%";
+
+    return main;
+
+  }
+
+
+
+  function ensureIndicator(grid, state) {
+
+    if (state.indicator) return;
+
     const indicator = document.createElement("div");
+
     indicator.className = "bento-layout-drop-indicator";
+
     grid.appendChild(indicator);
-    document.body.appendChild(bar);
-    state.toolbar = bar;
+
     state.indicator = indicator;
 
-    bar.querySelector("[data-bento-edit]").addEventListener("click", () => setEditing(state, true));
-    bar.querySelector("[data-bento-done]").addEventListener("click", () => setEditing(state, false));
-    bar.querySelector("[data-bento-reset]").addEventListener("click", () => {
-      localStorage.removeItem(storageKey(state.dashboardId));
-      applySaved(state.grid, defaultLayout(state.grid));
-      decorateTiles(state);
-      persist(state);
-    });
   }
+
+
+
+  function ensureToolbar(grid, state, mode) {
+
+    ensureIndicator(grid, state);
+
+    if (mode === "none") {
+
+      state.toolbarMode = "none";
+
+      state.toolbar = null;
+
+      return;
+
+    }
+
+    if (state.toolbar && state.toolbarMode === mode) return;
+
+    if (state.toolbar) state.toolbar.remove();
+
+
+
+    const bar = document.createElement("div");
+
+    bar.className = "bento-layout-toolbar meta-inline";
+
+    bar.innerHTML = `
+
+      <button type="button" class="layout-edit-btn" data-bento-edit>Edit layout</button>
+
+      <button type="button" data-bento-reset hidden>Reset default</button>
+
+      <button type="button" data-bento-done class="primary" hidden>Done</button>
+
+    `;
+
+    const host = metaToolbarHost(grid);
+
+    if (host) {
+
+      host.appendChild(bar);
+
+    } else {
+
+      bar.style.margin = "8px 0 0";
+
+      grid.parentElement?.insertBefore(bar, grid) || grid.prepend(bar);
+
+    }
+
+    state.toolbar = bar;
+
+    state.toolbarMode = mode;
+
+
+
+    bar.querySelector("[data-bento-edit]").addEventListener("click", () => setEditing(state, true));
+
+    bar.querySelector("[data-bento-done]").addEventListener("click", () => setEditing(state, false));
+
+    bar.querySelector("[data-bento-reset]").addEventListener("click", () => resetLayout(state.grid));
+
+  }
+
+
 
   function decorateTiles(state) {
+
     for (const el of tiles(state.grid)) {
+
       if (!el.querySelector(".bento-drag-handle")) {
+
         const handle = document.createElement("div");
+
         handle.className = "bento-drag-handle";
+
         handle.textContent = "Drag to move";
+
         el.prepend(handle);
+
       }
+
       if (!el.querySelector(".bento-resize-handle")) {
+
         const resize = document.createElement("div");
+
         resize.className = "bento-resize-handle";
+
         resize.title = "Drag to resize width";
+
         el.appendChild(resize);
+
       }
+
     }
+
   }
+
+
 
   function persist(state) {
+
     saveDashboardPrefs(storageKey(state.dashboardId), serialize(state.grid));
+
   }
+
+
+
+  function syncToolbarButtons(state) {
+
+    if (!state.toolbar) return;
+
+    const on = state.editing;
+
+    const edit = state.toolbar.querySelector("[data-bento-edit]");
+
+    const reset = state.toolbar.querySelector("[data-bento-reset]");
+
+    const done = state.toolbar.querySelector("[data-bento-done]");
+
+    if (edit) edit.hidden = on;
+
+    if (reset) reset.hidden = !on;
+
+    if (done) done.hidden = !on;
+
+  }
+
+
 
   function setEditing(state, on) {
+
     state.editing = on;
+
     state.grid.classList.toggle("bento-layout-editing", on);
-    state.toolbar.querySelector("[data-bento-edit]").hidden = on;
-    state.toolbar.querySelector("[data-bento-reset]").hidden = !on;
-    state.toolbar.querySelector("[data-bento-done]").hidden = !on;
+
+    syncToolbarButtons(state);
+
     if (!on) persist(state);
+
   }
+
+
 
   function cellFromPoint(grid, clientX, clientY) {
+
     const rect = grid.getBoundingClientRect();
+
     const x = Math.max(0, Math.min(rect.width - 1, clientX - rect.left));
+
     const y = Math.max(0, clientY - rect.top);
+
     const colWidth = rect.width / COLS;
+
     const c = Math.max(1, Math.min(COLS, Math.floor(x / colWidth) + 1));
+
     const rowHeight = 72;
+
     const r = Math.max(1, Math.floor(y / rowHeight) + 1);
+
     return { c, r };
+
   }
+
+
 
   function showIndicator(state, p, cs) {
+
     const rect = state.grid.getBoundingClientRect();
+
     const colWidth = rect.width / COLS;
+
     state.indicator.style.display = "block";
+
     state.indicator.style.left = `${rect.left + (p.c - 1) * colWidth}px`;
+
     state.indicator.style.top = `${rect.top + (p.r - 1) * 72}px`;
+
     state.indicator.style.width = `${colWidth * cs}px`;
+
     state.indicator.style.height = "68px";
+
   }
+
+
 
   function hideIndicator(state) {
+
     if (state.indicator) state.indicator.style.display = "none";
+
   }
+
+
 
   function bindInteractions(state) {
+
     if (state.bound) return;
+
     state.bound = true;
 
+
+
     function onPointerMove(ev) {
+
       if (!state.dragging && !state.resizing) return;
+
       if (state.dragging) {
+
         const p = cellFromPoint(state.grid, ev.clientX, ev.clientY);
+
         const cs = Number(state.dragging.dataset.bentoColSpan || defaultSpan(state.dragging));
+
         showIndicator(state, p, cs);
+
       }
+
       if (state.resizing) {
+
         const rect = state.grid.getBoundingClientRect();
+
         const colWidth = rect.width / COLS;
+
         const delta = ev.clientX - state.resizeStartX;
+
         const next = Math.max(2, Math.min(COLS, Math.round(state.resizeStartSpan + delta / colWidth)));
+
         applyPlacement(state.resizing, {
+
           c: Number(state.resizing.dataset.bentoCol || 1),
+
           cs: next,
+
           r: Number(state.resizing.dataset.bentoRow || 1),
+
           rs: Number(state.resizing.dataset.bentoRowSpan || 1),
+
         });
+
       }
+
     }
+
+
 
     function onPointerUp(ev) {
+
       if (state.dragging) {
+
         const p = cellFromPoint(state.grid, ev.clientX, ev.clientY);
+
         const cs = Number(state.dragging.dataset.bentoColSpan || defaultSpan(state.dragging));
+
         applyPlacement(state.dragging, {
+
           c: p.c,
+
           cs,
+
           r: p.r,
+
           rs: Number(state.dragging.dataset.bentoRowSpan || 1),
+
         });
+
         persist(state);
+
       }
+
       if (state.resizing) persist(state);
+
       state.dragging = null;
+
       state.resizing = null;
+
       hideIndicator(state);
+
       window.removeEventListener("pointermove", onPointerMove);
+
       window.removeEventListener("pointerup", onPointerUp);
+
     }
+
+
 
     state.grid.addEventListener("pointerdown", (ev) => {
+
       if (!state.editing) return;
+
       const handle = ev.target.closest(".bento-resize-handle");
+
       const drag = ev.target.closest(".bento-drag-handle");
+
       const tile = ev.target.closest("[data-bento-id]");
+
       if (!tile || !state.grid.contains(tile)) return;
+
       if (handle) {
+
         state.resizing = tile;
+
         state.resizeStartX = ev.clientX;
+
         state.resizeStartSpan = Number(tile.dataset.bentoColSpan || defaultSpan(tile));
+
         ev.preventDefault();
+
         window.addEventListener("pointermove", onPointerMove);
+
         window.addEventListener("pointerup", onPointerUp);
+
         return;
+
       }
+
       if (drag) {
+
         state.dragging = tile;
+
         ev.preventDefault();
+
         window.addEventListener("pointermove", onPointerMove);
+
         window.addEventListener("pointerup", onPointerUp);
+
       }
+
     });
+
   }
+
+
+
+  function getState(grid) {
+
+    return mounted.get(grid) || null;
+
+  }
+
+
 
   function mount(grid, options) {
+
     if (!grid) return null;
+
     const dashboardId = options?.dashboardId || grid.dataset.bentoDashboard;
+
     if (!dashboardId) return null;
+
     grid.classList.add("bento-layout-root");
+
     if (!grid.dataset.bentoDashboard) grid.dataset.bentoDashboard = dashboardId;
 
+
+
+    const toolbarMode = resolveToolbarMode(options);
+
     let state = mounted.get(grid);
+
     if (!state) {
+
       state = { grid, dashboardId, editing: false };
+
       mounted.set(grid, state);
-      ensureChrome(grid, state);
+
       bindInteractions(state);
+
     }
 
+    state.dashboardId = dashboardId;
+
+    ensureToolbar(grid, state, toolbarMode);
+
+
+
     const saved = loadDashboardPrefs(storageKey(dashboardId));
+
     if (saved?.items) applySaved(grid, saved);
+
     else applySaved(grid, defaultLayout(grid));
+
     decorateTiles(state);
+
     return state;
+
   }
+
+
 
   function apply(grid, dashboardId) {
+
     const id = dashboardId || grid?.dataset?.bentoDashboard;
+
     if (!grid || !id) return;
+
     const state = mount(grid, { dashboardId: id });
+
     if (!state) return;
+
     const saved = loadDashboardPrefs(storageKey(id));
+
     if (saved?.items) applySaved(grid, saved);
+
     decorateTiles(state);
+
   }
+
+
 
   function openEditor(grid) {
+
     const root = grid || document.querySelector("[data-bento-dashboard]");
+
     if (!root) return false;
+
     const id = root.dataset.bentoDashboard;
+
     const state = mount(root, { dashboardId: id });
+
     if (state) setEditing(state, true);
+
     return Boolean(state);
+
   }
 
-  return { mount, apply, openEditor, storageKey, VERSION };
+
+
+  function closeEditor(grid) {
+
+    const root = grid || document.querySelector("[data-bento-dashboard]");
+
+    if (!root) return false;
+
+    const state = getState(root);
+
+    if (!state) return false;
+
+    setEditing(state, false);
+
+    return true;
+
+  }
+
+
+
+  function resetLayout(grid) {
+
+    const root = grid || document.querySelector("[data-bento-dashboard]");
+
+    if (!root) return false;
+
+    const state = getState(root) || mount(root, { dashboardId: root.dataset.bentoDashboard });
+
+    if (!state) return false;
+
+    localStorage.removeItem(storageKey(state.dashboardId));
+
+    applySaved(state.grid, defaultLayout(state.grid));
+
+    decorateTiles(state);
+
+    persist(state);
+
+    return true;
+
+  }
+
+
+
+  function isEditing(grid) {
+
+    const state = getState(grid || document.querySelector("[data-bento-dashboard]"));
+
+    return Boolean(state?.editing);
+
+  }
+
+
+
+  return { mount, apply, openEditor, closeEditor, resetLayout, isEditing, getState, storageKey, VERSION };
+
 })();
     const DATA = JSON.parse(document.getElementById("dashboard-data").textContent);
     const FILTER_PREFS_KEY = "dla-tt-filters:" + (DATA.month?.label || "default");
