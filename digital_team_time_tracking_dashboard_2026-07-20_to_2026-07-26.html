@@ -279,12 +279,11 @@ body { margin: 0; color: var(--ink); background: var(--bg); }
   grid-column: span 12;
 }
 .tt-kpis > .card { grid-column: span 2; min-width: 0; }
-.tt-compliance { grid-column: span 12; }
-.tt-main { grid-column: span 8; }
-.tt-aside { grid-column: span 4; position: sticky; top: 12px; }
-.tt-bottom { grid-column: span 12; }
-.top-stack { display: contents; }
-.layout { display: contents; }
+.tt-compliance-panel { grid-column: span 12; }
+.tt-project { grid-column: span 7; }
+.tt-detail { grid-column: span 5; position: sticky; top: 12px; align-self: start; }
+.tt-breakdown { grid-column: span 4; }
+.tt-entries { grid-column: span 12; }
 .toolbar {
   display: grid;
   grid-template-columns: repeat(6, minmax(150px, 1fr));
@@ -561,10 +560,15 @@ tr.clickable:hover { background: var(--surface-raised); }
 }
 .project-combo {
   display: grid;
-  grid-template-columns: minmax(420px, 0.86fr) minmax(320px, 1fr);
-  gap: 10px;
+  grid-template-columns: 1fr;
+  gap: 12px;
   align-items: start;
   margin-top: 8px;
+}
+@media (min-width: 1100px) {
+  .tt-project .project-combo {
+    grid-template-columns: minmax(280px, 0.92fr) minmax(220px, 1fr);
+  }
 }
 .pie-area { display: flex; justify-content: center; }
 .pie-area svg { width: min(100%, 210px); height: auto; }
@@ -623,9 +627,9 @@ tr.clickable:hover { background: var(--surface-raised); }
 }
 @media (max-width: 1240px) {
   .tt-kpis > .card { grid-column: span 4; }
-  .tt-main, .tt-aside { grid-column: span 12; }
-  .tt-aside { position: static; }
-  .layout, .split, .pie-shell, .project-combo, .analysis-grid { grid-template-columns: 1fr; }
+  .tt-project, .tt-detail, .tt-breakdown { grid-column: span 12; }
+  .tt-detail { position: static; }
+  .pie-shell, .project-combo, .analysis-grid { grid-template-columns: 1fr; }
   .toolbar { grid-template-columns: repeat(3, minmax(150px, 1fr)); }
 }
 @media (max-width: 760px) {
@@ -660,7 +664,7 @@ body {
 </head>
 <body>
   <div id="app"></div>
-  <script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-09T10:00:38","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["dahn.nguyen","hu.dam"],"2026-07-21":["dahn.nguyen","hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
+  <script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-09T10:12:31","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["dahn.nguyen","hu.dam"],"2026-07-21":["dahn.nguyen","hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
   <script>
   (function () {
     function fmtIsoDate(iso) {
@@ -1361,8 +1365,7 @@ function bindDdMmDateInput(el, onChange, options) {
             <div class="card"><div class="kpi-label">Off-target Hours</div><div class="kpi-value">${fmtHours(compliance.reduce((sum, row) => sum + row.offTargetHours, 0))}</div><div class="kpi-sub">Total deviation from ${fmtHours(TARGET)}h per workday</div></div>
           </section>
 
-          <section class="top-stack tt-compliance">
-            <section class="panel">
+          <section class="panel tt-compliance-panel">
               <div class="panel-head">
                 <h2>Daily 7.5h Compliance by Member</h2>
                 <div class="panel-note">
@@ -1397,12 +1400,9 @@ function bindDdMmDateInput(el, onChange, options) {
                   </tbody>
                 </table>
               </div>
-            </section>
           </section>
 
-          <section class="layout">
-            <div class="stack tt-main">
-              <section class="panel">
+          <section class="panel tt-project">
                 <div class="panel-head">
                   <h2>Project Hours Share</h2>
                   <div class="panel-note">${projects.length ? "Pie chart, legend, and project table are linked" : "No data"}</div>
@@ -1431,52 +1431,9 @@ function bindDdMmDateInput(el, onChange, options) {
                       </table>
                     </div>
                   </div>` : `<div class="empty">No project hours in the current filter scope.</div>`}
-              </section>
+          </section>
 
-              <section class="panel">
-                <div class="panel-head">
-                  <h2>Workload Breakdown</h2>
-                  <div class="panel-note">Member, workday, and ticket views stay synced with the same filters</div>
-                </div>
-                <div class="analysis-grid">
-                  <div>
-                    <div class="panel-head">
-                      <h2>By Team Member</h2>
-                      <div class="panel-note">Click a member bar</div>
-                    </div>
-                    <div class="bar-list">
-                      ${members.length ? members.map((row) => `<button type="button" class="bar-row ${filters.user === row.raw ? "active" : ""}" data-user="${esc(row.raw)}"><div class="bar-label">${esc(row.label)}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.max(2, row.amount / maxMember * 100).toFixed(2)}%"></div></div><div class="bar-value">${fmtHours(row.amount)}</div></button>`).join("") : `<div class="empty">No member hours in scope.</div>`}
-                    </div>
-                  </div>
-                  <div>
-                    <div class="panel-head">
-                      <h2>By Workday</h2>
-                      <div class="panel-note">Click a day bar</div>
-                    </div>
-                    <div class="bar-list">
-                      ${days.length ? days.map((row) => `<button type="button" class="bar-row ${filters.day === row.raw ? "active" : ""}" data-day="${esc(row.raw)}"><div class="bar-label">${esc(row.label)}</div><div class="bar-track"><div class="bar-fill blue" style="width:${Math.max(2, row.amount / maxDay * 100).toFixed(2)}%"></div></div><div class="bar-value">${fmtHours(row.amount)}</div></button>`).join("") : `<div class="empty">No workdays in scope.</div>`}
-                    </div>
-                  </div>
-                  <div>
-                    <div class="panel-head">
-                      <h2>By Ticket</h2>
-                      <div class="panel-note">Click a ticket row</div>
-                    </div>
-                    <div class="table-wrap">
-                      <table class="ticket-table">
-                        <thead><tr><th>Ticket</th><th>Project</th><th>Summary</th><th class="num">Hours</th></tr></thead>
-                        <tbody>
-                          ${tickets.length ? tickets.slice(0, 20).map((row) => `<tr class="clickable ${selectedTicket === String(row.bugId) ? "active-row" : ""}" data-ticket="${esc(row.bugId)}"><td>#${esc(row.bugId)}</td><td>${esc(row.project)}</td><td>${esc(row.summary)}</td><td class="num">${fmtHours(row.hours)}</td></tr>`).join("") : `<tr><td colspan="4" class="empty">No tickets in scope.</td></tr>`}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            </div>
-
-            <aside class="stack tt-aside">
-              <section class="panel">
+          <section class="panel tt-detail">
                 <div class="panel-head">
                   <h2>Ticket Detail</h2>
                   <div class="panel-note">${selectedTicket ? "Selected from the current filters" : "Pick a ticket from any chart or table"}</div>
@@ -1491,13 +1448,44 @@ function bindDdMmDateInput(el, onChange, options) {
                     <div class="detail-box"><div class="detail-label">Entries in scope</div><div class="detail-value">${fmtInt(selectedEntries.length || detailBase.entries || 0)}</div></div>
                   </div>
                 ` : `<div class="empty">No ticket selected yet.</div>`}
-              </section>
-
-            </aside>
           </section>
 
-          <section class="bottom-stack tt-bottom">
-            <section class="panel">
+          <section class="panel tt-breakdown">
+            <div class="panel-head">
+              <h2>By Team Member</h2>
+              <div class="panel-note">Click a member bar</div>
+            </div>
+            <div class="bar-list">
+              ${members.length ? members.map((row) => `<button type="button" class="bar-row ${filters.user === row.raw ? "active" : ""}" data-user="${esc(row.raw)}"><div class="bar-label">${esc(row.label)}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.max(2, row.amount / maxMember * 100).toFixed(2)}%"></div></div><div class="bar-value">${fmtHours(row.amount)}</div></button>`).join("") : `<div class="empty">No member hours in scope.</div>`}
+            </div>
+          </section>
+
+          <section class="panel tt-breakdown">
+            <div class="panel-head">
+              <h2>By Workday</h2>
+              <div class="panel-note">Click a day bar</div>
+            </div>
+            <div class="bar-list">
+              ${days.length ? days.map((row) => `<button type="button" class="bar-row ${filters.day === row.raw ? "active" : ""}" data-day="${esc(row.raw)}"><div class="bar-label">${esc(row.label)}</div><div class="bar-track"><div class="bar-fill blue" style="width:${Math.max(2, row.amount / maxDay * 100).toFixed(2)}%"></div></div><div class="bar-value">${fmtHours(row.amount)}</div></button>`).join("") : `<div class="empty">No workdays in scope.</div>`}
+            </div>
+          </section>
+
+          <section class="panel tt-breakdown">
+            <div class="panel-head">
+              <h2>By Ticket</h2>
+              <div class="panel-note">Click a ticket row</div>
+            </div>
+            <div class="table-wrap">
+              <table class="ticket-table">
+                <thead><tr><th>Ticket</th><th>Project</th><th>Summary</th><th class="num">Hours</th></tr></thead>
+                <tbody>
+                  ${tickets.length ? tickets.slice(0, 20).map((row) => `<tr class="clickable ${selectedTicket === String(row.bugId) ? "active-row" : ""}" data-ticket="${esc(row.bugId)}"><td>#${esc(row.bugId)}</td><td>${esc(row.project)}</td><td>${esc(row.summary)}</td><td class="num">${fmtHours(row.hours)}</td></tr>`).join("") : `<tr><td colspan="4" class="empty">No tickets in scope.</td></tr>`}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel tt-entries">
               <div class="panel-head">
                 <h2>Time Tracking Details</h2>
                 <div class="panel-note">Every filtered Mantis time entry. Click a row to lock the ticket detail.</div>
@@ -1521,7 +1509,6 @@ function bindDdMmDateInput(el, onChange, options) {
                   </tbody>
                 </table>
               </div>
-            </section>
           </section>
         </main>
       `;
