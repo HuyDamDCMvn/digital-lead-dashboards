@@ -1,0 +1,2540 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Digital Team Time Tracking Dashboard</title>
+  <style>
+.dla-date-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+.dla-date-field input {
+  flex: 1 1 auto;
+  min-width: 0;
+  cursor: pointer;
+}
+.dla-date-trigger,
+.dla-date-clear {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line-strong, #cbd5e1);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text, #0f172a);
+  padding: 0;
+}
+.dla-date-trigger:hover,
+.dla-date-clear:hover {
+  background: var(--surface-raised, #f8fafc);
+}
+.dla-date-clear {
+  width: 28px;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.dla-date-field input.invalid-date {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 1px #fecaca;
+}
+.dla-date-popup {
+  position: fixed;
+  z-index: 10050;
+  width: 280px;
+  padding: 12px;
+  border: 1px solid var(--line-strong, #cbd5e1);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
+  color: var(--text, #0f172a);
+}
+.dla-date-popup-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.dla-date-popup-title {
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+.dla-date-popup-nav {
+  display: inline-flex;
+  gap: 4px;
+}
+.dla-date-popup-nav button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+.dla-date-popup-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.dla-date-popup-grid .dla-cal-wd {
+  text-align: center;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--muted, #64748b);
+  padding: 2px 0 6px;
+}
+.dla-date-popup-grid button {
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+}
+.dla-date-popup-grid button:hover:not(:disabled) {
+  background: var(--surface-raised, #f1f5f9);
+}
+.dla-date-popup-grid button.is-selected {
+  background: var(--accent, #0f766e);
+  color: #fff;
+}
+.dla-date-popup-grid button.is-today {
+  box-shadow: inset 0 0 0 1px var(--accent, #0f766e);
+}
+.dla-date-popup-grid button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.dla-date-popup-grid button.is-outside {
+  color: var(--muted, #94a3b8);
+}
+
+:root {
+  color-scheme: light;
+  --bg: #f4f6f8;
+  --panel: #ffffff;
+  --surface-raised: #f8fafc;
+  --ink: #0f172a;
+  --muted: #475569;
+  --line: #e2e8f0;
+  --accent: #0f766e;
+  --accent-strong: #115e59;
+  --accent-soft: #ccfbf1;
+  --hero-bg: #134e4a;
+  --shadow: 0 4px 14px rgba(15, 23, 42, 0.07);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --radius: 10px;
+  --radius-lg: 12px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --transition: 160ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+:root { --bento-gap: 14px; }
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--bento-gap);
+  align-items: start;
+}
+.bento-cell { min-width: 0; }
+.bento-span-12 { grid-column: span 12; }
+.bento-span-8 { grid-column: span 8; }
+.bento-span-6 { grid-column: span 6; }
+.bento-span-4 { grid-column: span 4; }
+.bento-span-3 { grid-column: span 3; }
+.bento-span-2 { grid-column: span 2; }
+.bento-nested {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--bento-gap);
+  width: 100%;
+  grid-column: span 12;
+  align-items: start;
+}
+@media (max-width: 1199px) {
+  .bento-span-8, .bento-span-6 { grid-column: span 12; }
+  .bento-span-4, .bento-span-3 { grid-column: span 6; }
+  .bento-span-2 { grid-column: span 4; }
+}
+@media (max-width: 767px) {
+  .bento-span-8, .bento-span-6, .bento-span-4, .bento-span-3, .bento-span-2 {
+    grid-column: span 12;
+  }
+}
+@media print {
+  .bento-grid, .bento-nested { display: block; }
+  .bento-grid > *, .bento-nested > * { break-inside: avoid; margin-bottom: 12px; }
+}
+
+
+.meta-strip {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 14px 18px;
+}
+.meta-strip-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+.meta-title {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-wrap: balance;
+  color: var(--ink);
+}
+.meta-sub { margin: 4px 0 0; color: var(--muted); font-size: 0.875rem; }
+.meta-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.meta-pill {
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.meta-strip .source-panel {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-raised);
+}
+.meta-warning { color: #b91c1c; font-weight: 600; font-size: 0.8125rem; margin: 8px 0 0; }
+
+
+.bento-grid.bento-layout-root {
+  position: relative;
+  grid-auto-rows: minmax(72px, auto);
+}
+[data-bento-host] { display: contents; }
+.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]) {
+  outline: 2px dashed var(--accent, #0f766e);
+  outline-offset: -2px;
+  cursor: default;
+  touch-action: none;
+  position: relative;
+}
+.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]) .bento-drag-handle {
+  display: flex;
+}
+.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]) .bento-resize-handle {
+  display: block;
+}
+.bento-drag-handle {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  margin: -4px 0 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--accent-soft, #ccfbf1);
+  color: var(--accent-strong, #115e59);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  width: fit-content;
+  max-width: 100%;
+}
+.bento-drag-handle::before {
+  content: "⋮⋮";
+  font-size: 0.875rem;
+  line-height: 1;
+}
+.bento-drag-handle:active { cursor: grabbing; }
+.bento-resize-handle {
+  display: none;
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--accent, #0f766e);
+  cursor: nwse-resize;
+  opacity: 0.85;
+  z-index: 3;
+}
+.bento-resize-row-handle {
+  display: none;
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--accent, #0f766e);
+  cursor: ns-resize;
+  opacity: 0.85;
+  z-index: 3;
+}
+.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]) .bento-resize-row-handle {
+  display: block;
+}
+.bento-layout-toolbar {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.bento-layout-toolbar.meta-inline {
+  margin-left: auto;
+}
+.bento-layout-toolbar button {
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink, #0f172a);
+  padding: 6px 11px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.bento-layout-toolbar button:hover { background: var(--surface-raised, #f8fafc); }
+.bento-layout-toolbar button.primary {
+  background: var(--accent, #0f766e);
+  border-color: var(--accent, #0f766e);
+  color: #fff;
+}
+.bento-layout-toolbar button.layout-edit-btn {
+  background: #0f766e;
+  border-color: #0f766e;
+  color: #fff;
+}
+.bento-layout-toolbar button.layout-edit-btn:hover { background: #115e59; }
+.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]).bento-tile-dragging {
+  opacity: 0.38;
+  pointer-events: none;
+}
+.bento-layout-drop-indicator {
+  position: absolute;
+  border: 2px solid var(--accent, #0f766e);
+  border-radius: 10px;
+  background: rgba(15, 118, 110, 0.12);
+  box-shadow: 0 8px 24px rgba(15, 118, 110, 0.18);
+  pointer-events: none;
+  z-index: 100;
+  display: none;
+  box-sizing: border-box;
+  will-change: transform, width, height;
+}
+@media (max-width: 767px) {
+  .bento-layout-toolbar.meta-inline {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .bento-grid.bento-layout-root:not(.bento-layout-editing) > [data-bento-id]:not([data-bento-id] [data-bento-id]) {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+  }
+}
+@media print {
+  .bento-grid.bento-layout-root [data-bento-id]:not([data-bento-id] [data-bento-id]) {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+    break-inside: avoid;
+  }
+  .bento-drag-handle, .bento-resize-handle, .bento-resize-row-handle, .bento-layout-drop-indicator { display: none !important; }
+}
+
+
+:root {
+  --deep: var(--hero-bg);
+  --teal: var(--accent);
+  --teal-soft: var(--accent-soft);
+  --red: #dc2626;
+  --red-soft: #fee2e2;
+  --gold: #ca8a04;
+  --gold-soft: #fef9c3;
+  --blue: #2563eb;
+  --compliance-ok-bg: #ecfdf5;
+  --compliance-ok-border: #86efac;
+  --compliance-miss-bg: #fef2f2;
+  --compliance-miss-border: #fecaca;
+  --compliance-offday-bg: #f1f5f9;
+  --compliance-offday-border: #e2e8f0;
+  --compliance-pending-bg: #f8fafc;
+  --compliance-pending-border: #cbd5e1;
+  --compliance-leave-bg: #e0f2fe;
+  --compliance-leave-border: #7dd3fc;
+  --compliance-leave-half-bg: #f0f9ff;
+}
+body { margin: 0; color: var(--ink); background: var(--bg); }
+#app { display: contents; min-height: 100vh; }
+#tt-root { display: contents; }
+.shell { width: calc(100% - 32px); max-width: none; margin: 0 auto; padding: 18px 0; }
+.shell.bento-grid { width: 100%; padding: 16px; max-width: 1840px; }
+.tt-toolbar { grid-column: span 12; }
+.tt-chips { grid-column: span 12; }
+.tt-kpis {
+  display: contents;
+}
+.tt-kpis > .card { grid-column: span 2; min-width: 0; }
+.tt-compliance-panel { grid-column: span 12; }
+.tt-project { grid-column: span 7; }
+.tt-detail { grid-column: span 5; position: sticky; top: 12px; align-self: start; }
+.tt-breakdown { grid-column: span 4; }
+.tt-entries { grid-column: span 12; }
+.toolbar {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+  align-items: end;
+}
+.control label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.control input, .control select, .action-button {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  padding: 0 12px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.control input:focus, .control select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.action-button { font-weight: 600; background: var(--panel); }
+.action-button:hover { background: var(--surface-raised); }
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 34px;
+  margin-bottom: 14px;
+  align-items: center;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  box-shadow: var(--shadow-sm);
+}
+.chip button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+  padding: 0;
+}
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.card, .panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+.card { padding: 16px; }
+.kpi-label {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.kpi-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.kpi-sub { margin-top: 8px; color: var(--muted); font-size: 0.75rem; }
+.panel { padding: 16px; min-width: 0; }
+.stack { display: grid; gap: 14px; }
+.split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.analysis-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.bottom-stack { display: contents; }
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+.panel h2 { margin: 0; font-size: 1.125rem; font-weight: 600; }
+.panel-note { color: var(--muted); font-size: 0.75rem; }
+.legend-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  vertical-align: middle;
+  margin-right: 3px;
+  border: 1px solid transparent;
+}
+.legend-swatch.ok { background: var(--compliance-ok-bg); border-color: var(--compliance-ok-border); }
+.legend-swatch.miss { background: var(--compliance-miss-bg); border-color: var(--compliance-miss-border); }
+.legend-swatch.leave { background: var(--compliance-leave-bg); border-color: var(--compliance-leave-border); }
+.legend-swatch.leave-half {
+  background: var(--compliance-leave-half-bg);
+  border-color: var(--compliance-leave-border);
+  border-style: dashed;
+}
+.legend-swatch.offday { background: var(--compliance-offday-bg); border-color: var(--compliance-offday-border); }
+.legend-swatch.pending { background: var(--compliance-pending-bg); border-color: var(--compliance-pending-border); }
+.empty { color: var(--muted); font-size: 0.8125rem; padding: 12px 0; }
+.bar-list { display: grid; gap: 8px; }
+.bar-row {
+  display: grid;
+  grid-template-columns: minmax(90px, 1.1fr) minmax(140px, 2.4fr) 84px;
+  gap: 10px;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--ink);
+  text-align: left;
+}
+.bar-row.active .bar-label { color: var(--deep); font-weight: 600; }
+.bar-track {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+.bar-fill { height: 100%; border-radius: 999px; background: var(--teal); }
+.bar-fill.blue { background: var(--blue); }
+.bar-fill.gold { background: var(--gold); }
+.bar-label, .bar-value {
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.project-table, .entry-table, .ticket-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+.entry-table { min-width: 1180px; }
+.table-wrap {
+  overflow: auto;
+  max-height: 520px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+}
+th, td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-raised);
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  z-index: 1;
+}
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.active-row { background: var(--accent-soft); }
+tr.clickable { cursor: pointer; transition: background var(--transition); }
+tr.clickable:hover { background: var(--surface-raised); }
+.compliance-wrap { overflow-x: hidden; overflow-y: visible; }
+.compliance {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 3px;
+  min-width: 0;
+}
+.compliance col.user-col { width: 72px; }
+.compliance th {
+  position: static;
+  border: 0;
+  background: transparent;
+  padding: 0 0 3px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.625rem;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: normal;
+}
+.compliance td { border: 0; padding: 0; background: transparent; }
+.cell-button {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 5px 3px;
+  text-align: center;
+  background: var(--panel);
+  box-shadow: var(--shadow-sm);
+  transition: outline-color var(--transition);
+  overflow: hidden;
+}
+.cell-button.ok {
+  background: var(--compliance-ok-bg);
+  border-color: var(--compliance-ok-border);
+}
+.cell-button.miss {
+  background: var(--compliance-miss-bg);
+  border-color: var(--compliance-miss-border);
+}
+.cell-button.offday {
+  background: var(--compliance-offday-bg);
+  border-color: var(--compliance-offday-border);
+}
+.cell-button.pending {
+  background: var(--compliance-pending-bg);
+  border-color: var(--compliance-pending-border);
+}
+.cell-button.leave {
+  background: var(--compliance-leave-bg);
+  border-color: var(--compliance-leave-border);
+}
+.cell-button.leave .cell-hours,
+.cell-button.leave .cell-gap { color: #0369a1; }
+.cell-button.leave.half {
+  background: var(--compliance-leave-half-bg);
+  border-color: var(--compliance-leave-border);
+  border-style: dashed;
+}
+.cell-button.active { outline: 2px solid var(--accent); outline-offset: 1px; }
+.cell-hours {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+.cell-gap {
+  margin-top: 2px;
+  font-size: 0.5625rem;
+  line-height: 1.05;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+@media (min-width: 1600px) {
+  .compliance col.user-col { width: 84px; }
+  .cell-button { min-height: 52px; padding: 6px 4px; }
+  .cell-hours { font-size: 0.875rem; }
+  .cell-gap { font-size: 0.625rem; }
+}
+.pie-shell {
+  display: grid;
+  grid-template-columns: minmax(180px, 220px) minmax(180px, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+.project-combo {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  align-items: start;
+  margin-top: 8px;
+}
+@media (min-width: 1100px) {
+  .tt-project .project-combo {
+    grid-template-columns: minmax(280px, 0.92fr) minmax(220px, 1fr);
+  }
+}
+.pie-area { display: flex; justify-content: center; }
+.pie-area svg { width: min(100%, 210px); height: auto; }
+.pie-center-main { font-size: 1.125rem; font-weight: 700; }
+.pie-center-sub { font-size: 0.625rem; fill: var(--muted); }
+.legend { display: grid; gap: 5px; }
+.legend button {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+  gap: 6px;
+  align-items: center;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: var(--radius);
+  padding: 5px 7px;
+  text-align: left;
+  box-shadow: var(--shadow-sm);
+  font-size: 0.75rem;
+  transition: border-color var(--transition);
+}
+.legend button.active { border-color: var(--accent); }
+.swatch { width: 10px; height: 10px; border-radius: 3px; }
+.project-combo .table-wrap { max-height: 240px; border-radius: var(--radius); }
+.project-combo .project-table { font-size: 0.75rem; }
+.project-combo th,
+.project-combo td { padding: 6px 8px; }
+.detail-grid { display: grid; gap: 8px; }
+.detail-box {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  padding: 10px 12px;
+}
+.detail-label {
+  color: var(--muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.detail-value { margin-top: 4px; overflow-wrap: anywhere; font-size: 0.875rem; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 3px 8px;
+  background: var(--surface-raised);
+  font-size: 0.75rem;
+}
+.forecast-snippet-wrap { width: calc(100% - 32px); max-width: none; margin: 0 auto; padding: 0; }
+.forecast-disclaimer {
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+@media (max-width: 1240px) {
+  .tt-kpis > .card { grid-column: span 4; }
+  .tt-project, .tt-detail, .tt-breakdown { grid-column: span 12; }
+  .tt-detail { position: static; }
+  .pie-shell, .project-combo, .analysis-grid { grid-template-columns: 1fr; }
+  .toolbar { grid-template-columns: repeat(3, minmax(150px, 1fr)); }
+}
+@media (max-width: 760px) {
+  .shell { padding: 12px; }
+  .toolbar, .kpis { grid-template-columns: 1fr; }
+  .tt-kpis > .card { grid-column: span 12; }
+  .bar-row { grid-template-columns: 1fr; gap: 4px; }
+}
+
+  </style>
+  <style id="dla-full-frame-style">
+html, body {
+  width: 100% !important;
+  max-width: none !important;
+  overflow-x: hidden !important;
+}
+body {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.wrap, .shell, .main, .container, .dashboard, .dashboard-shell, .page, main,
+.app-main, .content, .report, .report-shell {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.card, .panel, .section, .project-section, .chart-panel, .table-section {
+  max-width: none !important;
+}
+</style>
+</head>
+<body>
+  <div id="app"></div>
+  <script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-13T07:49:51","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["dahn.nguyen","hu.dam"],"2026-07-21":["dahn.nguyen","hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
+  <script>
+  (function () {
+    function fmtIsoDate(iso) {
+  const day = String(iso || "").slice(0, 10);
+  if (day.length < 10 || day[4] !== "-") return String(iso || "");
+  return day.slice(8, 10) + "/" + day.slice(5, 7) + "/" + day.slice(0, 4);
+}
+function fmtIsoDateTime(iso) {
+  const text = String(iso || "");
+  const day = text.slice(0, 10);
+  if (day.length < 10 || day[4] !== "-") return text;
+  const time = text.length >= 16 ? text.slice(11, 16) : "";
+  return fmtIsoDate(day) + (time ? " " + time : "");
+}
+function parseDdMmYyyy(text) {
+  const raw = String(text || "").trim();
+  const match = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!match) return null;
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  const year = Number(match[3]);
+  if (month < 1 || month > 12 || day < 1 || day > 31 || year < 1900) return null;
+  const probe = new Date(year, month - 1, day);
+  if (probe.getFullYear() !== year || probe.getMonth() !== month - 1 || probe.getDate() !== day) return null;
+  return String(year).padStart(4, "0") + "-" + String(month).padStart(2, "0") + "-" + String(day).padStart(2, "0");
+}
+function setDateInputDisplay(el, iso) {
+  if (!el) return;
+  const day = String(iso || "").slice(0, 10);
+  el.dataset.isoValue = day.length === 10 && day[4] === "-" ? day : "";
+  el.value = el.dataset.isoValue ? fmtIsoDate(el.dataset.isoValue) : "";
+  el.classList.remove("invalid-date");
+}
+function readDateInputIso(el) {
+  if (!el) return "";
+  const parsed = parseDdMmYyyy(el.value);
+  if (parsed) {
+    el.dataset.isoValue = parsed;
+    el.value = fmtIsoDate(parsed);
+    el.classList.remove("invalid-date");
+    return parsed;
+  }
+  if (el.value.trim()) {
+    el.classList.add("invalid-date");
+    return "";
+  }
+  el.dataset.isoValue = "";
+  el.classList.remove("invalid-date");
+  return "";
+}
+function loadDashboardPrefs(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+function saveDashboardPrefs(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // Private mode or quota exceeded — ignore.
+  }
+}
+const DLA_CAL_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const DLA_CAL_WD = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const DlaDatePicker = (function () {
+  let popup = null;
+  let anchor = null;
+  let state = null;
+  function ensurePopup() {
+    if (popup) return popup;
+    popup = document.createElement("div");
+    popup.className = "dla-date-popup";
+    popup.hidden = true;
+    popup.addEventListener("mousedown", (event) => event.stopPropagation());
+    document.body.appendChild(popup);
+    document.addEventListener("mousedown", (event) => {
+      if (!popup || popup.hidden) return;
+      if (popup.contains(event.target)) return;
+      if (anchor && (anchor.contains(event.target) || anchor === event.target)) return;
+      close();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") close();
+    });
+    return popup;
+  }
+  function isoToLocalDate(iso) {
+    const parts = String(iso || "").slice(0, 10).split("-").map(Number);
+    if (parts.length !== 3 || parts.some((part) => !Number.isFinite(part))) return new Date(NaN);
+    return new Date(parts[0], parts[1] - 1, parts[2]);
+  }
+  function localIsoFromDate(dt) {
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth() + 1).padStart(2, "0");
+    const d = String(dt.getDate()).padStart(2, "0");
+    return y + "-" + m + "-" + d;
+  }
+  function compareIso(a, b) {
+    return String(a || "").localeCompare(String(b || ""));
+  }
+  function render() {
+    const el = ensurePopup();
+    if (!state) return;
+    const first = new Date(state.viewYear, state.viewMonth, 1);
+    const startOffset = (first.getDay() + 6) % 7;
+    const start = new Date(state.viewYear, state.viewMonth, 1 - startOffset);
+    const todayIso = localIsoFromDate(new Date());
+    let cells = DLA_CAL_WD.map((label) => '<div class="dla-cal-wd">' + label + "</div>").join("");
+    for (let i = 0; i < 42; i += 1) {
+      const day = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+      const iso = localIsoFromDate(day);
+      const outside = day.getMonth() !== state.viewMonth;
+      const disabled = (state.min && compareIso(iso, state.min) < 0) || (state.max && compareIso(iso, state.max) > 0);
+      const classes = [];
+      if (outside) classes.push("is-outside");
+      if (iso === state.selectedIso) classes.push("is-selected");
+      if (iso === todayIso) classes.push("is-today");
+      cells += '<button type="button" data-iso="' + iso + '"' + (disabled ? " disabled" : "") + ' class="' + classes.join(" ") + '">' + day.getDate() + "</button>";
+    }
+    el.innerHTML =
+      '<div class="dla-date-popup-head">' +
+      '<div class="dla-date-popup-title">' + DLA_CAL_MONTHS[state.viewMonth] + " " + state.viewYear + "</div>" +
+      '<div class="dla-date-popup-nav">' +
+      '<button type="button" data-nav="-1" aria-label="Previous month">&lsaquo;</button>' +
+      '<button type="button" data-nav="1" aria-label="Next month">&rsaquo;</button>' +
+      "</div></div>" +
+      '<div class="dla-date-popup-grid">' + cells + "</div>";
+    el.querySelectorAll("[data-nav]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.viewMonth += Number(btn.dataset.nav);
+        if (state.viewMonth < 0) { state.viewMonth = 11; state.viewYear -= 1; }
+        if (state.viewMonth > 11) { state.viewMonth = 0; state.viewYear += 1; }
+        render();
+      });
+    });
+    el.querySelectorAll("[data-iso]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (btn.disabled) return;
+        const iso = btn.dataset.iso;
+        if (state.onSelect) state.onSelect(iso);
+        close();
+      });
+    });
+  }
+  function positionPopup() {
+    if (!popup || !anchor || popup.hidden) return;
+    const rect = anchor.getBoundingClientRect();
+    const margin = 8;
+    let top = rect.bottom + margin;
+    let left = rect.left;
+    popup.style.top = top + "px";
+    popup.style.left = left + "px";
+    const bounds = popup.getBoundingClientRect();
+    if (bounds.right > window.innerWidth - margin) {
+      left = Math.max(margin, window.innerWidth - bounds.width - margin);
+      popup.style.left = left + "px";
+    }
+    if (bounds.bottom > window.innerHeight - margin) {
+      top = Math.max(margin, rect.top - bounds.height - margin);
+      popup.style.top = top + "px";
+    }
+  }
+  function open(input, config) {
+    anchor = input;
+    const seed = config && config.iso ? config.iso : localIsoFromDate(new Date());
+    const seedDate = isoToLocalDate(seed);
+    state = {
+      viewYear: seedDate.getFullYear(),
+      viewMonth: seedDate.getMonth(),
+      selectedIso: (config && config.iso) || "",
+      min: (config && config.min) || "",
+      max: (config && config.max) || "",
+      onSelect: (config && config.onSelect) || null,
+    };
+    render();
+    const el = ensurePopup();
+    el.hidden = false;
+    positionPopup();
+  }
+  function close() {
+    if (popup) popup.hidden = true;
+    state = null;
+    anchor = null;
+  }
+  return { open, close };
+})();
+function bindDdMmDatePicker(input, onChange, options) {
+  if (!input || input.dataset.dlaDatePicker === "1") return;
+  options = options || {};
+  input.dataset.dlaDatePicker = "1";
+  input.readOnly = true;
+  input.setAttribute("autocomplete", "off");
+  input.setAttribute("spellcheck", "false");
+  input.setAttribute("placeholder", options.placeholder || "dd/mm/yyyy");
+  if (!input.parentElement || !input.parentElement.classList.contains("dla-date-field")) {
+    const wrap = document.createElement("div");
+    wrap.className = "dla-date-field";
+    input.parentNode.insertBefore(wrap, input);
+    wrap.appendChild(input);
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "dla-date-trigger";
+    trigger.setAttribute("aria-label", "Open calendar");
+    trigger.innerHTML = "&#128197;";
+    wrap.appendChild(trigger);
+    if (options.clearable !== false) {
+      const clearBtn = document.createElement("button");
+      clearBtn.type = "button";
+      clearBtn.className = "dla-date-clear";
+      clearBtn.setAttribute("aria-label", "Clear date");
+      clearBtn.textContent = "×";
+      clearBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setDateInputDisplay(input, "");
+        if (typeof onChange === "function") onChange("");
+      });
+      wrap.appendChild(clearBtn);
+    }
+    trigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      openDdMmDatePicker(input, onChange, options);
+    });
+  }
+  input.addEventListener("click", () => openDdMmDatePicker(input, onChange, options));
+}
+function openDdMmDatePicker(input, onChange, options) {
+  options = options || {};
+  const current = readDateInputIso(input) || options.defaultIso || "";
+  DlaDatePicker.open(input, {
+    iso: current || localIsoFromDate(new Date()),
+    min: options.min || "",
+    max: options.max || "",
+    onSelect: (iso) => {
+      setDateInputDisplay(input, iso);
+      if (typeof onChange === "function") onChange(iso);
+    },
+  });
+}
+function localIsoFromDate(dt) {
+  const y = dt.getFullYear();
+  const m = String(dt.getMonth() + 1).padStart(2, "0");
+  const d = String(dt.getDate()).padStart(2, "0");
+  return y + "-" + m + "-" + d;
+}
+function bindDdMmDateInput(el, onChange, options) {
+  bindDdMmDatePicker(el, onChange, options);
+}
+    function loadDashboardPrefs(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+function loadLayout(dashboardId) {
+  try {
+    for (const ver of [4, 3, 2, 1]) {
+      const raw = localStorage.getItem(`dla-bento-layout:v${ver}:${dashboardId}`);
+      if (!raw) continue;
+      const parsed = JSON.parse(raw);
+      parsed._loadedFromVersion = ver;
+      return parsed;
+    }
+  } catch {
+    // ignore parse errors
+  }
+  return null;
+}
+function saveDashboardPrefs(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // ignore quota / private mode
+  }
+}
+const DlaBentoLayout = (() => {
+  const VERSION = 4;
+  const COLS = 12;
+  const mounted = new WeakMap();
+
+  function storageKey(dashboardId) {
+    return `dla-bento-layout:v${VERSION}:${dashboardId}`;
+  }
+
+  function inIframe() {
+    try {
+      return window.self !== window.top;
+    } catch {
+      return true;
+    }
+  }
+
+  function resolveToolbarMode(options) {
+    const mode = options?.toolbar;
+    if (mode === "none" || mode === "meta") return mode;
+    return inIframe() ? "none" : "meta";
+  }
+
+  function layoutRoot() {
+    return (
+      document.querySelector("[data-bento-dashboard]") ||
+      document.querySelector(".bento-grid.bento-layout-root") ||
+      document.querySelector(".bento-grid")
+    );
+  }
+
+  function tiles(grid) {
+    if (!grid) return [];
+    return [...grid.querySelectorAll("[data-bento-id]")].filter((el) => {
+      let parent = el.parentElement;
+      while (parent && parent !== grid) {
+        if (parent.matches("[data-bento-id]")) return false;
+        parent = parent.parentElement;
+      }
+      return true;
+    });
+  }
+
+  function defaultSpan(el) {
+    const attr = Number(el.dataset.bentoSpan || el.getAttribute("data-bento-span") || 0);
+    if (attr > 0) return Math.min(COLS, attr);
+    const match = String(el.className || "").match(/bento-span-(\d+)/);
+    if (match) return Math.min(COLS, Number(match[1]));
+    if (el.classList.contains("tt-compliance-panel") || el.classList.contains("tt-entries")) return 12;
+    if (el.classList.contains("tt-project")) return 7;
+    if (el.classList.contains("tt-detail")) return 5;
+    if (el.classList.contains("tt-breakdown")) return 4;
+    if (el.classList.contains("tt-toolbar") || el.classList.contains("tt-chips")) return 12;
+    return 6;
+  }
+
+  function readPlacement(el) {
+    const cs = getComputedStyle(el);
+    const col = Number(el.dataset.bentoCol || 0);
+    const span = Number(el.dataset.bentoColSpan || 0);
+    const row = Number(el.dataset.bentoRow || 0);
+    const rowSpan = Number(el.dataset.bentoRowSpan || 1);
+    if (col && span) {
+      return { c: col, cs: span, r: row || 1, rs: rowSpan || 1 };
+    }
+    const gc = cs.gridColumnStart;
+    const gspan = cs.gridColumnEnd;
+    const gr = cs.gridRowStart;
+    const grs = cs.gridRowEnd;
+    let c = 1;
+    let csVal = defaultSpan(el);
+    let r = 1;
+    let rs = 1;
+    if (gc && gc !== "auto") c = Number(gc);
+    if (gspan && gspan !== "auto" && String(gspan).includes("span")) {
+      csVal = Number(String(gspan).replace("span", "").trim()) || csVal;
+    }
+    if (gr && gr !== "auto") r = Number(gr);
+    if (grs && grs !== "auto" && String(grs).includes("span")) {
+      rs = Number(String(grs).replace("span", "").trim()) || 1;
+    }
+    return { c, cs: csVal, r, rs };
+  }
+
+  function applyPlacement(el, p) {
+    const c = Math.max(1, Math.min(COLS, Number(p.c || 1)));
+    const cs = Math.max(1, Math.min(COLS, Number(p.cs || defaultSpan(el))));
+    const safeC = Math.min(c, COLS - cs + 1);
+    const r = Math.max(1, Number(p.r || 1));
+    const rs = Math.max(1, Number(p.rs || 1));
+    el.style.setProperty("grid-column", `${safeC} / span ${cs}`, "important");
+    el.style.setProperty("grid-row", `${r} / span ${rs}`, "important");
+    el.dataset.bentoCol = String(safeC);
+    el.dataset.bentoColSpan = String(cs);
+    el.dataset.bentoRow = String(r);
+    el.dataset.bentoRowSpan = String(rs);
+  }
+
+  function rowFromTop(topPx, metrics) {
+    return Math.max(1, Math.floor(Math.max(0, topPx) / metrics.rowUnit) + 1);
+  }
+
+  function columnFromLeft(leftPx, cs, metrics) {
+    let c = Math.floor(Math.max(0, leftPx) / metrics.colUnit) + 1;
+    return Math.max(1, Math.min(COLS - cs + 1, c));
+  }
+
+  function packLayoutDefault(grid, onlyMissing = true) {
+    const list = sortedTiles(grid).filter((el) => !(onlyMissing && el.dataset.bentoCol));
+    let row = 1;
+    let col = 1;
+    for (const el of list) {
+      const cs = Math.max(1, Math.min(COLS, Number(el.dataset.bentoColSpan || defaultSpan(el))));
+      const rs = defaultRowSpan(el);
+      if (cs >= COLS) {
+        if (col > 1) {
+          row += 1;
+          col = 1;
+        }
+        applyPlacement(el, { c: 1, cs: COLS, r: row, rs });
+        row += rs;
+        col = 1;
+        continue;
+      }
+      if (col + cs - 1 > COLS) {
+        row += 1;
+        col = 1;
+      }
+      applyPlacement(el, { c: col, cs, r: row, rs });
+      col += cs;
+      if (col > COLS) {
+        row += 1;
+        col = 1;
+      }
+    }
+  }
+
+  function sortedTiles(grid) {
+    return tiles(grid)
+      .map((el, idx) => ({
+        el,
+        idx,
+        order: Number(el.dataset.bentoOrder || 0),
+      }))
+      .sort((a, b) => (a.order - b.order) || (a.idx - b.idx))
+      .map((item) => item.el);
+  }
+
+  function defaultRowSpan(el) {
+    const rs = Number(el.dataset.bentoRowSpan || 0);
+    return rs > 0 ? rs : 1;
+  }
+
+  function packOrphans(grid) {
+    for (const el of tiles(grid).filter((t) => !t.dataset.bentoCol)) {
+      const cs = Math.max(1, Math.min(COLS, Number(el.dataset.bentoColSpan || defaultSpan(el))));
+      const rs = defaultRowSpan(el);
+      let placed = false;
+      for (let row = 1; row < 400 && !placed; row += 1) {
+        for (let col = 1; col <= COLS - cs + 1; col += 1) {
+          const test = { c: col, cs, r: row, rs };
+          if (!findOccupants(grid, el, test).length) {
+            applyPlacement(el, test);
+            placed = true;
+            break;
+          }
+        }
+      }
+      if (!placed) applyPlacement(el, { c: 1, cs, r: 1, rs });
+    }
+  }
+
+  function packLayoutFromVisual(grid, onlyMissing = true) {
+    packLayoutDefault(grid, onlyMissing);
+  }
+
+  function isLayoutCorrupt(layout) {
+    const items = Object.values(layout?.items || {});
+    if (items.length < 4) return false;
+    const atCol1 = items.filter((p) => Number(p.c || 1) === 1).length;
+    if (atCol1 / items.length >= 0.85) return true;
+    const rows = items.map((p) => Number(p.r || 1));
+    const smallSpans = items.filter((p) => Number(p.cs || 1) <= 4).length;
+    if (smallSpans >= 4) {
+      const uniqueRows = new Set(rows).size;
+      if (uniqueRows >= smallSpans * 0.8) return true;
+    }
+    return false;
+  }
+
+  function applyLayoutFromStorageOrDefault(grid, dashboardId) {
+    const saved = loadLayout(dashboardId);
+    if (saved?.items && !isLayoutCorrupt(saved)) {
+      applySaved(grid, saved);
+      if (saved._loadedFromVersion && saved._loadedFromVersion !== VERSION) {
+        const st = getState(grid);
+        if (st) persist(st);
+      }
+      return;
+    }
+    if (saved?.items && isLayoutCorrupt(saved)) {
+      try {
+        localStorage.removeItem(storageKey(dashboardId));
+        for (const ver of [3, 2, 1]) {
+          localStorage.removeItem(`dla-bento-layout:v${ver}:${dashboardId}`);
+        }
+      } catch {
+        // ignore
+      }
+    }
+    packLayoutDefault(grid, false);
+  }
+
+  function findRowForTop(grid, dragging, topPx) {
+    const gridRect = grid.getBoundingClientRect();
+    const scrollTop = grid.scrollTop || 0;
+    const bands = tiles(grid)
+      .filter((t) => t !== dragging)
+      .map((t) => {
+        const rect = t.getBoundingClientRect();
+        return {
+          row: Number(t.dataset.bentoRow || 1),
+          mid: (rect.top + rect.bottom) / 2 - gridRect.top + scrollTop,
+        };
+      })
+      .sort((a, b) => a.mid - b.mid);
+    for (const band of bands) {
+      if (topPx < band.mid) return Math.max(1, band.row);
+    }
+    return (bands.length ? Math.max(...bands.map((b) => b.row)) : 0) + 1;
+  }
+
+  function columnsOverlap(c1, cs1, c2, cs2) {
+    const e1 = c1 + cs1 - 1;
+    const e2 = c2 + cs2 - 1;
+    return !(e1 < c2 || c1 > e2);
+  }
+
+  function isLocked(el) {
+    if (!el) return false;
+    if (el.dataset.bentoLocked === "true") return true;
+    const id = String(el.dataset.bentoId || "");
+    return id.endsWith("-meta") || id.includes("-toolbar") || id.includes("-filter");
+  }
+
+  function placementBox(p) {
+    return {
+      c: Number(p.c || 1),
+      cs: Number(p.cs || 1),
+      r: Number(p.r || 1),
+      rs: Number(p.rs || 1),
+    };
+  }
+
+  function boxesOverlap(a, b) {
+    return !(
+      a.c + a.cs - 1 < b.c ||
+      b.c + b.cs - 1 < a.c ||
+      a.r + a.rs - 1 < b.r ||
+      b.r + b.rs - 1 < a.r
+    );
+  }
+
+  function findOccupants(grid, tile, placement) {
+    const box = placementBox(placement);
+    return tiles(grid).filter((other) => {
+      if (other === tile || isLocked(other)) return false;
+      return boxesOverlap(box, placementBox(readPlacement(other)));
+    });
+  }
+
+  function placeTile(grid, tile, placement) {
+    const next = placementBox(placement);
+    const moved = new Set();
+    function resolveOverlaps(box, depth) {
+      if (depth > tiles(grid).length + 2) return;
+      for (const other of findOccupants(grid, tile, box)) {
+        if (moved.has(other)) continue;
+        const op = placementBox(readPlacement(other));
+        const pushed = { c: op.c, cs: op.cs, r: box.r + box.rs, rs: op.rs };
+        applyPlacement(other, pushed);
+        moved.add(other);
+        resolveOverlaps(placementBox(readPlacement(other)), depth + 1);
+      }
+    }
+    resolveOverlaps(next, 0);
+    applyPlacement(tile, next);
+  }
+
+  function defaultLayout(grid) {
+    const items = {};
+    for (const el of tiles(grid)) {
+      items[el.dataset.bentoId] = readPlacement(el);
+    }
+    return { version: VERSION, items };
+  }
+
+  function clearPlacements(grid) {
+    for (const el of tiles(grid)) {
+      el.style.removeProperty("grid-column");
+      el.style.removeProperty("grid-row");
+      delete el.dataset.bentoCol;
+      delete el.dataset.bentoColSpan;
+      delete el.dataset.bentoRow;
+      delete el.dataset.bentoRowSpan;
+    }
+  }
+
+  function serialize(grid) {
+    const items = {};
+    for (const el of tiles(grid)) {
+      items[el.dataset.bentoId] = readPlacement(el);
+    }
+    return { version: VERSION, items };
+  }
+
+  function applySaved(grid, layout) {
+    const items = layout?.items || {};
+    for (const el of tiles(grid)) {
+      const saved = items[el.dataset.bentoId];
+      if (saved) applyPlacement(el, saved);
+    }
+    const orphans = tiles(grid).filter((el) => !el.dataset.bentoCol);
+    if (orphans.length) packOrphans(grid);
+  }
+
+  function metaToolbarHost(grid) {
+    const scope = grid.closest(".bento-grid") || grid.parentElement || grid;
+    const strip = scope.querySelector(":scope > .meta-strip") || scope.querySelector(".meta-strip");
+    if (!strip) return null;
+    let main = strip.querySelector(".meta-strip-main");
+    if (!main) {
+      main = document.createElement("div");
+      main.className = "meta-strip-main";
+      strip.prepend(main);
+    }
+    main.style.display = "flex";
+    main.style.alignItems = "flex-start";
+    main.style.justifyContent = "space-between";
+    main.style.gap = "12px";
+    main.style.width = "100%";
+    return main;
+  }
+
+  function ensureIndicator(grid, state) {
+    if (state.indicator) return;
+    const indicator = document.createElement("div");
+    indicator.className = "bento-layout-drop-indicator";
+    grid.appendChild(indicator);
+    state.indicator = indicator;
+  }
+
+  function ensureToolbar(grid, state, mode) {
+    ensureIndicator(grid, state);
+    if (mode === "none") {
+      state.toolbarMode = "none";
+      if (state.toolbar) {
+        state.toolbar.remove();
+        state.toolbar = null;
+      }
+      return;
+    }
+    if (state.toolbar && state.toolbarMode === mode) return;
+    if (state.toolbar) state.toolbar.remove();
+
+    const bar = document.createElement("div");
+    bar.className = "bento-layout-toolbar meta-inline";
+    bar.innerHTML = `
+      <button type="button" class="layout-edit-btn" data-bento-edit>Edit layout</button>
+      <button type="button" data-bento-reset hidden>Reset default</button>
+      <button type="button" data-bento-done class="primary" hidden>Done</button>
+    `;
+    const host = metaToolbarHost(grid);
+    if (host) {
+      host.appendChild(bar);
+    } else {
+      bar.style.margin = "8px 0 0";
+      grid.parentElement?.insertBefore(bar, grid) || grid.prepend(bar);
+    }
+    state.toolbar = bar;
+    state.toolbarMode = mode;
+
+    bar.querySelector("[data-bento-edit]").addEventListener("click", () => setEditing(state, true));
+    bar.querySelector("[data-bento-done]").addEventListener("click", () => setEditing(state, false));
+    bar.querySelector("[data-bento-reset]").addEventListener("click", () => resetLayout());
+  }
+
+  function decorateTiles(state) {
+    for (const el of tiles(state.grid)) {
+      if (isLocked(el)) continue;
+      if (!el.querySelector(".bento-drag-handle")) {
+        const handle = document.createElement("div");
+        handle.className = "bento-drag-handle";
+        handle.textContent = "Drag to move";
+        el.prepend(handle);
+      }
+      if (!el.querySelector(".bento-resize-handle")) {
+        const resize = document.createElement("div");
+        resize.className = "bento-resize-handle";
+        resize.title = "Drag to resize width";
+        el.appendChild(resize);
+      }
+      if (!el.querySelector(".bento-resize-row-handle")) {
+        const rowResize = document.createElement("div");
+        rowResize.className = "bento-resize-row-handle";
+        rowResize.title = "Drag to resize height";
+        el.appendChild(rowResize);
+      }
+    }
+  }
+
+  function persist(state) {
+    saveDashboardPrefs(storageKey(state.dashboardId), serialize(state.grid));
+  }
+
+  function syncToolbarButtons(state) {
+    if (!state.toolbar) return;
+    const on = state.editing;
+    const edit = state.toolbar.querySelector("[data-bento-edit]");
+    const reset = state.toolbar.querySelector("[data-bento-reset]");
+    const done = state.toolbar.querySelector("[data-bento-done]");
+    if (edit) edit.hidden = on;
+    if (reset) reset.hidden = !on;
+    if (done) done.hidden = !on;
+  }
+
+  function setEditing(state, on) {
+    state.editing = on;
+    state.grid.classList.toggle("bento-layout-editing", on);
+    if (on) {
+      const saved = loadLayout(state.dashboardId);
+      if (!saved?.items) packLayoutDefault(state.grid, true);
+      decorateTiles(state);
+    } else {
+      for (const el of tiles(state.grid)) el.classList.remove("bento-tile-dragging");
+      hideIndicator(state);
+    }
+    syncToolbarButtons(state);
+    if (!on) persist(state);
+  }
+
+  function isManagedTile(grid, el) {
+    if (!el?.matches?.("[data-bento-id]")) return false;
+    let parent = el.parentElement;
+    while (parent && parent !== grid) {
+      if (parent.matches("[data-bento-id]")) return false;
+      parent = parent.parentElement;
+    }
+    return parent === grid;
+  }
+
+  function gridMetrics(grid) {
+    const rect = grid.getBoundingClientRect();
+    const style = getComputedStyle(grid);
+    const gap = parseFloat(style.gap) || 16;
+    const colGap = parseFloat(style.columnGap) || gap;
+    const rowGap = parseFloat(style.rowGap) || gap;
+    const colWidth = (rect.width - colGap * (COLS - 1)) / COLS;
+    const rowMin = 72;
+    return { rect, colWidth, colGap, rowGap, rowMin, colUnit: colWidth + colGap, rowUnit: rowMin + rowGap };
+  }
+
+  function snapColumn(metrics, clientX, cs) {
+    const x = clientX - metrics.rect.left;
+    let c = Math.floor(x / metrics.colUnit) + 1;
+    return Math.max(1, Math.min(COLS - cs + 1, c));
+  }
+
+  function tileBox(grid, tile, c, cs) {
+    const m = gridMetrics(grid);
+    const left = (c - 1) * m.colUnit;
+    const width = cs * m.colWidth + (cs - 1) * m.colGap;
+    const height = Math.max(tile.offsetHeight || 0, tile.getBoundingClientRect().height);
+    return { left, width, height, metrics: m };
+  }
+
+  function showIndicatorAt(state, tile, c, topPx, cs) {
+    const box = tileBox(state.grid, tile, c, cs);
+    const ind = state.indicator;
+    ind.style.display = "block";
+    ind.style.left = `${box.left}px`;
+    ind.style.top = `${Math.max(0, topPx)}px`;
+    ind.style.width = `${box.width}px`;
+    ind.style.height = `${box.height}px`;
+  }
+
+  function hideIndicator(state) {
+    if (state.indicator) state.indicator.style.display = "none";
+  }
+
+  function canStartDrag(ev, tile) {
+    if (isLocked(tile)) return false;
+    if (ev.target.closest(".bento-resize-handle, .bento-resize-row-handle")) return false;
+    if (ev.target.closest("button, a, input, select, textarea, label, .cell-button, .bar-row")) return false;
+    if (ev.target.closest(".bento-drag-handle")) return true;
+    if (ev.target.closest(".panel-head")) return true;
+    const rect = tile.getBoundingClientRect();
+    return ev.clientY - rect.top <= 52;
+  }
+
+  function bindInteractions(state) {
+    if (state.bound) return;
+    state.bound = true;
+    let moveFrame = 0;
+    let lastMoveEv = null;
+
+    function flushMove() {
+      moveFrame = 0;
+      const ev = lastMoveEv;
+      if (!ev) return;
+      if (state.dragging) {
+        const cs = Number(state.dragging.dataset.bentoColSpan || defaultSpan(state.dragging));
+        const m = gridMetrics(state.grid);
+        const c = snapColumn(m, ev.clientX, cs);
+        const scrollTop = state.grid.scrollTop || 0;
+        const topPx = ev.clientY - m.rect.top + scrollTop - state.dragOffsetY;
+        showIndicatorAt(state, state.dragging, c, topPx, cs);
+        state.pendingDrop = { c, topPx, cs };
+      }
+      if (state.resizing) {
+        const m = gridMetrics(state.grid);
+        const delta = ev.clientX - state.resizeStartX;
+        const next = Math.max(1, Math.min(COLS, Math.round(state.resizeStartSpan + delta / m.colUnit)));
+        applyPlacement(state.resizing, {
+          c: Number(state.resizing.dataset.bentoCol || 1),
+          cs: next,
+          r: Number(state.resizing.dataset.bentoRow || 1),
+          rs: Number(state.resizing.dataset.bentoRowSpan || 1),
+        });
+      }
+      if (state.rowResizing) {
+        const m = gridMetrics(state.grid);
+        const delta = ev.clientY - state.resizeStartY;
+        const nextRs = Math.max(1, Math.min(24, Math.round(state.resizeStartRowSpan + delta / m.rowUnit)));
+        applyPlacement(state.rowResizing, {
+          c: Number(state.rowResizing.dataset.bentoCol || 1),
+          cs: Number(state.rowResizing.dataset.bentoColSpan || defaultSpan(state.rowResizing)),
+          r: Number(state.rowResizing.dataset.bentoRow || 1),
+          rs: nextRs,
+        });
+      }
+    }
+
+    function onPointerMove(ev) {
+      if (!state.dragging && !state.resizing && !state.rowResizing) return;
+      lastMoveEv = ev;
+      if (!moveFrame) moveFrame = requestAnimationFrame(flushMove);
+    }
+
+    function finishPointer(ev) {
+      if (state.dragPointerId != null && state.dragCaptureEl?.releasePointerCapture) {
+        try { state.dragCaptureEl.releasePointerCapture(state.dragPointerId); } catch { /* ignore */ }
+      }
+      state.dragPointerId = null;
+      state.dragCaptureEl = null;
+
+      if (state.dragging) {
+        const cs = Number(state.dragging.dataset.bentoColSpan || defaultSpan(state.dragging));
+        const rs = Number(state.dragging.dataset.bentoRowSpan || 1);
+        const m = gridMetrics(state.grid);
+        const c = state.pendingDrop?.c ?? snapColumn(m, ev.clientX, cs);
+        const scrollTop = state.grid.scrollTop || 0;
+        const topPx = state.pendingDrop?.topPx ?? (ev.clientY - m.rect.top + scrollTop - state.dragOffsetY);
+        const r = findRowForTop(state.grid, state.dragging, topPx);
+        placeTile(state.grid, state.dragging, { c, cs, r, rs });
+        state.dragging.classList.remove("bento-tile-dragging");
+        persist(state);
+      }
+      if (state.resizing || state.rowResizing) persist(state);
+      state.dragging = null;
+      state.resizing = null;
+      state.rowResizing = null;
+      state.pendingDrop = null;
+      hideIndicator(state);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
+    }
+
+    function onPointerUp(ev) {
+      finishPointer(ev);
+    }
+
+    state.grid.addEventListener("pointerdown", (ev) => {
+      if (!state.editing || ev.button !== 0) return;
+      const colHandle = ev.target.closest(".bento-resize-handle");
+      const rowHandle = ev.target.closest(".bento-resize-row-handle");
+      let tile = ev.target.closest("[data-bento-id]");
+      if (!tile || !isManagedTile(state.grid, tile) || isLocked(tile)) return;
+
+      if (colHandle) {
+        state.resizing = tile;
+        state.resizeStartX = ev.clientX;
+        state.resizeStartSpan = Number(tile.dataset.bentoColSpan || defaultSpan(tile));
+        state.dragCaptureEl = colHandle;
+        state.dragPointerId = ev.pointerId;
+        try { colHandle.setPointerCapture(ev.pointerId); } catch { /* ignore */ }
+        ev.preventDefault();
+        window.addEventListener("pointermove", onPointerMove);
+        window.addEventListener("pointerup", onPointerUp);
+        window.addEventListener("pointercancel", onPointerUp);
+        return;
+      }
+
+      if (rowHandle) {
+        state.rowResizing = tile;
+        state.resizeStartY = ev.clientY;
+        state.resizeStartRowSpan = Number(tile.dataset.bentoRowSpan || 1);
+        state.dragCaptureEl = rowHandle;
+        state.dragPointerId = ev.pointerId;
+        try { rowHandle.setPointerCapture(ev.pointerId); } catch { /* ignore */ }
+        ev.preventDefault();
+        window.addEventListener("pointermove", onPointerMove);
+        window.addEventListener("pointerup", onPointerUp);
+        window.addEventListener("pointercancel", onPointerUp);
+        return;
+      }
+
+      if (!canStartDrag(ev, tile)) return;
+
+      state.dragging = tile;
+      tile.classList.add("bento-tile-dragging");
+      const tileRect = tile.getBoundingClientRect();
+      state.dragOffsetY = ev.clientY - tileRect.top;
+      state.pendingDrop = null;
+      state.dragCaptureEl = ev.target.closest(".bento-drag-handle") || tile;
+      state.dragPointerId = ev.pointerId;
+      try { state.dragCaptureEl.setPointerCapture(ev.pointerId); } catch { /* ignore */ }
+      ev.preventDefault();
+      onPointerMove(ev);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+      window.addEventListener("pointercancel", onPointerUp);
+    });
+  }
+
+  function getState(grid) {
+    return mounted.get(grid) || null;
+  }
+
+  function mount(grid, options) {
+    if (!grid) return null;
+    const dashboardId = options?.dashboardId || grid.dataset.bentoDashboard;
+    if (!dashboardId) return null;
+    grid.classList.add("bento-layout-root");
+    grid.dataset.bentoDashboard = dashboardId;
+
+    const toolbarMode = resolveToolbarMode(options);
+    let state = mounted.get(grid);
+    if (!state) {
+      state = { grid, dashboardId, editing: false };
+      mounted.set(grid, state);
+      bindInteractions(state);
+    }
+    state.dashboardId = dashboardId;
+    ensureToolbar(grid, state, toolbarMode);
+
+    const saved = loadLayout(dashboardId);
+    applyLayoutFromStorageOrDefault(grid, dashboardId);
+    if (state.editing) decorateTiles(state);
+    window.__dlaBentoReady = true;
+    return state;
+  }
+
+  function apply(grid, dashboardId, options) {
+    const id = dashboardId || grid?.dataset?.bentoDashboard;
+    if (!grid || !id) return;
+    grid.dataset.bentoDashboard = id;
+    mount(grid, Object.assign({ dashboardId: id }, options || {}));
+    const state = getState(grid);
+    if (!state) return;
+    applyLayoutFromStorageOrDefault(grid, id);
+    if (state.editing) decorateTiles(state);
+    window.__dlaBentoReady = true;
+  }
+
+  function refreshTiles(grid, dashboardId, options) {
+    const id = dashboardId || grid?.dataset?.bentoDashboard;
+    if (!grid || !id) return;
+    grid.dataset.bentoDashboard = id;
+    const state = getState(grid) || mount(grid, Object.assign({ dashboardId: id }, options || {}));
+    if (!state) return;
+    state.dashboardId = id;
+    applyLayoutFromStorageOrDefault(grid, id);
+    if (state.editing) decorateTiles(state);
+  }
+
+  function restoreEditing(grid, on) {
+    const state = getState(grid);
+    if (!state) return false;
+    setEditing(state, Boolean(on));
+    return true;
+  }
+
+  function openEditor() {
+    const root = layoutRoot();
+    if (!root) return false;
+    const state = getState(root);
+    const id = state?.dashboardId || root.dataset.bentoDashboard;
+    apply(root, id, { toolbar: "none" });
+    const next = getState(root);
+    if (next) setEditing(next, true);
+    return Boolean(next);
+  }
+
+  function closeEditor() {
+    const root = layoutRoot();
+    if (!root) return false;
+    const state = getState(root);
+    if (!state) return false;
+    setEditing(state, false);
+    return true;
+  }
+
+  function resetLayout() {
+    const root = layoutRoot();
+    if (!root) return false;
+    const state = getState(root) || mount(root, { dashboardId: root.dataset.bentoDashboard, toolbar: "none" });
+    if (!state) return false;
+    localStorage.removeItem(storageKey(state.dashboardId));
+    for (const ver of [3, 2, 1]) {
+      try { localStorage.removeItem(`dla-bento-layout:v${ver}:${state.dashboardId}`); } catch { /* ignore */ }
+    }
+    clearPlacements(state.grid);
+    packLayoutDefault(state.grid, false);
+    if (state.editing) decorateTiles(state);
+    return true;
+  }
+
+  function isEditing() {
+    const root = layoutRoot();
+    const state = root ? getState(root) : null;
+    return Boolean(state?.editing);
+  }
+
+  function exportLayout(dashboardId) {
+    const root = layoutRoot();
+    if (!root) return null;
+    const state = getState(root);
+    const id = dashboardId || state?.dashboardId || root.dataset.bentoDashboard;
+    if (!id) return null;
+    const layout = serialize(root);
+    layout.dashboardId = id;
+    layout.exportedAt = new Date().toISOString();
+    return layout;
+  }
+
+  function importLayout(payload, options) {
+    const root = layoutRoot();
+    if (!root || !payload?.items) return false;
+    const id = payload.dashboardId || options?.dashboardId || root.dataset.bentoDashboard;
+    if (!id) return false;
+    const normalized = { version: VERSION, items: payload.items };
+    applySaved(root, normalized);
+    saveDashboardPrefs(storageKey(id), normalized);
+    const state = getState(root) || mount(root, { dashboardId: id, toolbar: "none" });
+    if (state) {
+      state.dashboardId = id;
+      root.dataset.bentoDashboard = id;
+      if (state.editing) decorateTiles(state);
+    }
+    return true;
+  }
+
+  function downloadLayoutExport(dashboardId) {
+    const layout = exportLayout(dashboardId);
+    if (!layout) return false;
+    const blob = new Blob([JSON.stringify(layout, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `dla-layout-${layout.dashboardId || "dashboard"}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    return true;
+  }
+
+  if (!window.__dlaBentoMessageBound) {
+    window.__dlaBentoMessageBound = true;
+    window.addEventListener("message", (ev) => {
+      if (ev.origin && ev.origin !== "null" && ev.origin !== window.location.origin) return;
+      const msg = ev.data;
+      if (!msg || typeof msg !== "object") return;
+      if (msg.type === "dla-bento-open") openEditor();
+      if (msg.type === "dla-bento-close") closeEditor();
+      if (msg.type === "dla-bento-reset") resetLayout();
+      if (msg.type === "dla-bento-export") downloadLayoutExport(msg.dashboardId);
+      if (msg.type === "dla-bento-import" && msg.payload) importLayout(msg.payload, { dashboardId: msg.dashboardId });
+    });
+  }
+
+  return { mount, apply, refreshTiles, restoreEditing, exportLayout, importLayout, downloadLayoutExport, openEditor, closeEditor, resetLayout, isEditing, getState, storageKey, VERSION };
+})();
+window.DlaBentoLayout = DlaBentoLayout;
+    const DATA = JSON.parse(document.getElementById("dashboard-data").textContent);
+    const LAYOUT_ID = "digital-team-time-tracking:" + (DATA.month?.label || "default");
+    const FILTER_PREFS_KEY = "dla-tt-filters:" + (DATA.month?.label || "default");
+    const TARGET = Number(DATA.workdayTargetHours || 7.5);
+    const FILTER_DEFAULTS = { user: "all", project: "all", day: "all", ticket: "all", search: "" };
+
+    function asNumber(value) {
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function fmtHours(value) {
+      return asNumber(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function fmtInt(value) {
+      return Math.round(asNumber(value)).toLocaleString("en-US");
+    }
+
+    function fmtPct(value) {
+      return asNumber(value).toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%";
+    }
+
+    function esc(value) {
+      return String(value == null ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function readFilters() {
+      const next = Object.assign({}, FILTER_DEFAULTS);
+      const saved = loadDashboardPrefs(FILTER_PREFS_KEY);
+      if (saved && typeof saved === "object") {
+        Object.keys(FILTER_DEFAULTS).forEach((key) => {
+          if (saved[key] != null && saved[key] !== "") next[key] = String(saved[key]);
+        });
+      }
+      const params = new URLSearchParams(window.location.search);
+      Object.keys(next).forEach((key) => {
+        if (params.has(key)) next[key] = params.get(key) || FILTER_DEFAULTS[key];
+      });
+      return next;
+    }
+
+    function writeFilters(filters) {
+      saveDashboardPrefs(FILTER_PREFS_KEY, filters);
+      const params = new URLSearchParams();
+      Object.keys(filters).forEach((key) => {
+        const value = filters[key];
+        if (value && value !== FILTER_DEFAULTS[key]) params.set(key, value);
+      });
+      const query = params.toString();
+      history.replaceState(null, "", location.pathname + (query ? "?" + query : ""));
+    }
+
+    const HOURS_MATCH_EPSILON = 0.004;
+
+    function normalizeDayKey(value) {
+      if (value == null || value === "") return "";
+      return String(value).slice(0, 10);
+    }
+
+    function isoDateToLocalDate(iso) {
+      const parts = normalizeDayKey(iso).split("-").map(Number);
+      if (parts.length !== 3 || parts.some((part) => !Number.isFinite(part))) {
+        return new Date(NaN);
+      }
+      return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+
+    function localIsoFromDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return year + "-" + month + "-" + day;
+    }
+
+    function isoDateAddDays(iso, days) {
+      const cursor = isoDateToLocalDate(iso);
+      cursor.setDate(cursor.getDate() + days);
+      return localIsoFromDate(cursor);
+    }
+
+    function monthDates() {
+      const dates = [];
+      let current = normalizeDayKey(DATA.month.start);
+      const end = normalizeDayKey(DATA.month.end);
+      while (current && end && current < end) {
+        const cursor = isoDateToLocalDate(current);
+        dates.push({
+          day: current,
+          weekday: cursor.getDay()
+        });
+        current = isoDateAddDays(current, 1);
+      }
+      return dates;
+    }
+
+    function isExactTargetHours(hours) {
+      return Math.abs(asNumber(hours) - TARGET) < HOURS_MATCH_EPSILON;
+    }
+
+    function compactDate(iso) {
+      return fmtIsoDate(iso);
+    }
+
+    function searchText(row) {
+      return [
+        row.day,
+        row.project_name,
+        row.ticket_summary,
+        row.logged_by_username,
+        row.logged_by_name,
+        row.category,
+        row.info,
+        row.bug_id
+      ].filter(Boolean).join(" ").toLowerCase();
+    }
+
+    function matches(row, filters) {
+      if (filters.user !== "all" && row.logged_by_username !== filters.user) return false;
+      if (filters.project !== "all" && row.project_name !== filters.project) return false;
+      if (filters.day !== "all" && normalizeDayKey(row.day) !== filters.day) return false;
+      if (filters.ticket !== "all" && String(row.bug_id) !== String(filters.ticket)) return false;
+      if (filters.search.trim() && !searchText(row).includes(filters.search.trim().toLowerCase())) return false;
+      return true;
+    }
+
+    function uniqueOptions(rows, key, labelKey) {
+      const seen = new Map();
+      rows.forEach((row) => {
+        const value = row[key];
+        if (value == null || value === "") return;
+        if (!seen.has(String(value))) seen.set(String(value), row[labelKey] || String(value));
+      });
+      return Array.from(seen.entries())
+        .map(([value, label]) => ({ value, label }))
+        .sort((a, b) => String(a.label).localeCompare(String(b.label)));
+    }
+
+    function groupBy(rows, keyFn, amountFn) {
+      const map = new Map();
+      rows.forEach((row) => {
+        const meta = keyFn(row);
+        if (!meta || meta.value == null || meta.value === "") return;
+        const key = String(meta.value);
+        const current = map.get(key) || { value: key, raw: meta.raw || key, label: meta.label || key, amount: 0, count: 0 };
+        current.amount += asNumber(amountFn(row));
+        current.count += 1;
+        map.set(key, current);
+      });
+      return Array.from(map.values());
+    }
+
+    function ticketRows(rows) {
+      const map = new Map();
+      rows.forEach((row) => {
+        const key = String(row.bug_id || "");
+        if (!key) return;
+        const current = map.get(key) || {
+          bugId: key,
+          project: row.project_name || "",
+          summary: row.ticket_summary || "",
+          hours: 0,
+          entries: 0,
+          users: new Set()
+        };
+        current.hours += asNumber(row.hours);
+        current.entries += 1;
+        if (row.logged_by_username) current.users.add(row.logged_by_username);
+        map.set(key, current);
+      });
+      return Array.from(map.values())
+        .map((row) => Object.assign({}, row, { userCount: row.users.size }))
+        .sort((a, b) => b.hours - a.hours || String(a.bugId).localeCompare(String(b.bugId)));
+    }
+
+    function projectRows(rows) {
+      const total = rows.reduce((sum, row) => sum + asNumber(row.hours), 0);
+      return groupBy(
+        rows,
+        (row) => ({ value: row.project_name || "No project", label: row.project_name || "No project" }),
+        (row) => row.hours
+      )
+        .map((row) => Object.assign({}, row, { percent: total ? row.amount / total * 100 : 0 }))
+        .sort((a, b) => b.amount - a.amount || String(a.label).localeCompare(String(b.label)));
+    }
+
+    function alphaProjectRows(rows) {
+      return rows.slice().sort((a, b) => String(a.label).localeCompare(String(b.label)));
+    }
+
+    function memberRows(rows) {
+      return groupBy(
+        rows,
+        (row) => ({ value: row.logged_by_username, raw: row.logged_by_username, label: row.logged_by_name || row.logged_by_username }),
+        (row) => row.hours
+      ).sort((a, b) => b.amount - a.amount || String(a.label).localeCompare(String(b.label)));
+    }
+
+    function dayRows(rows) {
+      return groupBy(
+        rows,
+        (row) => {
+          const day = normalizeDayKey(row.day);
+          return { value: day, raw: day, label: compactDate(day) };
+        },
+        (row) => row.hours
+      ).sort((a, b) => String(a.value).localeCompare(String(b.value)));
+    }
+
+    function isLeaveDay(username, day) {
+      const ld = DATA.leaveDays;
+      if (!ld) return false;
+      const users = ld[day];
+      if (!users) return false;
+      return Array.isArray(users) ? users.indexOf(username) >= 0 : false;
+    }
+
+    function isHalfDayLeave(username, day) {
+      const hd = DATA.halfDayLeaves;
+      if (!hd) return false;
+      const users = hd[day];
+      if (!users) return false;
+      return Array.isArray(users) ? users.indexOf(username) >= 0 : false;
+    }
+
+    function specialOffdayLabel(day) {
+      const special = DATA.specialOffDays || {};
+      return special[day] || "";
+    }
+
+    function complianceSnapshotDay(rows) {
+      const candidates = [];
+      const generated = normalizeDayKey(DATA.generatedAt);
+      if (generated) candidates.push(generated);
+      rows.forEach((row) => {
+        const day = normalizeDayKey(row.day);
+        if (day) candidates.push(day);
+      });
+      candidates.sort();
+      return candidates.length ? candidates[candidates.length - 1] : normalizeDayKey(DATA.month.start);
+    }
+
+    function complianceGapLabel(hours, isOffday, isLeave, isHalfLeave, isPending, offdayLabel) {
+      if (isLeave) return "Leave Day";
+      if (isHalfLeave) return "Half-day Leave";
+      if (isOffday) return offdayLabel || "Weekend";
+      if (isPending) return "Not due yet";
+      if (isExactTargetHours(hours)) return "Exactly " + fmtHours(TARGET) + "h";
+      if (hours <= 0) return "No hours logged";
+      if (hours > TARGET) return "Over by " + fmtHours(hours - TARGET);
+      return "Short by " + fmtHours(TARGET - hours);
+    }
+
+    function complianceRows(rows, members, workdays, complianceThroughDay) {
+      const byUserDay = new Map();
+      rows.forEach((row) => {
+        const day = normalizeDayKey(row.day);
+        if (!row.logged_by_username || !day) return;
+        const key = row.logged_by_username + "|" + day;
+        byUserDay.set(key, asNumber(byUserDay.get(key)) + asNumber(row.hours));
+      });
+      return members.map((member) => {
+        const days = workdays.map((meta) => {
+          const offdayLabel = specialOffdayLabel(meta.day);
+          const isOffday = meta.weekday === 0 || meta.weekday === 6 || Boolean(offdayLabel);
+          const isLeave = isLeaveDay(member.username, meta.day);
+          const isHalfLeave = isHalfDayLeave(member.username, meta.day);
+          const isPending = meta.day > complianceThroughDay;
+          const hours = asNumber(byUserDay.get(member.username + "|" + meta.day));
+          const onTarget = isOffday || isLeave || isHalfLeave || isPending || isExactTargetHours(hours);
+          return {
+            day: meta.day,
+            weekday: meta.weekday,
+            isOffday,
+            isLeave,
+            isHalfLeave,
+            isPending,
+            hours,
+            onTarget,
+            offdayLabel,
+            gapLabel: complianceGapLabel(hours, isOffday, isLeave, isHalfLeave, isPending, offdayLabel)
+          };
+        });
+        return {
+          username: member.username,
+          name: member.realname || member.username,
+          totalHours: days.reduce((sum, item) => sum + item.hours, 0),
+          offTargetHours: days.reduce((sum, item) => {
+            if (item.isOffday || item.isLeave || item.isHalfLeave || item.isPending || item.onTarget) return sum;
+            return sum + Math.abs(item.hours - TARGET);
+          }, 0),
+          days
+        };
+      });
+    }
+
+    const PIE_COLORS = ["#1d857d", "#3f6fb5", "#c4702b", "#7f8f3a", "#9b4f7e", "#4d7f99", "#aa5c5c", "#b29028", "#5e8c63", "#6a6bb4"];
+
+    function polar(cx, cy, radius, angle) {
+      return { x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle) };
+    }
+
+    function pieSlicePath(cx, cy, radius, startAngle, endAngle) {
+      const start = polar(cx, cy, radius, startAngle);
+      const end = polar(cx, cy, radius, endAngle);
+      const largeArc = endAngle - startAngle > Math.PI ? 1 : 0;
+      return [
+        "M", cx, cy,
+        "L", start.x, start.y,
+        "A", radius, radius, 0, largeArc, 1, end.x, end.y,
+        "Z"
+      ].join(" ");
+    }
+
+    function ensureGridShell() {
+      let grid = document.getElementById("tt-grid");
+      if (!grid) {
+        document.getElementById("app").innerHTML =
+          `<main id="tt-grid" class="shell bento-grid" data-bento-dashboard="${LAYOUT_ID}"><div id="tt-root"></div></main>`;
+        grid = document.getElementById("tt-grid");
+        DlaBentoLayout.mount(grid, { dashboardId: LAYOUT_ID, toolbar: "none" });
+      } else {
+        grid.dataset.bentoDashboard = LAYOUT_ID;
+      }
+      return { grid, root: document.getElementById("tt-root") };
+    }
+
+    function render() {
+      const shell = ensureGridShell();
+      const grid = shell.grid;
+      const root = shell.root;
+      const wasEditing = Boolean(DlaBentoLayout.getState(grid)?.editing);
+      const filters = readFilters();
+      const entries = DATA.timeEntries.filter((row) => matches(row, filters));
+      const totalHours = entries.reduce((sum, row) => sum + asNumber(row.hours), 0);
+      const projects = alphaProjectRows(projectRows(entries));
+      const projectTableRows = projects;
+      const members = memberRows(entries);
+      const days = dayRows(entries);
+      const tickets = ticketRows(entries);
+      const allCalendarDays = monthDates();
+      const complianceThroughDay = complianceSnapshotDay(DATA.timeEntries);
+      const compliance = complianceRows(DATA.timeEntries, DATA.members, allCalendarDays, complianceThroughDay);
+      const activeMembers = new Set(entries.map((row) => row.logged_by_username).filter(Boolean)).size;
+      const options = {
+        users: uniqueOptions(DATA.members.map((row) => ({ username: row.username, label: row.realname || row.username })), "username", "label"),
+        projects: uniqueOptions(DATA.timeEntries, "project_name", "project_name"),
+        days: allCalendarDays.map((meta) => ({ value: meta.day, label: compactDate(meta.day) }))
+      };
+      const selectedTicket = filters.ticket !== "all" ? String(filters.ticket) : "";
+      const selectedEntries = selectedTicket ? entries.filter((row) => String(row.bug_id) === selectedTicket) : [];
+      const detailBase = selectedEntries[0] || tickets.find((row) => String(row.bugId) === selectedTicket) || null;
+
+      const activeFilterKeys = Object.keys(filters).filter((key) => filters[key] && filters[key] !== FILTER_DEFAULTS[key]);
+      const maxProject = Math.max(1, ...projects.map((row) => row.amount));
+      const maxMember = Math.max(1, ...members.map((row) => row.amount));
+      const maxDay = Math.max(1, ...days.map((row) => row.amount));
+
+      const forecastWorkloadHtml = (() => {
+        const fw = DATA.forecastWorkload;
+        if (!fw) return "";
+        const cols = fw.columns || [];
+        const prev = fw.previewRows || [];
+        const head = cols.length ? `<tr>${cols.map((c) => `<th>${esc(c)}</th>`).join("")}</tr>` : "";
+        const colSpan = Math.max(1, cols.length);
+        const body = prev.length
+          ? prev.map((row) => `<tr>${cols.map((c) => `<td>${esc(row[c] != null ? row[c] : "")}</td>`).join("")}</tr>`).join("")
+          : `<tr><td colspan="${colSpan}" class="empty">No rows in CSV preview.</td></tr>`;
+        return `
+        <section class="forecast-snippet-wrap">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Forecast workload (CSV)</h2>
+              <div class="panel-note">${esc(fw.sourcePath || "")}</div>
+            </div>
+            <p class="forecast-disclaimer">Supplementary model output for planning only; not a commitment or booking instruction. Confirm with the forecasting pipeline and owning team before acting on these figures.</p>
+            <div class="table-wrap" style="max-height:240px">
+              <table class="entry-table" style="min-width:360px">
+                <thead>${head}</thead>
+                <tbody>${body}</tbody>
+              </table>
+            </div>
+          </div>
+        </section>`;
+      })();
+
+      let pieSlices = "";
+      let pieLegend = "";
+      if (projects.length) {
+        let angle = -Math.PI / 2;
+        projects.forEach((row, index) => {
+          const span = totalHours ? (row.amount / totalHours) * Math.PI * 2 : 0;
+          const end = angle + span;
+          const color = PIE_COLORS[index % PIE_COLORS.length];
+          const active = filters.project === row.value;
+          pieSlices += `<path data-project="${esc(row.value)}" d="${pieSlicePath(140, 140, active ? 108 : 100, angle, end)}" fill="${color}" stroke="white" stroke-width="2" style="cursor:pointer;opacity:${active || filters.project === "all" ? 1 : 0.78}"></path>`;
+          pieLegend += `<button type="button" data-project="${esc(row.value)}" class="${active ? "active" : ""}"><span class="swatch" style="background:${color}"></span><span>${esc(row.label)}</span><span>${fmtPct(row.percent)}</span></button>`;
+          angle = end;
+        });
+      }
+
+      function filterChipLabel(key, value) {
+        if (key === "day" && value && value !== "all") return fmtIsoDate(value);
+        return value;
+      }
+
+      root.innerHTML = `
+        <header class="meta-strip bento-span-12" data-bento-id="tt-meta" data-bento-span="12" data-bento-locked="true">
+          <div class="meta-strip-main">
+            <div>
+              <h1 class="meta-title">Digital Team Time Tracking Dashboard</h1>
+              <p class="meta-sub">Period: ${esc(DATA.month.period_display || (DATA.month.start + " to before " + DATA.month.end))}</p>
+            </div>
+            <div class="meta-pills">
+              <span class="meta-pill">Generated ${esc(fmtIsoDateTime(DATA.generatedAt))}</span>
+            </div>
+          </div>
+        </header>
+        ${forecastWorkloadHtml ? `<div class="bento-span-12" data-bento-id="tt-forecast" data-bento-span="12">${forecastWorkloadHtml}</div>` : ""}
+          <section class="toolbar tt-toolbar" data-bento-id="tt-toolbar" data-bento-span="12" data-bento-locked="true">
+            <div class="control">
+              <label>User</label>
+              <select id="filter-user">
+                <option value="all">All users</option>
+                ${options.users.map((opt) => `<option value="${esc(opt.value)}" ${filters.user === opt.value ? "selected" : ""}>${esc(opt.label)}</option>`).join("")}
+              </select>
+            </div>
+            <div class="control">
+              <label>Project</label>
+              <select id="filter-project">
+                <option value="all">All projects</option>
+                ${options.projects.map((opt) => `<option value="${esc(opt.value)}" ${filters.project === opt.value ? "selected" : ""}>${esc(opt.label)}</option>`).join("")}
+              </select>
+            </div>
+            <div class="control">
+              <label>Day</label>
+              <input type="text" id="filter-day" readonly placeholder="All workdays" autocomplete="off" />
+            </div>
+            <div class="control">
+              <label>Ticket</label>
+              <input id="filter-ticket" value="${filters.ticket === "all" ? "" : esc(filters.ticket)}" placeholder="Ticket ID">
+            </div>
+            <div class="control">
+              <label>Search</label>
+              <input id="filter-search" value="${esc(filters.search)}" placeholder="Project, ticket, note...">
+            </div>
+            <button type="button" class="action-button" id="reset-filters">Reset filters</button>
+          </section>
+
+          <section class="chips tt-chips" data-bento-id="tt-chips" data-bento-span="12">
+            ${activeFilterKeys.length ? activeFilterKeys.map((key) => `<span class="chip">${esc(key)}: ${esc(filterChipLabel(key, filters[key]))}<button type="button" data-clear="${esc(key)}">x</button></span>`).join("") : `<span class="empty">No active filters. Click any chart, project row, compliance cell, or ticket row to drill down.</span>`}
+          </section>
+
+            <div class="card" data-bento-id="tt-kpi-hours" data-bento-span="2"><div class="kpi-label">Total Hours</div><div class="kpi-value">${fmtHours(totalHours)}</div><div class="kpi-sub">${fmtInt(entries.length)} filtered time entries</div></div>
+            <div class="card" data-bento-id="tt-kpi-projects" data-bento-span="2"><div class="kpi-label">Projects Worked</div><div class="kpi-value">${fmtInt(projects.length)}</div><div class="kpi-sub">Projects with booked hours</div></div>
+            <div class="card" data-bento-id="tt-kpi-tickets" data-bento-span="2"><div class="kpi-label">Tickets Worked</div><div class="kpi-value">${fmtInt(tickets.length)}</div><div class="kpi-sub">Tickets behind filtered hours</div></div>
+            <div class="card" data-bento-id="tt-kpi-members" data-bento-span="2"><div class="kpi-label">Active Members</div><div class="kpi-value">${fmtInt(activeMembers)}</div><div class="kpi-sub">Out of ${fmtInt(DATA.summary.matched_members)}</div></div>
+            <div class="card" data-bento-id="tt-kpi-offtarget" data-bento-span="2"><div class="kpi-label">Off-target Hours</div><div class="kpi-value">${fmtHours(compliance.reduce((sum, row) => sum + row.offTargetHours, 0))}</div><div class="kpi-sub">Total deviation from ${fmtHours(TARGET)}h per workday</div></div>
+
+          <section class="panel tt-compliance-panel" data-bento-id="tt-compliance" data-bento-span="12">
+              <div class="panel-head">
+                <h2>Daily 7.5h Compliance by Member</h2>
+                <div class="panel-note">
+                  <span class="legend-swatch ok"></span> = exactly ${fmtHours(TARGET)}h &nbsp;
+                  <span class="legend-swatch miss"></span> = not exactly ${fmtHours(TARGET)}h &nbsp;
+                  <span class="legend-swatch leave"></span> = Leave Day &nbsp;
+                  <span class="legend-swatch leave-half"></span> = Half Leave &nbsp;
+                  <span class="legend-swatch offday"></span> = Weekend / Public Holiday &nbsp;
+                  <span class="legend-swatch pending"></span> = Pending future workday
+                </div>
+              </div>
+              <div class="compliance-wrap">
+                <table class="compliance">
+                  <colgroup>
+                    <col class="user-col">
+                    ${allCalendarDays.map(() => `<col class="day-col">`).join("")}
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      ${allCalendarDays.map((meta) => `<th>${compactDate(meta.day)}</th>`).join("")}
+                    </tr>
+                  </thead>
+                  <tbody>
+                      ${compliance.map((row) => `<tr><th>${esc(row.name)}</th>${row.days.map((item) => {
+                        const active = filters.user === row.username && filters.day === item.day;
+                        const cellClass = item.isLeave ? "leave" : (item.isHalfLeave ? "leave half" : (item.isOffday ? "offday" : (item.isPending ? "pending" : (item.onTarget ? "ok" : "miss"))));
+                        const cellLabel = item.isLeave ? "Leave Day" : (item.isHalfLeave ? (item.hours > 0 ? fmtHours(item.hours) : "Half Leave") : (item.isOffday ? "—" : (item.isPending ? "Pending" : (item.hours <= 0 ? "No hours" : fmtHours(item.hours)))));
+                        const gapText = item.isHalfLeave ? "Half-day Leave" : esc(item.gapLabel);
+                        return `<td><button type="button" class="cell-button ${cellClass} ${active ? "active" : ""}" data-user-day="${esc(row.username)}|${esc(item.day)}"><div class="cell-hours">${cellLabel}</div><div class="cell-gap">${gapText}</div></button></td>`;
+                      }).join("")}</tr>`).join("")}
+                  </tbody>
+                </table>
+              </div>
+          </section>
+
+          <section class="panel tt-project" data-bento-id="tt-project" data-bento-span="7">
+                <div class="panel-head">
+                  <h2>Project Hours Share</h2>
+                  <div class="panel-note">${projects.length ? "Pie chart, legend, and project table are linked" : "No data"}</div>
+                </div>
+                ${projects.length ? `
+                  <div class="project-combo">
+                    <div>
+                      <div class="pie-shell">
+                        <div class="pie-area">
+                          <svg viewBox="0 0 280 280" aria-label="Project hours pie chart">
+                            ${pieSlices}
+                            <circle cx="140" cy="140" r="58" fill="white"></circle>
+                            <text x="140" y="134" text-anchor="middle" class="pie-center-main">${fmtHours(totalHours)}</text>
+                            <text x="140" y="156" text-anchor="middle" class="pie-center-sub">team hours</text>
+                          </svg>
+                        </div>
+                        <div class="legend">${pieLegend}</div>
+                      </div>
+                    </div>
+                    <div class="table-wrap">
+                      <table class="project-table">
+                        <thead><tr><th>Project</th><th class="num">Hours</th><th class="num">%</th></tr></thead>
+                        <tbody>
+                          ${projectTableRows.map((row) => `<tr class="clickable ${filters.project === row.value ? "active-row" : ""}" data-project-row="${esc(row.value)}"><td>${esc(row.label)}</td><td class="num">${fmtHours(row.amount)}</td><td class="num">${fmtPct(row.percent)}</td></tr>`).join("")}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>` : `<div class="empty">No project hours in the current filter scope.</div>`}
+          </section>
+
+          <section class="panel tt-detail" data-bento-id="tt-detail" data-bento-span="5">
+                <div class="panel-head">
+                  <h2>Ticket Detail</h2>
+                  <div class="panel-note">${selectedTicket ? "Selected from the current filters" : "Pick a ticket from any chart or table"}</div>
+                </div>
+                ${detailBase ? `
+                  <div class="detail-grid">
+                    <div class="detail-box"><div class="detail-label">Ticket</div><div class="detail-value">#${esc(detailBase.bugId || detailBase.bug_id || "")}</div></div>
+                    <div class="detail-box"><div class="detail-label">Project</div><div class="detail-value">${esc(detailBase.project || detailBase.project_name || "")}</div></div>
+                    <div class="detail-box"><div class="detail-label">Summary</div><div class="detail-value">${esc(detailBase.summary || detailBase.ticket_summary || "")}</div></div>
+                    <div class="detail-box"><div class="detail-label">Hours in scope</div><div class="detail-value">${fmtHours(selectedEntries.reduce((sum, row) => sum + asNumber(row.hours), 0) || detailBase.hours || 0)}</div></div>
+                    <div class="detail-box"><div class="detail-label">People logging to this ticket</div><div class="detail-value">${esc(Array.from(new Set(selectedEntries.map((row) => row.logged_by_name || row.logged_by_username).filter(Boolean))).join(", ") || "-")}</div></div>
+                    <div class="detail-box"><div class="detail-label">Entries in scope</div><div class="detail-value">${fmtInt(selectedEntries.length || detailBase.entries || 0)}</div></div>
+                  </div>
+                ` : `<div class="empty">No ticket selected yet.</div>`}
+          </section>
+
+          <section class="panel tt-breakdown" data-bento-id="tt-breakdown-member" data-bento-span="4">
+            <div class="panel-head">
+              <h2>By Team Member</h2>
+              <div class="panel-note">Click a member bar</div>
+            </div>
+            <div class="bar-list">
+              ${members.length ? members.map((row) => `<button type="button" class="bar-row ${filters.user === row.raw ? "active" : ""}" data-user="${esc(row.raw)}"><div class="bar-label">${esc(row.label)}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.max(2, row.amount / maxMember * 100).toFixed(2)}%"></div></div><div class="bar-value">${fmtHours(row.amount)}</div></button>`).join("") : `<div class="empty">No member hours in scope.</div>`}
+            </div>
+          </section>
+
+          <section class="panel tt-breakdown" data-bento-id="tt-breakdown-day" data-bento-span="4">
+            <div class="panel-head">
+              <h2>By Workday</h2>
+              <div class="panel-note">Click a day bar</div>
+            </div>
+            <div class="bar-list">
+              ${days.length ? days.map((row) => `<button type="button" class="bar-row ${filters.day === row.raw ? "active" : ""}" data-day="${esc(row.raw)}"><div class="bar-label">${esc(row.label)}</div><div class="bar-track"><div class="bar-fill blue" style="width:${Math.max(2, row.amount / maxDay * 100).toFixed(2)}%"></div></div><div class="bar-value">${fmtHours(row.amount)}</div></button>`).join("") : `<div class="empty">No workdays in scope.</div>`}
+            </div>
+          </section>
+
+          <section class="panel tt-breakdown" data-bento-id="tt-breakdown-ticket" data-bento-span="4">
+            <div class="panel-head">
+              <h2>By Ticket</h2>
+              <div class="panel-note">Click a ticket row</div>
+            </div>
+            <div class="table-wrap">
+              <table class="ticket-table">
+                <thead><tr><th>Ticket</th><th>Project</th><th>Summary</th><th class="num">Hours</th></tr></thead>
+                <tbody>
+                  ${tickets.length ? tickets.slice(0, 20).map((row) => `<tr class="clickable ${selectedTicket === String(row.bugId) ? "active-row" : ""}" data-ticket="${esc(row.bugId)}"><td>#${esc(row.bugId)}</td><td>${esc(row.project)}</td><td>${esc(row.summary)}</td><td class="num">${fmtHours(row.hours)}</td></tr>`).join("") : `<tr><td colspan="4" class="empty">No tickets in scope.</td></tr>`}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel tt-entries" data-bento-id="tt-entries" data-bento-span="12">
+              <div class="panel-head">
+                <h2>Time Tracking Details</h2>
+                <div class="panel-note">Every filtered Mantis time entry. Click a row to lock the ticket detail.</div>
+              </div>
+              <div class="table-wrap">
+                <table class="entry-table">
+                  <thead>
+                    <tr>
+                      <th>Day</th>
+                      <th>User</th>
+                      <th>Ticket</th>
+                      <th>Project</th>
+                      <th class="num">Hours</th>
+                      <th>Category</th>
+                      <th>Info</th>
+                      <th>Created</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${entries.length ? entries.map((row) => `<tr class="clickable ${selectedTicket && String(row.bug_id) === selectedTicket ? "active-row" : ""}" data-ticket="${esc(row.bug_id || "")}"><td>${esc(fmtIsoDate(row.day))}</td><td>${esc(row.logged_by_name || row.logged_by_username)}</td><td>${row.bug_id ? "#" + esc(row.bug_id) : ""}</td><td>${esc(row.project_name)}</td><td class="num">${fmtHours(row.hours)}</td><td>${esc(row.category)}</td><td>${esc(row.info)}</td><td>${esc(fmtIsoDateTime(row.created_timestamp))}</td></tr>`).join("") : `<tr><td colspan="8" class="empty">No time entries match the current filters.</td></tr>`}
+                  </tbody>
+                </table>
+              </div>
+          </section>
+      `;
+
+      function setFilter(key, value) {
+        const next = Object.assign({}, filters, { [key]: value });
+        writeFilters(next);
+        render();
+      }
+
+      document.getElementById("filter-user").addEventListener("change", (event) => setFilter("user", event.target.value));
+      document.getElementById("filter-project").addEventListener("change", (event) => setFilter("project", event.target.value));
+      const dayInput = document.getElementById("filter-day");
+      setDateInputDisplay(dayInput, filters.day === "all" ? "" : filters.day);
+      bindDdMmDatePicker(dayInput, (iso) => setFilter("day", iso || "all"), {
+        placeholder: "All workdays",
+        min: normalizeDayKey(DATA.month.start),
+        max: normalizeDayKey(isoDateAddDays(DATA.month.end, -1)),
+      });
+      document.getElementById("filter-ticket").addEventListener("change", (event) => setFilter("ticket", event.target.value.trim() || "all"));
+      document.getElementById("filter-search").addEventListener("input", (event) => setFilter("search", event.target.value));
+      document.getElementById("reset-filters").addEventListener("click", () => { writeFilters(FILTER_DEFAULTS); render(); });
+      grid.querySelectorAll("[data-clear]").forEach((node) => node.addEventListener("click", () => setFilter(node.dataset.clear, FILTER_DEFAULTS[node.dataset.clear])));
+      grid.querySelectorAll("[data-project]").forEach((node) => node.addEventListener("click", () => setFilter("project", filters.project === node.dataset.project ? "all" : node.dataset.project)));
+      grid.querySelectorAll("[data-project-row]").forEach((node) => node.addEventListener("click", () => setFilter("project", filters.project === node.dataset.projectRow ? "all" : node.dataset.projectRow)));
+      grid.querySelectorAll("[data-user]").forEach((node) => node.addEventListener("click", () => setFilter("user", filters.user === node.dataset.user ? "all" : node.dataset.user)));
+      grid.querySelectorAll("[data-day]").forEach((node) => node.addEventListener("click", () => setFilter("day", filters.day === node.dataset.day ? "all" : node.dataset.day)));
+      grid.querySelectorAll("[data-user-day]").forEach((node) => node.addEventListener("click", () => {
+        const [user, day] = node.dataset.userDay.split("|");
+        const next = Object.assign({}, filters, {
+          user: filters.user === user && filters.day === day ? "all" : user,
+          day: filters.user === user && filters.day === day ? "all" : day
+        });
+        writeFilters(next);
+        render();
+      }));
+      grid.querySelectorAll("[data-ticket]").forEach((node) => node.addEventListener("click", () => setFilter("ticket", filters.ticket === node.dataset.ticket ? "all" : node.dataset.ticket || "all")));
+      try {
+        if (grid && window.DlaBentoLayout) {
+          DlaBentoLayout.refreshTiles(grid, LAYOUT_ID, { toolbar: "none" });
+          if (wasEditing) DlaBentoLayout.restoreEditing(grid, true);
+        }
+      } catch (err) {
+        console.error("Bento layout init failed", err);
+      }
+    }
+
+    render();
+  })();
+  </script>
+</body>
+</html>
