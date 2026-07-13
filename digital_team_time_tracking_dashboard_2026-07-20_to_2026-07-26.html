@@ -837,7 +837,7 @@ body {
 </head>
 <body>
   <div id="app"></div>
-  <script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-13T10:06:36","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["dahn.nguyen","hu.dam"],"2026-07-21":["dahn.nguyen","hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
+  <script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-13T10:23:43","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["dahn.nguyen","hu.dam"],"2026-07-21":["dahn.nguyen","hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
   <script>
   (function () {
     function fmtIsoDate(iso) {
@@ -1926,7 +1926,7 @@ window.DlaBentoLayout = DlaBentoLayout;
     const LAYOUT_ID = "digital-team-time-tracking:" + (DATA.month?.label || "default");
     const FILTER_PREFS_KEY = "dla-tt-filters:" + (DATA.month?.label || "default");
     const TARGET = Number(DATA.workdayTargetHours || 7.5);
-    const FILTER_DEFAULTS = { user: "all", project: "all", day: "all", ticket: "all", search: "" };
+    const FILTER_DEFAULTS = { user: "all", project: "all", from: "all", to: "all", ticket: "all", search: "" };
 
     function asNumber(value) {
       const parsed = Number(value);
@@ -1953,6 +1953,39 @@ window.DlaBentoLayout = DlaBentoLayout;
         .replace(/"/g, "&quot;");
     }
 
+    function periodBounds() {
+      const min = normalizeDayKey(DATA.month.start);
+      const max = normalizeDayKey(isoDateAddDays(DATA.month.end, -1));
+      return { min, max };
+    }
+
+    function clampDay(iso) {
+      const day = normalizeDayKey(iso);
+      if (!day || day === "all") return "all";
+      const { min, max } = periodBounds();
+      if (day < min) return min;
+      if (day > max) return max;
+      return day;
+    }
+
+    function normalizeRangeFilters(filters) {
+      const next = Object.assign({}, FILTER_DEFAULTS, filters || {});
+      // Migrate legacy single-day filter → From/To.
+      if ((next.from === "all" || !next.from) && (next.to === "all" || !next.to) && next.day && next.day !== "all") {
+        next.from = next.day;
+        next.to = next.day;
+      }
+      delete next.day;
+      next.from = clampDay(next.from === "all" ? "all" : next.from);
+      next.to = clampDay(next.to === "all" ? "all" : next.to);
+      if (next.from !== "all" && next.to !== "all" && next.from > next.to) {
+        const swap = next.from;
+        next.from = next.to;
+        next.to = swap;
+      }
+      return next;
+    }
+
     function readFilters() {
       const next = Object.assign({}, FILTER_DEFAULTS);
       const saved = loadDashboardPrefs(FILTER_PREFS_KEY);
@@ -1960,12 +1993,14 @@ window.DlaBentoLayout = DlaBentoLayout;
         Object.keys(FILTER_DEFAULTS).forEach((key) => {
           if (saved[key] != null && saved[key] !== "") next[key] = String(saved[key]);
         });
+        if (saved.day != null && saved.day !== "") next.day = String(saved.day);
       }
       const params = new URLSearchParams(window.location.search);
       Object.keys(next).forEach((key) => {
         if (params.has(key)) next[key] = params.get(key) || FILTER_DEFAULTS[key];
       });
-      return next;
+      if (params.has("day")) next.day = params.get("day") || "all";
+      return normalizeRangeFilters(next);
     }
 
     function writeFilters(filters) {
@@ -2046,10 +2081,29 @@ window.DlaBentoLayout = DlaBentoLayout;
     function matches(row, filters) {
       if (filters.user !== "all" && row.logged_by_username !== filters.user) return false;
       if (filters.project !== "all" && row.project_name !== filters.project) return false;
-      if (filters.day !== "all" && normalizeDayKey(row.day) !== filters.day) return false;
+      const day = normalizeDayKey(row.day);
+      if (filters.from !== "all" && day < filters.from) return false;
+      if (filters.to !== "all" && day > filters.to) return false;
       if (filters.ticket !== "all" && String(row.bug_id) !== String(filters.ticket)) return false;
       if (filters.search.trim() && !searchText(row).includes(filters.search.trim().toLowerCase())) return false;
       return true;
+    }
+
+    function isDaySelected(filters, day) {
+      const key = normalizeDayKey(day);
+      if (!key) return false;
+      if (filters.from === "all" && filters.to === "all") return false;
+      const from = filters.from === "all" ? key : filters.from;
+      const to = filters.to === "all" ? key : filters.to;
+      return key >= from && key <= to;
+    }
+
+    function toggleDayFilter(filters, day) {
+      const key = normalizeDayKey(day);
+      if (filters.from === key && filters.to === key) {
+        return Object.assign({}, filters, { from: "all", to: "all" });
+      }
+      return Object.assign({}, filters, { from: key, to: key });
     }
 
     function uniqueOptions(rows, key, labelKey) {
@@ -2328,7 +2382,7 @@ window.DlaBentoLayout = DlaBentoLayout;
       }
 
       function filterChipLabel(key, value) {
-        if (key === "day" && value && value !== "all") return fmtIsoDate(value);
+        if ((key === "from" || key === "to" || key === "day") && value && value !== "all") return fmtIsoDate(value);
         return value;
       }
 
@@ -2361,8 +2415,12 @@ window.DlaBentoLayout = DlaBentoLayout;
               </select>
             </div>
             <div class="control">
-              <label>Day</label>
-              <input type="text" id="filter-day" readonly placeholder="All workdays" autocomplete="off" />
+              <label>From</label>
+              <input type="text" id="filter-from" readonly placeholder="Start (dd/mm/yyyy)" autocomplete="off" />
+            </div>
+            <div class="control">
+              <label>To</label>
+              <input type="text" id="filter-to" readonly placeholder="End (dd/mm/yyyy)" autocomplete="off" />
             </div>
             <div class="control">
               <label>Ticket</label>
@@ -2411,7 +2469,7 @@ window.DlaBentoLayout = DlaBentoLayout;
                   </thead>
                   <tbody>
                       ${compliance.map((row) => `<tr><th>${esc(row.name)}</th>${row.days.map((item) => {
-                        const active = filters.user === row.username && filters.day === item.day;
+                        const active = filters.user === row.username && isDaySelected(filters, item.day);
                         const cellClass = item.isLeave ? "leave" : (item.isHalfLeave ? "leave half" : (item.isOffday ? "offday" : (item.isPending ? "pending" : (item.onTarget ? "ok" : "miss"))));
                         const cellLabel = item.isLeave ? "Leave Day" : (item.isHalfLeave ? (item.hours > 0 ? fmtHours(item.hours) : "Half Leave") : (item.isOffday ? "—" : (item.isPending ? "Pending" : (item.hours <= 0 ? "No hours" : fmtHours(item.hours)))));
                         const gapRaw = item.isHalfLeave ? "Half-day Leave" : (item.gapLabel || "");
@@ -2498,7 +2556,7 @@ window.DlaBentoLayout = DlaBentoLayout;
               <div class="panel-note">Click a day bar</div>
             </div>
             <div class="bar-list">
-              ${days.length ? days.map((row) => `<button type="button" class="bar-row ${filters.day === row.raw ? "active" : ""}" data-day="${esc(row.raw)}"><div class="bar-label">${esc(row.label)}</div><div class="bar-track"><div class="bar-fill blue" style="width:${Math.max(2, row.amount / maxDay * 100).toFixed(2)}%"></div></div><div class="bar-value">${fmtHours(row.amount)}</div></button>`).join("") : `<div class="empty">No workdays in scope.</div>`}
+              ${days.length ? days.map((row) => `<button type="button" class="bar-row ${isDaySelected(filters, row.raw) ? "active" : ""}" data-day="${esc(row.raw)}"><div class="bar-label">${esc(row.label)}</div><div class="bar-track"><div class="bar-fill blue" style="width:${Math.max(2, row.amount / maxDay * 100).toFixed(2)}%"></div></div><div class="bar-value">${fmtHours(row.amount)}</div></button>`).join("") : `<div class="empty">No workdays in scope.</div>`}
             </div>
           </section>
 
@@ -2552,12 +2610,30 @@ window.DlaBentoLayout = DlaBentoLayout;
 
       document.getElementById("filter-user").addEventListener("change", (event) => setFilter("user", event.target.value));
       document.getElementById("filter-project").addEventListener("change", (event) => setFilter("project", event.target.value));
-      const dayInput = document.getElementById("filter-day");
-      setDateInputDisplay(dayInput, filters.day === "all" ? "" : filters.day);
-      bindDdMmDatePicker(dayInput, (iso) => setFilter("day", iso || "all"), {
-        placeholder: "All workdays",
-        min: normalizeDayKey(DATA.month.start),
-        max: normalizeDayKey(isoDateAddDays(DATA.month.end, -1)),
+      const bounds = periodBounds();
+      const fromInput = document.getElementById("filter-from");
+      const toInput = document.getElementById("filter-to");
+      setDateInputDisplay(fromInput, filters.from === "all" ? "" : filters.from);
+      setDateInputDisplay(toInput, filters.to === "all" ? "" : filters.to);
+      bindDdMmDatePicker(fromInput, (iso) => {
+        const next = normalizeRangeFilters(Object.assign({}, filters, { from: iso || "all" }));
+        writeFilters(next);
+        render();
+      }, {
+        placeholder: "Start (dd/mm/yyyy)",
+        clearable: true,
+        min: bounds.min,
+        max: bounds.max,
+      });
+      bindDdMmDatePicker(toInput, (iso) => {
+        const next = normalizeRangeFilters(Object.assign({}, filters, { to: iso || "all" }));
+        writeFilters(next);
+        render();
+      }, {
+        placeholder: "End (dd/mm/yyyy)",
+        clearable: true,
+        min: bounds.min,
+        max: bounds.max,
       });
       document.getElementById("filter-ticket").addEventListener("change", (event) => setFilter("ticket", event.target.value.trim() || "all"));
       document.getElementById("filter-search").addEventListener("input", (event) => setFilter("search", event.target.value));
@@ -2566,14 +2642,19 @@ window.DlaBentoLayout = DlaBentoLayout;
       grid.querySelectorAll("[data-project]").forEach((node) => node.addEventListener("click", () => setFilter("project", filters.project === node.dataset.project ? "all" : node.dataset.project)));
       grid.querySelectorAll("[data-project-row]").forEach((node) => node.addEventListener("click", () => setFilter("project", filters.project === node.dataset.projectRow ? "all" : node.dataset.projectRow)));
       grid.querySelectorAll("[data-user]").forEach((node) => node.addEventListener("click", () => setFilter("user", filters.user === node.dataset.user ? "all" : node.dataset.user)));
-      grid.querySelectorAll("[data-day]").forEach((node) => node.addEventListener("click", () => setFilter("day", filters.day === node.dataset.day ? "all" : node.dataset.day)));
+      grid.querySelectorAll("[data-day]").forEach((node) => node.addEventListener("click", () => {
+        writeFilters(toggleDayFilter(filters, node.dataset.day));
+        render();
+      }));
       grid.querySelectorAll("[data-user-day]").forEach((node) => node.addEventListener("click", () => {
         const [user, day] = node.dataset.userDay.split("|");
+        const same = filters.user === user && filters.from === day && filters.to === day;
         const next = Object.assign({}, filters, {
-          user: filters.user === user && filters.day === day ? "all" : user,
-          day: filters.user === user && filters.day === day ? "all" : day
+          user: same ? "all" : user,
+          from: same ? "all" : day,
+          to: same ? "all" : day
         });
-        writeFilters(next);
+        writeFilters(normalizeRangeFilters(next));
         render();
       }));
       grid.querySelectorAll("[data-ticket]").forEach((node) => node.addEventListener("click", () => setFilter("ticket", filters.ticket === node.dataset.ticket ? "all" : node.dataset.ticket || "all")));
