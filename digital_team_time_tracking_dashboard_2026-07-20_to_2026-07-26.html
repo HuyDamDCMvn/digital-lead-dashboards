@@ -20,16 +20,21 @@
 .dla-date-trigger,
 .dla-date-clear {
   flex: 0 0 auto;
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 32px;
   height: 32px;
+  min-width: 32px;
+  min-height: 32px;
   border: 1px solid var(--line-strong, #cbd5e1);
   border-radius: 8px;
   background: #fff;
   color: var(--text, #0f172a);
   padding: 0;
+  cursor: pointer;
 }
 .dla-date-trigger:hover,
 .dla-date-clear:hover {
@@ -258,10 +263,16 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   touch-action: none;
   position: relative;
 }
-.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]) .bento-drag-handle {
+.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id])[data-bento-locked="true"] {
+  outline: 2px solid rgba(15, 118, 110, 0.35);
+  outline-offset: -2px;
+  cursor: not-allowed;
+  opacity: 0.92;
+}
+.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]):not([data-bento-locked="true"]) .bento-drag-handle {
   display: flex;
 }
-.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]) .bento-resize-handle {
+.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]):not([data-bento-locked="true"]) .bento-resize-handle {
   display: block;
 }
 .bento-drag-handle {
@@ -269,7 +280,8 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   align-items: center;
   gap: 6px;
   margin: -4px 0 8px;
-  padding: 6px 10px;
+  padding: 8px 12px;
+  min-height: 28px;
   border-radius: 6px;
   background: var(--accent-soft, #ccfbf1);
   color: var(--accent-strong, #115e59);
@@ -282,6 +294,7 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   touch-action: none;
   width: fit-content;
   max-width: 100%;
+  z-index: 4;
 }
 .bento-drag-handle::before {
   content: "⋮⋮";
@@ -292,32 +305,51 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 .bento-resize-handle {
   display: none;
   position: absolute;
-  right: 6px;
-  bottom: 6px;
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
+  right: 4px;
+  bottom: 4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
   background: var(--accent, #0f766e);
   cursor: nwse-resize;
-  opacity: 0.85;
-  z-index: 3;
+  opacity: 0.92;
+  z-index: 5;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35);
+}
+.bento-resize-handle::after {
+  content: "";
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
 }
 .bento-resize-row-handle {
   display: none;
   position: absolute;
   left: 50%;
-  bottom: 4px;
+  bottom: 2px;
   transform: translateX(-50%);
-  width: 40px;
-  height: 8px;
+  width: 56px;
+  height: 24px;
   border-radius: 4px;
   background: var(--accent, #0f766e);
   cursor: ns-resize;
-  opacity: 0.85;
-  z-index: 3;
+  opacity: 0.92;
+  z-index: 5;
 }
-.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]) .bento-resize-row-handle {
+.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]):not([data-bento-locked="true"]) .bento-resize-row-handle {
   display: block;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bento-layout-drop-indicator,
+  .bento-drag-handle,
+  .bento-resize-handle,
+  .bento-resize-row-handle {
+    transition: none !important;
+  }
 }
 .bento-layout-toolbar {
   display: inline-flex;
@@ -805,7 +837,7 @@ body {
 </head>
 <body>
   <div id="app"></div>
-  <script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-13T07:49:51","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["dahn.nguyen","hu.dam"],"2026-07-21":["dahn.nguyen","hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
+  <script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-13T10:06:36","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["dahn.nguyen","hu.dam"],"2026-07-21":["dahn.nguyen","hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
   <script>
   (function () {
     function fmtIsoDate(iso) {
@@ -1263,17 +1295,13 @@ const DlaBentoLayout = (() => {
   }
 
   function isLayoutCorrupt(layout) {
+    // Only treat "almost everything forced to column 1" as corruption.
+    // Dense KPI boards (many cs<=4 across many rows) are valid custom layouts
+    // and must not be wiped on refreshTiles / Done.
     const items = Object.values(layout?.items || {});
     if (items.length < 4) return false;
     const atCol1 = items.filter((p) => Number(p.c || 1) === 1).length;
-    if (atCol1 / items.length >= 0.85) return true;
-    const rows = items.map((p) => Number(p.r || 1));
-    const smallSpans = items.filter((p) => Number(p.cs || 1) <= 4).length;
-    if (smallSpans >= 4) {
-      const uniqueRows = new Set(rows).size;
-      if (uniqueRows >= smallSpans * 0.8) return true;
-    }
-    return false;
+    return atCol1 / items.length >= 0.85;
   }
 
   function applyLayoutFromStorageOrDefault(grid, dashboardId) {
@@ -1475,7 +1503,12 @@ const DlaBentoLayout = (() => {
 
   function decorateTiles(state) {
     for (const el of tiles(state.grid)) {
-      if (isLocked(el)) continue;
+      if (isLocked(el)) {
+        el.dataset.bentoLocked = "true";
+        el.title = el.title || "Locked tile — layout fixed";
+        continue;
+      }
+      el.dataset.bentoLocked = "false";
       if (!el.querySelector(".bento-drag-handle")) {
         const handle = document.createElement("div");
         handle.className = "bento-drag-handle";
@@ -1835,10 +1868,19 @@ const DlaBentoLayout = (() => {
 
   function importLayout(payload, options) {
     const root = layoutRoot();
-    if (!root || !payload?.items) return false;
+    const items = payload?.items;
+    if (!root || !items || typeof items !== "object" || Array.isArray(items)) return false;
+    if (!Object.keys(items).length) return false;
     const id = payload.dashboardId || options?.dashboardId || root.dataset.bentoDashboard;
     if (!id) return false;
-    const normalized = { version: VERSION, items: payload.items };
+    // Reject only the stacked-col-1 corruption pattern — dense custom layouts
+    // (many small spans / many rows) are valid and must remain importable.
+    const placements = Object.values(items);
+    if (placements.length >= 4) {
+      const atCol1 = placements.filter((p) => Number(p.c || 1) === 1).length;
+      if (atCol1 / placements.length >= 0.85) return false;
+    }
+    const normalized = { version: VERSION, items };
     applySaved(root, normalized);
     saveDashboardPrefs(storageKey(id), normalized);
     const state = getState(root) || mount(root, { dashboardId: id, toolbar: "none" });
@@ -2372,8 +2414,20 @@ window.DlaBentoLayout = DlaBentoLayout;
                         const active = filters.user === row.username && filters.day === item.day;
                         const cellClass = item.isLeave ? "leave" : (item.isHalfLeave ? "leave half" : (item.isOffday ? "offday" : (item.isPending ? "pending" : (item.onTarget ? "ok" : "miss"))));
                         const cellLabel = item.isLeave ? "Leave Day" : (item.isHalfLeave ? (item.hours > 0 ? fmtHours(item.hours) : "Half Leave") : (item.isOffday ? "—" : (item.isPending ? "Pending" : (item.hours <= 0 ? "No hours" : fmtHours(item.hours)))));
-                        const gapText = item.isHalfLeave ? "Half-day Leave" : esc(item.gapLabel);
-                        return `<td><button type="button" class="cell-button ${cellClass} ${active ? "active" : ""}" data-user-day="${esc(row.username)}|${esc(item.day)}"><div class="cell-hours">${cellLabel}</div><div class="cell-gap">${gapText}</div></button></td>`;
+                        const gapRaw = item.isHalfLeave ? "Half-day Leave" : (item.gapLabel || "");
+                        const gapText = esc(gapRaw);
+                        // Heatmap density: show gap only when it adds info beyond the primary cell label.
+                        const showGap = Boolean(gapRaw)
+                          && gapRaw !== cellLabel
+                          && !item.onTarget
+                          && !item.isLeave
+                          && !item.isOffday
+                          && !item.isPending
+                          && cellLabel !== "No hours"
+                          && /^(Over by|Short by|Half-day)/.test(gapRaw);
+                        const tip = gapRaw || cellLabel;
+                        const aria = `${esc(row.name)} ${esc(compactDate(item.day))}: ${esc(tip)}`;
+                        return `<td><button type="button" class="cell-button ${cellClass} ${active ? "active" : ""}" data-user-day="${esc(row.username)}|${esc(item.day)}" title="${esc(tip)}" aria-label="${aria}"><div class="cell-hours">${cellLabel}</div>${showGap ? `<div class="cell-gap">${gapText}</div>` : ""}</button></td>`;
                       }).join("")}</tr>`).join("")}
                   </tbody>
                 </table>
