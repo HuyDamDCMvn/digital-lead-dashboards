@@ -200,18 +200,26 @@
   display: none;
   position: absolute;
   left: 50%;
-  bottom: 2px;
+  bottom: 4px;
   transform: translateX(-50%);
-  width: 56px;
-  height: 24px;
-  border-radius: 4px;
+  width: 48px;
+  height: 8px;
+  min-height: 8px;
+  border-radius: 999px;
   background: var(--accent, #0f766e);
   cursor: ns-resize;
-  opacity: 0.92;
+  opacity: 0.55;
   z-index: 5;
+}
+.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]):not([data-bento-locked="true"]) {
+  padding-bottom: 28px;
 }
 .bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]):not([data-bento-locked="true"]) .bento-resize-row-handle {
   display: block;
+}
+.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]):not([data-bento-locked="true"]):hover .bento-resize-row-handle {
+  opacity: 0.9;
+  height: 10px;
 }
 @media (prefers-reduced-motion: reduce) {
   .bento-layout-drop-indicator,
@@ -522,7 +530,7 @@
     </div>
   </div>
   <div class="toast" id="toast"></div>
-  <script id="dashboard-data" type="application/json">{"generatedAt":"15/07/2026 10:39","dashboards":[{"title":"Annotation Digital Productivity","file":"annotation_digital_productivity_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/refresh_mantis_dashboard_cache.py --start 2025-01-01 --end YYYY-MM-DD; python scripts/extract_annotation_digital_productivity.py --project-id 396 --source cache; python scripts/build_annotation_productivity_dashboard.py --data-dir data/reports/annotation_digital_productivity --output dashboard_reports/annotation_digital_productivity_dashboard.html","source":"Mantis cache project 396 (after cache refresh)","memory":"Interactive tickets count only when note, status change, and handler change come from the same actor.","exists":true,"href":"annotation_digital_productivity_dashboard.html","bytes":1122475,"size":"1.1 MB","modified":"2026-07-15T03:27:17.077530+00:00","modifiedDisplay":"15/07/2026 10:27","ageDays":0,"freshness":"fresh","dataSignal":"15/07/2026 10:27","registered":true,"layoutId":"annotation-productivity"},{"title":"Annotation Member Workload","file":"digital_team_annotation_status_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/build_annotation_member_ticket_dashboard_html.py --cutoff 2026-W29 --output dashboard_reports/digital_team_annotation_status_dashboard.html --source cache","source":"TIDP Master Rev6 + Mantis cache project 396 (stepwise uses same cache)","memory":"COO primary member workload; active TIDP family tickets handled by Digital Team.","exists":true,"href":"digital_team_annotation_status_dashboard.html","bytes":493294,"size":"481.7 KB","modified":"2026-07-15T03:39:19.926377+00:00","modifiedDisplay":"15/07/2026 10:39","ageDays":0,"freshness":"fresh","dataSignal":"15/07/2026 10:39","registered":true,"layoutId":"annotation-member-workload"},{"title":"Digital Team Time Tracking","file":"digital_team_time_tracking_dashboard_2026-07.html","group":"Time Tracking","owner":"Digital Team","status":"Primary","refresh":"python -m dashboard_assistant --month 2026-07 --team digital --react --limit 20 --strict-dq --source cache","source":"Mantis cache time tracking","memory":"Generalized time tracking dashboard: choose an available month/range in the viewer; run cache refresh then rebuild with --source cache before reporting.","exists":true,"href":"digital_team_time_tracking_dashboard_2026-07.html","bytes":286139,"size":"279.4 KB","modified":"2026-07-15T03:39:20.114709+00:00","modifiedDisplay":"15/07/2026 10:39","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-15T10:39:19","registered":true,"layoutId":"digital-team-time-tracking:2026-07","variants":[{"label":"01/07/2026 to 31/07/2026","file":"digital_team_time_tracking_dashboard_2026-07.html","href":"digital_team_time_tracking_dashboard_2026-07.html","layoutId":"digital-team-time-tracking:2026-07","sortKey":"2026-07","start":"2026-07-01","end":"2026-07-31","cw":"","exists":true,"bytes":286139,"size":"279.4 KB","modified":"2026-07-15T03:39:20.114709+00:00","modifiedDisplay":"15/07/2026 10:39","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-15T10:39:19"},{"label":"20/07/2026 to 26/07/2026","file":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","href":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","layoutId":"digital-team-time-tracking:2026-07-20_to_2026-07-26","sortKey":"2026-07-20_2026-07-26","start":"2026-07-20","end":"2026-07-26","cw":"2026-W30","exists":true,"bytes":103651,"size":"101.2 KB","modified":"2026-07-14T09:41:37.842242+00:00","modifiedDisplay":"14/07/2026 16:41","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-14T16:40:00"}],"variantCount":2,"currentVariantFile":"digital_team_time_tracking_dashboard_2026-07.html","rangeRefreshTemplate":"python -m dashboard_assistant --month {from}..{to} --team digital --react --limit 20 --strict-dq --source cache"},{"title":"Digital Team Work Current","file":"digital_team_work_dashboard_current.html","group":"Digital Team","owner":"Digital Team","status":"Operational","refresh":"python build_digital_dashboard.py --output dashboard_reports/digital_team_work_dashboard_current.html --source cache","source":"Mantis cache open work","memory":"Open ticket dashboard grouped by project with due assessment and status badges.","exists":true,"href":"digital_team_work_dashboard_current.html","bytes":21892439,"size":"20.9 MB","modified":"2026-07-15T03:39:21.952509+00:00","modifiedDisplay":"15/07/2026 10:39","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-15T10:39:08+07:00","registered":true,"layoutId":"digital-team-work-current"},{"title":"Annotation TIDP Ticket Overview","file":"digital_team_annotation_ticket_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/build_annotation_tidp_dashboard_html.py --cutoff 2026-W29 --source cache --output dashboard_reports/digital_team_annotation_ticket_dashboard.html; python scripts/build_tidp_report_sheet1.py --cutoff 2026-W29 --source cache --output data/reports/TIDP_Report_Stepwise.xlsx --no-open","source":"TIDP Master Rev6 + Mantis cache project 396 (paired with stepwise Excel)","memory":"COO executive TIDP mirror; rebuild together with TIDP_Report_Stepwise.xlsx on refresh.","exists":true,"href":"digital_team_annotation_ticket_dashboard.html","bytes":1104595,"size":"1.1 MB","modified":"2026-07-15T03:27:17.293454+00:00","modifiedDisplay":"15/07/2026 10:27","ageDays":0,"freshness":"fresh","dataSignal":"15/07/2026 10:27","registered":true,"layoutId":"annotation-tidp"}],"groups":["Annotation","Digital Team","Time Tracking"],"cache":{"generated_at":"2026-07-14T16:38:46+07:00","cache_schema_version":3,"source":"MariaDB/Mantis","database":"mantis","range":{"start":"2025-01-01","end":"2026-09-01"},"project_ids":[396,357,400,401],"digital_team_users":["hu.dam","ht.nguyen","dahn.nguyen","nd.huynh","kd.doan","lk.dang","qd.nguyen","qn.ha"],"files":{"sqlite":"data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite","manifest":"data/mantis_dashboard_cache/manifest.json","extracts":"data/mantis_dashboard_cache/extracts"},"tables":{"projects":4,"users":92,"tickets":15773,"time_entries":24779,"bug_history":183887,"bugnotes":20084,"work_dashboard_team_members":8,"work_dashboard_rows":789,"work_dashboard_notes":3128,"work_dashboard_history":26322,"annotation_p396_tickets":2080,"annotation_p396_history":17780,"annotation_p396_rename":172,"annotation_p396_note_authors":4825,"annotation_p396_users":407},"usage":{"refresh":"python scripts/refresh_mantis_dashboard_cache.py --start YYYY-MM-DD --end YYYY-MM-DD","sqlite":"Read data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite from dashboard builders."}},"cacheDisplay":"01/01/2025 to 01/09/2026","duplicateGroups":[{"key":"digital_team_time_tracking_dashboard","title":"Digital Team Time Tracking Dashboard","count":2,"variants":[{"file":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","label":"20/07/2026 to 26/07/2026","sortKey":"2026-07-20_2026-07-26","start":"2026-07-20","end":"2026-07-26","cw":"2026-W30","exists":true,"href":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","bytes":103651,"size":"101.2 KB","modified":"2026-07-14T09:41:37.842242+00:00","modifiedDisplay":"14/07/2026 16:41","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-14T16:40:00"},{"file":"digital_team_time_tracking_dashboard_2026-07.html","label":"01/07/2026 to 31/07/2026","sortKey":"2026-07","start":"2026-07-01","end":"2026-07-31","cw":"","exists":true,"href":"digital_team_time_tracking_dashboard_2026-07.html","bytes":286139,"size":"279.4 KB","modified":"2026-07-15T03:39:20.114709+00:00","modifiedDisplay":"15/07/2026 10:39","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-15T10:39:19"}]}],"metrics":{"total":5,"registered":5,"fresh":5,"stale":0,"missing":0,"latest":"Digital Team Work Current","cacheRows":300130},"templateSource":"https://github.com/shadcnstore/shadcn-dashboard-landing-template.git"}</script>
+  <script id="dashboard-data" type="application/json">{"generatedAt":"15/07/2026 10:56","dashboards":[{"title":"Annotation Digital Productivity","file":"annotation_digital_productivity_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/refresh_mantis_dashboard_cache.py --start 2025-01-01 --end YYYY-MM-DD; python scripts/extract_annotation_digital_productivity.py --project-id 396 --source cache; python scripts/build_annotation_productivity_dashboard.py --data-dir data/reports/annotation_digital_productivity --output dashboard_reports/annotation_digital_productivity_dashboard.html","source":"Mantis cache project 396 (after cache refresh)","memory":"Interactive tickets count only when note, status change, and handler change come from the same actor.","exists":true,"href":"annotation_digital_productivity_dashboard.html","bytes":1124164,"size":"1.1 MB","modified":"2026-07-15T03:55:37.074806+00:00","modifiedDisplay":"15/07/2026 10:55","ageDays":0,"freshness":"fresh","dataSignal":"15/07/2026 10:55","registered":true,"layoutId":"annotation-productivity"},{"title":"Annotation Member Workload","file":"digital_team_annotation_status_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/build_annotation_member_ticket_dashboard_html.py --cutoff 2026-W29 --output dashboard_reports/digital_team_annotation_status_dashboard.html --source cache","source":"TIDP Master Rev6 + Mantis cache project 396 (stepwise uses same cache)","memory":"COO primary member workload; active TIDP family tickets handled by Digital Team.","exists":true,"href":"digital_team_annotation_status_dashboard.html","bytes":491939,"size":"480.4 KB","modified":"2026-07-15T03:55:17.514341+00:00","modifiedDisplay":"15/07/2026 10:55","ageDays":0,"freshness":"fresh","dataSignal":"15/07/2026 10:55","registered":true,"layoutId":"annotation-member-workload"},{"title":"Digital Team Time Tracking","file":"digital_team_time_tracking_dashboard_2026-07.html","group":"Time Tracking","owner":"Digital Team","status":"Primary","refresh":"python -m dashboard_assistant --month 2026-07 --team digital --react --limit 20 --strict-dq --source cache","source":"Mantis cache time tracking","memory":"Generalized time tracking dashboard: choose an available month/range in the viewer; run cache refresh then rebuild with --source cache before reporting.","exists":true,"href":"digital_team_time_tracking_dashboard_2026-07.html","bytes":287123,"size":"280.4 KB","modified":"2026-07-15T03:55:38.271008+00:00","modifiedDisplay":"15/07/2026 10:55","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-15T10:55:36","registered":true,"layoutId":"digital-team-time-tracking:2026-07","variants":[{"label":"01/07/2026 to 31/07/2026","file":"digital_team_time_tracking_dashboard_2026-07.html","href":"digital_team_time_tracking_dashboard_2026-07.html","layoutId":"digital-team-time-tracking:2026-07","sortKey":"2026-07","start":"2026-07-01","end":"2026-07-31","cw":"","exists":true,"bytes":287123,"size":"280.4 KB","modified":"2026-07-15T03:55:38.271008+00:00","modifiedDisplay":"15/07/2026 10:55","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-15T10:55:36"},{"label":"20/07/2026 to 26/07/2026","file":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","href":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","layoutId":"digital-team-time-tracking:2026-07-20_to_2026-07-26","sortKey":"2026-07-20_2026-07-26","start":"2026-07-20","end":"2026-07-26","cw":"2026-W30","exists":true,"bytes":104635,"size":"102.2 KB","modified":"2026-07-15T03:55:31.976245+00:00","modifiedDisplay":"15/07/2026 10:55","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-14T16:40:00"}],"variantCount":2,"currentVariantFile":"digital_team_time_tracking_dashboard_2026-07.html","rangeRefreshTemplate":"python -m dashboard_assistant --month {from}..{to} --team digital --react --limit 20 --strict-dq --source cache"},{"title":"Digital Team Work Current","file":"digital_team_work_dashboard_current.html","group":"Digital Team","owner":"Digital Team","status":"Operational","refresh":"python build_digital_dashboard.py --output dashboard_reports/digital_team_work_dashboard_current.html --source cache","source":"Mantis cache open work","memory":"Open ticket dashboard grouped by project with due assessment and status badges.","exists":true,"href":"digital_team_work_dashboard_current.html","bytes":21893423,"size":"20.9 MB","modified":"2026-07-15T03:55:31.915677+00:00","modifiedDisplay":"15/07/2026 10:55","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-15T10:39:08+07:00","registered":true,"layoutId":"digital-team-work-current"},{"title":"Annotation TIDP Ticket Overview","file":"digital_team_annotation_ticket_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/build_annotation_tidp_dashboard_html.py --cutoff 2026-W29 --source cache --output dashboard_reports/digital_team_annotation_ticket_dashboard.html; python scripts/build_tidp_report_sheet1.py --cutoff 2026-W29 --source cache --output data/reports/TIDP_Report_Stepwise.xlsx --no-open","source":"TIDP Master Rev6 + Mantis cache project 396 (paired with stepwise Excel)","memory":"COO executive TIDP mirror; rebuild together with TIDP_Report_Stepwise.xlsx on refresh.","exists":true,"href":"digital_team_annotation_ticket_dashboard.html","bytes":1105579,"size":"1.1 MB","modified":"2026-07-15T03:55:31.936019+00:00","modifiedDisplay":"15/07/2026 10:55","ageDays":0,"freshness":"fresh","dataSignal":"15/07/2026 10:27","registered":true,"layoutId":"annotation-tidp"}],"groups":["Annotation","Digital Team","Time Tracking"],"cache":{"generated_at":"2026-07-14T16:38:46+07:00","cache_schema_version":3,"source":"MariaDB/Mantis","database":"mantis","range":{"start":"2025-01-01","end":"2026-09-01"},"project_ids":[396,357,400,401],"digital_team_users":["hu.dam","ht.nguyen","dahn.nguyen","nd.huynh","kd.doan","lk.dang","qd.nguyen","qn.ha"],"files":{"sqlite":"data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite","manifest":"data/mantis_dashboard_cache/manifest.json","extracts":"data/mantis_dashboard_cache/extracts"},"tables":{"projects":4,"users":92,"tickets":15773,"time_entries":24779,"bug_history":183887,"bugnotes":20084,"work_dashboard_team_members":8,"work_dashboard_rows":789,"work_dashboard_notes":3128,"work_dashboard_history":26322,"annotation_p396_tickets":2080,"annotation_p396_history":17780,"annotation_p396_rename":172,"annotation_p396_note_authors":4825,"annotation_p396_users":407},"usage":{"refresh":"python scripts/refresh_mantis_dashboard_cache.py --start YYYY-MM-DD --end YYYY-MM-DD","sqlite":"Read data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite from dashboard builders."}},"cacheDisplay":"01/01/2025 to 01/09/2026","duplicateGroups":[{"key":"digital_team_time_tracking_dashboard","title":"Digital Team Time Tracking Dashboard","count":2,"variants":[{"file":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","label":"20/07/2026 to 26/07/2026","sortKey":"2026-07-20_2026-07-26","start":"2026-07-20","end":"2026-07-26","cw":"2026-W30","exists":true,"href":"digital_team_time_tracking_dashboard_2026-07-20_to_2026-07-26.html","bytes":104635,"size":"102.2 KB","modified":"2026-07-15T03:55:31.976245+00:00","modifiedDisplay":"15/07/2026 10:55","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-14T16:40:00"},{"file":"digital_team_time_tracking_dashboard_2026-07.html","label":"01/07/2026 to 31/07/2026","sortKey":"2026-07","start":"2026-07-01","end":"2026-07-31","cw":"","exists":true,"href":"digital_team_time_tracking_dashboard_2026-07.html","bytes":287123,"size":"280.4 KB","modified":"2026-07-15T03:55:38.271008+00:00","modifiedDisplay":"15/07/2026 10:55","ageDays":0,"freshness":"fresh","dataSignal":"2026-07-15T10:55:36"}]}],"metrics":{"total":5,"registered":5,"fresh":5,"stale":0,"missing":0,"latest":"Digital Team Time Tracking","cacheRows":300130},"templateSource":"https://github.com/shadcnstore/shadcn-dashboard-landing-template.git"}</script>
   <script>
     function loadDashboardPrefs(key) {
   try {
@@ -534,7 +542,7 @@
 }
 function loadLayout(dashboardId) {
   try {
-    for (const ver of [4, 3, 2, 1]) {
+    for (const ver of [5, 4, 3, 2, 1]) {
       const raw = localStorage.getItem(`dla-bento-layout:v${ver}:${dashboardId}`);
       if (!raw) continue;
       const parsed = JSON.parse(raw);
@@ -554,7 +562,7 @@ function saveDashboardPrefs(key, value) {
   }
 }
 const DlaBentoLayout = (() => {
-  const VERSION = 4;
+  const VERSION = 5;
   const COLS = 12;
   const mounted = new WeakMap();
 
@@ -667,6 +675,13 @@ const DlaBentoLayout = (() => {
     for (const el of list) {
       const cs = Math.max(1, Math.min(COLS, Number(el.dataset.bentoColSpan || defaultSpan(el))));
       const rs = defaultRowSpan(el);
+      const breakBefore =
+        el.dataset.bentoBreak === "before" ||
+        el.getAttribute("data-bento-break") === "before";
+      if (breakBefore && col > 1) {
+        row += 1;
+        col = 1;
+      }
       if (cs >= COLS) {
         if (col > 1) {
           row += 1;
@@ -736,23 +751,29 @@ const DlaBentoLayout = (() => {
     const items = Object.values(layout?.items || {});
     if (items.length < 4) return false;
     const atCol1 = items.filter((p) => Number(p.c || 1) === 1).length;
-    return atCol1 / items.length >= 0.85;
+    if (atCol1 / items.length >= 0.85) return true;
+    const rows = [...new Set(items.map((p) => Number(p.r || 1)))].sort((a, b) => a - b);
+    const maxR = rows[rows.length - 1] || 1;
+    // Huge empty bands (e.g. Ticket Status parked at row 20) look broken in edit mode.
+    if (maxR > items.length + 3) return true;
+    for (let i = 1; i < rows.length; i += 1) {
+      if (rows[i] - rows[i - 1] > 3) return true;
+    }
+    return false;
   }
 
   function applyLayoutFromStorageOrDefault(grid, dashboardId) {
     const saved = loadLayout(dashboardId);
-    if (saved?.items && !isLayoutCorrupt(saved)) {
+    const staleEngine =
+      Boolean(saved?._loadedFromVersion) && saved._loadedFromVersion !== VERSION;
+    if (saved?.items && !isLayoutCorrupt(saved) && !staleEngine) {
       applySaved(grid, saved);
-      if (saved._loadedFromVersion && saved._loadedFromVersion !== VERSION) {
-        const st = getState(grid);
-        if (st) persist(st);
-      }
       return;
     }
-    if (saved?.items && isLayoutCorrupt(saved)) {
+    if (saved?.items && (isLayoutCorrupt(saved) || staleEngine)) {
       try {
         localStorage.removeItem(storageKey(dashboardId));
-        for (const ver of [3, 2, 1]) {
+        for (const ver of [5, 4, 3, 2, 1]) {
           localStorage.removeItem(`dla-bento-layout:v${ver}:${dashboardId}`);
         }
       } catch {
@@ -1274,7 +1295,7 @@ const DlaBentoLayout = (() => {
     const state = getState(root) || mount(root, { dashboardId: root.dataset.bentoDashboard, toolbar: "none" });
     if (!state) return false;
     localStorage.removeItem(storageKey(state.dashboardId));
-    for (const ver of [3, 2, 1]) {
+    for (const ver of [5, 4, 3, 2, 1]) {
       try { localStorage.removeItem(`dla-bento-layout:v${ver}:${state.dashboardId}`); } catch { /* ignore */ }
     }
     clearPlacements(state.grid);

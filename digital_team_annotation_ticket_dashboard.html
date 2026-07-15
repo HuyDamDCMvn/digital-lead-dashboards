@@ -402,18 +402,26 @@ a:focus-visible {
   display: none;
   position: absolute;
   left: 50%;
-  bottom: 2px;
+  bottom: 4px;
   transform: translateX(-50%);
-  width: 56px;
-  height: 24px;
-  border-radius: 4px;
+  width: 48px;
+  height: 8px;
+  min-height: 8px;
+  border-radius: 999px;
   background: var(--accent, #0f766e);
   cursor: ns-resize;
-  opacity: 0.92;
+  opacity: 0.55;
   z-index: 5;
+}
+.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]):not([data-bento-locked="true"]) {
+  padding-bottom: 28px;
 }
 .bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]):not([data-bento-locked="true"]) .bento-resize-row-handle {
   display: block;
+}
+.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]):not([data-bento-locked="true"]):hover .bento-resize-row-handle {
+  opacity: 0.9;
+  height: 10px;
 }
 @media (prefers-reduced-motion: reduce) {
   .bento-layout-drop-indicator,
@@ -834,7 +842,7 @@ body {
 }
 function loadLayout(dashboardId) {
   try {
-    for (const ver of [4, 3, 2, 1]) {
+    for (const ver of [5, 4, 3, 2, 1]) {
       const raw = localStorage.getItem(`dla-bento-layout:v${ver}:${dashboardId}`);
       if (!raw) continue;
       const parsed = JSON.parse(raw);
@@ -854,7 +862,7 @@ function saveDashboardPrefs(key, value) {
   }
 }
 const DlaBentoLayout = (() => {
-  const VERSION = 4;
+  const VERSION = 5;
   const COLS = 12;
   const mounted = new WeakMap();
 
@@ -967,6 +975,13 @@ const DlaBentoLayout = (() => {
     for (const el of list) {
       const cs = Math.max(1, Math.min(COLS, Number(el.dataset.bentoColSpan || defaultSpan(el))));
       const rs = defaultRowSpan(el);
+      const breakBefore =
+        el.dataset.bentoBreak === "before" ||
+        el.getAttribute("data-bento-break") === "before";
+      if (breakBefore && col > 1) {
+        row += 1;
+        col = 1;
+      }
       if (cs >= COLS) {
         if (col > 1) {
           row += 1;
@@ -1036,23 +1051,29 @@ const DlaBentoLayout = (() => {
     const items = Object.values(layout?.items || {});
     if (items.length < 4) return false;
     const atCol1 = items.filter((p) => Number(p.c || 1) === 1).length;
-    return atCol1 / items.length >= 0.85;
+    if (atCol1 / items.length >= 0.85) return true;
+    const rows = [...new Set(items.map((p) => Number(p.r || 1)))].sort((a, b) => a - b);
+    const maxR = rows[rows.length - 1] || 1;
+    // Huge empty bands (e.g. Ticket Status parked at row 20) look broken in edit mode.
+    if (maxR > items.length + 3) return true;
+    for (let i = 1; i < rows.length; i += 1) {
+      if (rows[i] - rows[i - 1] > 3) return true;
+    }
+    return false;
   }
 
   function applyLayoutFromStorageOrDefault(grid, dashboardId) {
     const saved = loadLayout(dashboardId);
-    if (saved?.items && !isLayoutCorrupt(saved)) {
+    const staleEngine =
+      Boolean(saved?._loadedFromVersion) && saved._loadedFromVersion !== VERSION;
+    if (saved?.items && !isLayoutCorrupt(saved) && !staleEngine) {
       applySaved(grid, saved);
-      if (saved._loadedFromVersion && saved._loadedFromVersion !== VERSION) {
-        const st = getState(grid);
-        if (st) persist(st);
-      }
       return;
     }
-    if (saved?.items && isLayoutCorrupt(saved)) {
+    if (saved?.items && (isLayoutCorrupt(saved) || staleEngine)) {
       try {
         localStorage.removeItem(storageKey(dashboardId));
-        for (const ver of [3, 2, 1]) {
+        for (const ver of [5, 4, 3, 2, 1]) {
           localStorage.removeItem(`dla-bento-layout:v${ver}:${dashboardId}`);
         }
       } catch {
@@ -1574,7 +1595,7 @@ const DlaBentoLayout = (() => {
     const state = getState(root) || mount(root, { dashboardId: root.dataset.bentoDashboard, toolbar: "none" });
     if (!state) return false;
     localStorage.removeItem(storageKey(state.dashboardId));
-    for (const ver of [3, 2, 1]) {
+    for (const ver of [5, 4, 3, 2, 1]) {
       try { localStorage.removeItem(`dla-bento-layout:v${ver}:${state.dashboardId}`); } catch { /* ignore */ }
     }
     clearPlacements(state.grid);
