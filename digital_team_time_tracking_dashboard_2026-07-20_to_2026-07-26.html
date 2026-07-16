@@ -1412,8 +1412,33 @@ tr.clickable:hover { background: var(--surface-raised); }
   background: var(--cds-layer-01);
   min-width: 0;
 }
-.tt-project-chart .bx--cc--legend text,
-.tt-project-chart .cds--cc--legend text { font-size: 11px; }
+.tt-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 12px;
+  border-top: 1px solid var(--cds-border-subtle-01);
+}
+.tt-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  font-size: 0.8125rem;
+  color: var(--cds-text-primary);
+}
+.tt-legend-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.tt-legend-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 #tt-root.carbon-grid > .tt-metrics {
   display: grid;
   grid-template-columns: repeat(16, 1fr);
@@ -1505,8 +1530,8 @@ body {
 </style>
 </head>
 <body class="cds--g100">
-<div class="carbon-page cds--g100" data-carbon-theme="g100"><a class="skip-link" href="#main-content">Skip to main content</a><header class="carbon-page-header"><nav aria-label="Breadcrumb"><ol class="carbon-page-header__breadcrumb"><li><a href="#">Digital Team</a></li><li>Digital Team Time Tracking</li></ol></nav><div class="carbon-page-header__row"><h1 class="carbon-page-header__title">Digital Team Time Tracking</h1><div class="carbon-page-header__actions"><span class="meta-pill">Period: 20/07/2026 - 26/07/2026</span><span class="meta-pill">Generated 2026-07-16T10:57:24</span></div></div></header><main id="main-content" class="carbon-page__content" role="main"><div id="tt-root" class="carbon-grid"></div></main></div>
-<script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-16T10:57:24","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["hu.dam"],"2026-07-21":["hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
+<div class="carbon-page cds--g100" data-carbon-theme="g100"><a class="skip-link" href="#main-content">Skip to main content</a><header class="carbon-page-header"><nav aria-label="Breadcrumb"><ol class="carbon-page-header__breadcrumb"><li><a href="#">Digital Team</a></li><li>Digital Team Time Tracking</li></ol></nav><div class="carbon-page-header__row"><h1 class="carbon-page-header__title">Digital Team Time Tracking</h1><div class="carbon-page-header__actions"><span class="meta-pill">Period: 20/07/2026 - 26/07/2026</span><span class="meta-pill">Generated 2026-07-16T11:19:09</span></div></div></header><main id="main-content" class="carbon-page__content" role="main"><div id="tt-root" class="carbon-grid"></div></main></div>
+<script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-16T11:19:09","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["hu.dam"],"2026-07-21":["hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
 <script>
   (function () {
     function fmtIsoDate(iso) {
@@ -2183,14 +2208,21 @@ function bindDdMmDateInput(el, onChange, options) {
           title: "Hours by project",
           theme: "g100",
           resizable: true,
-          height: "360px",
+          height: "280px",
           donut: { center: { label: "Total hours" }, alignment: "center" },
           pie: { labels: { enabled: false } },
-          legend: { alignment: "center", position: "bottom", truncation: { type: "mid_line", threshold: 24 }, fontSize: 11 },
+          legend: { enabled: false },
           tooltip: { valueFormatter: (v) => v.toFixed(2) + "h" },
           accessibility: { svgAriaLabel: "Hours by project donut chart" },
         },
       });
+      const legendHost = document.getElementById("chart-project-legend");
+      if (legendHost) {
+        const colors = ["#6929c4","#1192e8","#005d5d","#9f1853","#fa4d56","#570408","#198038","#002d9c","#b28600","#009d9a","#012749","#8a3800"];
+        legendHost.innerHTML = data.map((d, i) =>
+          `<div class="tt-legend-row"><span class="tt-legend-swatch" style="background:${colors[i % colors.length]}"></span><span class="tt-legend-label">${esc(d.group)}</span></div>`
+        ).join("");
+      }
     }
 
     function renderDailyTrendChart(days) {
@@ -2406,7 +2438,10 @@ function bindDdMmDateInput(el, onChange, options) {
 
         <section class="carbon-tile tt-project">
           <div class="tt-project-grid">
-            <div class="tt-project-chart">${carbonChartShell("chart-project-hours", "Hours by Project", "360px")}</div>
+            <div class="tt-project-chart">
+              ${carbonChartShell("chart-project-hours", "Hours by Project", "280px")}
+              <div class="tt-legend" id="chart-project-legend"></div>
+            </div>
             <div class="tt-project-table">${carbonDataTableShell("Project hours", projectTableHead, projectTableBody, projects.length ? "Click a project row to filter" : "")}</div>
           </div>
         </section>
