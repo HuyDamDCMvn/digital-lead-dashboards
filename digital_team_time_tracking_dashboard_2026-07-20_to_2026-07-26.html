@@ -1,10 +1,855 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-carbon-theme="g100">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Digital Team Time Tracking Dashboard</title>
-  <style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digital Team Time Tracking</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@carbon/styles@1/css/styles.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@carbon/charts@1.27.16/styles.min.css">
+<link rel="stylesheet" href="https://1.www.s81c.com/common/carbon/plex/sans.css">
+
+
+<script src="https://cdn.jsdelivr.net/npm/@carbon/charts@1.27.16/dist/bundle.js"></script>
+
+<style>
+
+:root,
+[data-carbon-theme="g100"],
+.cds--g100 {
+  color-scheme: dark;
+
+  /* Carbon Gray 100 tokens */
+  --cds-background: #161616;
+  --cds-layer-01: #262626;
+  --cds-layer-02: #393939;
+  --cds-layer-03: #525252;
+  --cds-text-primary: #f4f4f4;
+  --cds-text-secondary: #c6c6c6;
+  --cds-text-helper: #8d8d8d;
+  --cds-interactive: #4589ff;
+  --cds-link-primary: #78a9ff;
+  --cds-border-subtle-01: #525252;
+  --cds-border-strong-01: #6f6f6f;
+  --cds-support-error: #fa4d56;
+  --cds-support-success: #42be65;
+  --cds-support-warning: #f1c21b;
+  --cds-support-info: #4589ff;
+  --cds-focus: #ffffff;
+  --cds-layer-hover-01: #333333;
+  --cds-layer-selected-01: #393939;
+  --cds-overlay: rgba(0, 0, 0, 0.7);
+  --cds-skeleton-element: #353535;
+
+  /* Carbon motion */
+  --cds-motion-standard-productive: cubic-bezier(0.2, 0, 0.38, 0.9);
+  --cds-motion-standard-expressive: cubic-bezier(0.4, 0.14, 0.3, 1);
+  --cds-motion-duration-fast-01: 70ms;
+  --cds-motion-duration-moderate-01: 150ms;
+  --cds-motion-duration-moderate-02: 240ms;
+  --cds-transition: var(--cds-motion-duration-fast-01) var(--cds-motion-standard-productive);
+  --cds-transition-panel: var(--cds-motion-duration-moderate-01) var(--cds-motion-standard-productive);
+  --cds-transition-overlay: var(--cds-motion-duration-moderate-02) var(--cds-motion-standard-productive);
+
+  /* Carbon breakpoints (min-width) */
+  --cds-breakpoint-sm: 320px;
+  --cds-breakpoint-md: 672px;
+  --cds-breakpoint-lg: 1056px;
+  --cds-breakpoint-xlg: 1312px;
+  --cds-breakpoint-max: 1584px;
+
+  /* Typography — IBM Plex Sans productive */
+  --cds-font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --cds-type-body-compact-01: 0.875rem;
+  --cds-type-heading-compact-01: 0.875rem;
+  --cds-type-heading-03: 1.25rem;
+  --cds-type-heading-04: 1.75rem;
+  --cds-type-label-01: 0.75rem;
+
+  /* Legacy bridge — existing dashboard CSS */
+  --bg: var(--cds-background);
+  --panel: var(--cds-layer-01);
+  --surface-raised: var(--cds-layer-02);
+  --ink: var(--cds-text-primary);
+  --muted: var(--cds-text-secondary);
+  --line: var(--cds-border-subtle-01);
+  --accent: var(--cds-interactive);
+  --accent-strong: #0f62fe;
+  --accent-soft: rgba(69, 137, 255, 0.15);
+  --hero-bg: var(--cds-layer-02);
+  --shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.32);
+  --radius: 0;
+  --radius-lg: 0;
+  --font: var(--cds-font-family);
+  --transition: var(--cds-transition);
+  --focus-ring: 0 0 0 2px var(--cds-focus);
+  --sidebar: var(--cds-layer-02);
+  --danger: var(--cds-support-error);
+  --danger-soft: rgba(250, 77, 86, 0.15);
+  --success: var(--cds-support-success);
+  --success-soft: rgba(66, 190, 101, 0.15);
+  --warning: var(--cds-support-warning);
+  --warning-soft: rgba(241, 194, 27, 0.15);
+  --control-height: 40px;
+  --type-kpi: var(--cds-type-heading-04);
+  --type-section: var(--cds-type-heading-03);
+  --type-label: var(--cds-type-label-01);
+}
+
+
+* { box-sizing: border-box; }
+html {
+  overflow-x: clip;
+  font-size: 100%;
+}
+body {
+  margin: 0;
+  font-family: var(--cds-font-family);
+  font-size: var(--cds-type-body-compact-01);
+  font-weight: 400;
+  letter-spacing: 0.16px;
+  color: var(--cds-text-primary);
+  background: var(--cds-background);
+  line-height: 1.29;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  max-width: 100%;
+}
+a { color: var(--cds-link-primary); }
+a:hover { color: var(--cds-interactive); }
+.table-wrap, .compliance-wrap, .heatmap-wrap {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.table-wrap > table,
+.compliance-wrap > table,
+.heatmap-wrap > table {
+  max-width: none;
+}
+main, .wrap, .shell, .app, .dashboard-grid, .grid-nested, .grid-cell,
+.project-stack, .project-section, .member-section, .member, .panel, .card {
+  max-width: 100%;
+  min-width: 0;
+}
+@media (max-width: 767px) {
+  .project-stack, .project-section, .member-section, .member, .members {
+    overflow-x: clip;
+  }
+}
+.chip button, .filter-chip button, [data-clear] {
+  min-width: 28px;
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--cds-focus);
+  outline-offset: 2px;
+}
+.skip-link,
+.cds--skip-to-content {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  z-index: 1000;
+  padding: 8px 12px;
+  background: var(--cds-interactive);
+  color: var(--cds-text-primary);
+  border-radius: 0;
+  text-decoration: none;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: background var(--cds-transition);
+}
+.skip-link:focus, .skip-link:focus-visible,
+.cds--skip-to-content:focus, .cds--skip-to-content:focus-visible {
+  clip: auto;
+  clip-path: none;
+  height: auto;
+  width: auto;
+  overflow: visible;
+  outline: 2px solid var(--cds-focus);
+  outline-offset: 2px;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+a:focus-visible {
+  outline: 2px solid var(--cds-focus);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Carbon 2x Grid — 16-column condensed (1px gutters)                 */
+/* ------------------------------------------------------------------ */
+.carbon-grid {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 1px;
+  align-items: start;
+  width: 100%;
+  max-width: var(--cds-breakpoint-max, 1584px);
+  margin: 0 auto;
+  padding: 0 16px;
+  background: var(--cds-border-subtle-01);
+}
+.carbon-grid--md { grid-template-columns: repeat(8, 1fr); }
+.carbon-grid--sm { grid-template-columns: repeat(4, 1fr); }
+
+.carbon-tile,
+.cds--tile.carbon-tile {
+  background: var(--cds-layer-01);
+  padding: 16px;
+  border: 1px solid var(--cds-border-subtle-01);
+  min-width: 0;
+  transition: background var(--cds-transition);
+}
+.carbon-tile:hover { background: var(--cds-layer-hover-01); }
+.carbon-tile--span-4 { grid-column: span 4; }
+.carbon-tile--span-8 { grid-column: span 8; }
+.carbon-tile--span-16 { grid-column: span 16; }
+
+/* Legacy 12-column grid — backward compat for existing builders */
+:root { --layout-gap: 1px; }
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--layout-gap);
+  align-items: start;
+  background: var(--cds-border-subtle-01);
+}
+.grid-cell { min-width: 0; }
+.grid-span-12 { grid-column: span 12; }
+.grid-span-8 { grid-column: span 8; }
+.grid-span-6 { grid-column: span 6; }
+.grid-span-4 { grid-column: span 4; }
+.grid-span-3 { grid-column: span 3; }
+.grid-span-2 { grid-column: span 2; }
+.grid-nested {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--layout-gap);
+  width: 100%;
+  grid-column: span 12;
+  align-items: start;
+}
+
+/* Carbon breakpoints */
+@media (max-width: 1055px) {
+  .carbon-grid { grid-template-columns: repeat(8, 1fr); padding: 0 16px; }
+  .carbon-tile--span-16 { grid-column: span 8; }
+  .carbon-tile--span-8 { grid-column: span 8; }
+  .carbon-tile--span-4 { grid-column: span 4; }
+  .grid-span-8, .grid-span-6 { grid-column: span 12; }
+  .grid-span-4, .grid-span-3 { grid-column: span 6; }
+  .grid-span-2 { grid-column: span 4; }
+}
+@media (max-width: 671px) {
+  .carbon-grid,
+  .carbon-grid--md,
+  .carbon-grid--sm {
+    grid-template-columns: repeat(4, 1fr);
+    padding: 0 16px;
+  }
+  .carbon-tile--span-16,
+  .carbon-tile--span-8,
+  .carbon-tile--span-4 { grid-column: span 4; }
+  .grid-span-8, .grid-span-6, .grid-span-4, .grid-span-3, .grid-span-2 {
+    grid-column: span 12;
+  }
+  .dashboard-grid, .shell, .wrap, .app { max-width: 100%; width: 100%; }
+  .dashboard-grid, .grid-nested, .grid-cell, .panel, .card, .member, .project-section {
+    min-width: 0;
+  }
+  .filters, .toolbar, .grid.filters { grid-template-columns: 1fr !important; }
+}
+@media (min-width: 1312px) {
+  .carbon-grid { max-width: 1312px; }
+}
+@media (min-width: 1584px) {
+  .carbon-grid { max-width: 1584px; }
+}
+@media print {
+  .dashboard-grid, .grid-nested, .carbon-grid { display: block; background: transparent; }
+  .dashboard-grid > *, .grid-nested > *, .carbon-grid > * {
+    break-inside: avoid;
+    margin-bottom: 12px;
+  }
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Carbon component layer — page shell, toolbar, tables, KPI, charts  */
+/* ------------------------------------------------------------------ */
+.carbon-page {
+  min-height: 100vh;
+  background: var(--cds-background);
+  color: var(--cds-text-primary);
+}
+.carbon-page__content {
+  max-width: var(--cds-breakpoint-max, 1584px);
+  margin: 0 auto;
+  padding: 0 16px 32px;
+}
+.carbon-page-header {
+  background: var(--cds-layer-01);
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  padding: 16px;
+  margin-bottom: 1px;
+}
+.carbon-page-header__breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  font-size: var(--cds-type-label-01);
+  color: var(--cds-text-secondary);
+}
+.carbon-page-header__breadcrumb li:not(:last-child)::after {
+  content: "/";
+  margin-left: 4px;
+  color: var(--cds-text-helper);
+}
+.carbon-page-header__breadcrumb a {
+  color: var(--cds-link-primary);
+  text-decoration: none;
+  transition: color var(--cds-transition);
+}
+.carbon-page-header__breadcrumb a:hover { color: var(--cds-interactive); }
+.carbon-page-header__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px 16px;
+}
+.carbon-page-header__title {
+  margin: 0;
+  font-size: var(--cds-type-heading-04);
+  font-weight: 400;
+  line-height: 1.29;
+  letter-spacing: 0;
+  color: var(--cds-text-primary);
+}
+.carbon-page-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.carbon-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: 12px;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+}
+.carbon-tabs__tab {
+  padding: 11px 16px;
+  font-size: var(--cds-type-body-compact-01);
+  font-weight: 400;
+  color: var(--cds-text-secondary);
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color var(--cds-transition), border-color var(--cds-transition);
+}
+.carbon-tabs__tab:hover { color: var(--cds-text-primary); background: var(--cds-layer-hover-01); }
+.carbon-tabs__tab--active {
+  color: var(--cds-text-primary);
+  border-bottom-color: var(--cds-interactive);
+  font-weight: 600;
+}
+
+.carbon-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--cds-layer-01);
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  min-height: 48px;
+}
+.carbon-toolbar__title {
+  flex: 1 1 auto;
+  margin: 0;
+  font-size: var(--cds-type-heading-compact-01);
+  font-weight: 600;
+  color: var(--cds-text-primary);
+}
+.carbon-toolbar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.carbon-kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 88px;
+}
+.carbon-kpi__label {
+  font-size: var(--cds-type-label-01);
+  font-weight: 400;
+  letter-spacing: 0.32px;
+  color: var(--cds-text-secondary);
+  text-transform: none;
+}
+.carbon-kpi__value {
+  font-size: var(--cds-type-heading-04);
+  font-weight: 400;
+  line-height: 1.29;
+  font-variant-numeric: tabular-nums;
+  color: var(--cds-text-primary);
+}
+.carbon-kpi__subtitle {
+  font-size: var(--cds-type-label-01);
+  color: var(--cds-text-helper);
+}
+.carbon-kpi__trend {
+  font-size: var(--cds-type-label-01);
+  font-weight: 600;
+}
+.carbon-kpi__trend--up { color: var(--cds-support-success); }
+.carbon-kpi__trend--down { color: var(--cds-support-error); }
+.carbon-kpi__trend--neutral { color: var(--cds-text-secondary); }
+
+.carbon-data-table-container {
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+}
+.carbon-data-table-container__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+}
+.carbon-data-table-container__title {
+  margin: 0;
+  font-size: var(--cds-type-heading-compact-01);
+  font-weight: 600;
+  color: var(--cds-text-primary);
+}
+.carbon-data-table-wrap { overflow-x: auto; }
+.carbon-data-table,
+.cds--data-table.carbon-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--cds-type-body-compact-01);
+}
+.carbon-data-table caption {
+  padding: 8px 16px;
+  text-align: left;
+  font-size: var(--cds-type-label-01);
+  color: var(--cds-text-helper);
+}
+.carbon-data-table th,
+.carbon-data-table td {
+  padding: 11px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  vertical-align: top;
+  color: var(--cds-text-primary);
+}
+.carbon-data-table th {
+  position: sticky;
+  top: 0;
+  background: var(--cds-layer-01);
+  font-size: var(--cds-type-heading-compact-01);
+  font-weight: 600;
+  color: var(--cds-text-secondary);
+  z-index: 1;
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--cds-transition);
+}
+.carbon-data-table th:hover { background: var(--cds-layer-hover-01); }
+.carbon-data-table th[aria-sort="ascending"]::after { content: " ↑"; }
+.carbon-data-table th[aria-sort="descending"]::after { content: " ↓"; }
+.carbon-data-table tbody tr:hover td { background: var(--cds-layer-hover-01); }
+
+.carbon-chart-container {
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+  padding: 16px;
+  min-width: 0;
+}
+.carbon-chart-container__title {
+  margin: 0 0 12px;
+  font-size: var(--cds-type-heading-compact-01);
+  font-weight: 600;
+  color: var(--cds-text-primary);
+}
+.carbon-chart-container__plot { width: 100%; min-height: 200px; }
+
+.carbon-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  min-height: 24px;
+  font-size: var(--cds-type-label-01);
+  font-weight: 400;
+  letter-spacing: 0.32px;
+  border-radius: 999px;
+  white-space: nowrap;
+  max-width: 100%;
+}
+.carbon-status-badge__icon {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.carbon-status-badge--success {
+  background: rgba(66, 190, 101, 0.15);
+  color: var(--cds-support-success);
+}
+.carbon-status-badge--success .carbon-status-badge__icon { background: var(--cds-support-success); }
+.carbon-status-badge--error {
+  background: rgba(250, 77, 86, 0.15);
+  color: var(--cds-support-error);
+}
+.carbon-status-badge--error .carbon-status-badge__icon { background: var(--cds-support-error); }
+.carbon-status-badge--warning {
+  background: rgba(241, 194, 27, 0.15);
+  color: var(--cds-support-warning);
+}
+.carbon-status-badge--warning .carbon-status-badge__icon { background: var(--cds-support-warning); }
+.carbon-status-badge--info {
+  background: rgba(69, 137, 255, 0.15);
+  color: var(--cds-support-info);
+}
+.carbon-status-badge--info .carbon-status-badge__icon { background: var(--cds-support-info); }
+.carbon-status-badge--neutral {
+  background: var(--cds-layer-02);
+  color: var(--cds-text-secondary);
+}
+.carbon-status-badge--neutral .carbon-status-badge__icon { background: var(--cds-text-helper); }
+
+.carbon-filter-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--cds-layer-01);
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+}
+.carbon-filter-summary__label {
+  font-size: var(--cds-type-label-01);
+  color: var(--cds-text-secondary);
+  margin-right: 4px;
+}
+.carbon-filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  min-height: 24px;
+  font-size: var(--cds-type-label-01);
+  background: var(--cds-layer-02);
+  color: var(--cds-text-primary);
+  border: 1px solid var(--cds-border-subtle-01);
+  border-radius: 999px;
+}
+.carbon-filter-tag__dismiss {
+  border: 0;
+  background: transparent;
+  color: var(--cds-text-secondary);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  font-size: 0.875rem;
+  transition: color var(--cds-transition);
+}
+.carbon-filter-tag__dismiss:hover { color: var(--cds-text-primary); }
+
+.carbon-empty-state {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  padding: 48px 32px;
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+  text-align: left;
+}
+.carbon-empty-state__title {
+  margin: 0;
+  font-size: var(--cds-type-heading-03);
+  font-weight: 400;
+  color: var(--cds-text-primary);
+}
+.carbon-empty-state__description {
+  margin: 0;
+  font-size: var(--cds-type-body-compact-01);
+  color: var(--cds-text-secondary);
+  max-width: 52ch;
+}
+.carbon-empty-state__action {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 16px;
+  background: var(--cds-interactive);
+  color: var(--cds-text-primary);
+  border: 0;
+  font-size: var(--cds-type-body-compact-01);
+  font-weight: 400;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--cds-transition);
+}
+.carbon-empty-state__action:hover { background: #0f62fe; color: var(--cds-text-primary); }
+
+.carbon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 16px;
+  font-size: var(--cds-type-body-compact-01);
+  font-weight: 400;
+  border: 0;
+  cursor: pointer;
+  transition: background var(--cds-transition), color var(--cds-transition);
+}
+.carbon-btn--primary { background: var(--cds-interactive); color: var(--cds-text-primary); }
+.carbon-btn--primary:hover { background: #0f62fe; }
+.carbon-btn--ghost {
+  background: transparent;
+  color: var(--cds-link-primary);
+  border: 1px solid var(--cds-border-subtle-01);
+}
+.carbon-btn--ghost:hover { background: var(--cds-layer-hover-01); }
+
+.panel, .card {
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+}
+
+
+.meta-strip {
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 16px;
+}
+.meta-strip-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+.meta-title {
+  margin: 0;
+  font-size: var(--cds-type-heading-04);
+  font-weight: 400;
+  line-height: 1.29;
+  text-wrap: balance;
+  color: var(--cds-text-primary);
+}
+.meta-sub { margin: 4px 0 0; color: var(--cds-text-secondary); font-size: var(--cds-type-body-compact-01); }
+.meta-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  max-width: 100%;
+  min-width: 0;
+}
+.meta-pill {
+  border-radius: 999px;
+  padding: 0 8px;
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--cds-type-label-01);
+  background: var(--cds-layer-02);
+  border: 1px solid var(--cds-border-subtle-01);
+  color: var(--cds-text-secondary);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  max-width: min(100%, 36ch);
+}
+.meta-strip-main,
+.meta-strip-main > div {
+  min-width: 0;
+  max-width: 100%;
+}
+.meta-strip .source-panel {
+  margin-top: 10px;
+  padding: 12px 16px;
+  border: 1px solid var(--cds-border-subtle-01);
+  border-radius: 0;
+  background: var(--cds-layer-02);
+}
+.meta-warning { color: var(--cds-support-error); font-weight: 600; font-size: 0.8125rem; margin: 8px 0 0; }
+
+
+.empty-state {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  padding: 28px 24px;
+  border: 1px dashed var(--cds-border-subtle-01);
+  border-radius: 0;
+  background: var(--cds-layer-02);
+  color: var(--cds-text-primary);
+}
+.empty-state[hidden] { display: none !important; }
+.empty-state-title {
+  margin: 0;
+  font-size: var(--cds-type-heading-03);
+  font-weight: 400;
+  line-height: 1.4;
+}
+.empty-state-message {
+  margin: 0;
+  color: var(--cds-text-secondary);
+  font-size: var(--cds-type-body-compact-01);
+  max-width: 52ch;
+}
+.empty-state-action {
+  margin-top: 4px;
+  min-height: var(--control-height, 40px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 0;
+  background: var(--cds-interactive);
+  color: var(--cds-text-primary);
+  font-weight: 400;
+  cursor: pointer;
+  transition: background var(--cds-transition);
+}
+.empty-state-action:hover { background: #0f62fe; }
+.empty-state--filter { border-color: var(--cds-border-strong-01); }
+.empty-state--nodata { border-style: solid; }
+.empty-state--error {
+  border-color: var(--cds-support-error);
+  background: rgba(250, 77, 86, 0.1);
+}
+.skeleton-panel {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--cds-border-subtle-01);
+  border-radius: 0;
+  background: var(--cds-layer-01);
+}
+.skeleton-panel[hidden] { display: none !important; }
+.skeleton-line, .skeleton-kpi, .skeleton-row {
+  display: block;
+  border-radius: 0;
+  background: linear-gradient(
+    90deg,
+    var(--cds-skeleton-element) 0%,
+    var(--cds-layer-02) 50%,
+    var(--cds-skeleton-element) 100%
+  );
+  background-size: 200% 100%;
+  animation: dla-skeleton-shimmer 1.2s ease-in-out infinite;
+}
+.skeleton-line { height: 12px; width: 100%; }
+.skeleton-line.w-60 { width: 60%; }
+.skeleton-line.w-40 { width: 40%; }
+.skeleton-kpi { height: 44px; width: 100%; }
+.skeleton-row { height: 32px; width: 100%; }
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+.is-loading {
+  position: relative;
+  pointer-events: none;
+}
+.is-loading > *:not(.skeleton-panel) { opacity: 0.35; }
+@keyframes dla-skeleton-shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-line, .skeleton-kpi, .skeleton-row {
+    animation: none;
+    background: var(--cds-skeleton-element);
+  }
+}
+.freshness-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: var(--cds-type-label-01);
+  font-weight: 600;
+  letter-spacing: 0.32px;
+  text-transform: uppercase;
+  border: 1px solid var(--cds-border-subtle-01);
+}
+.freshness-pill[data-freshness="fresh"] {
+  color: var(--cds-support-success);
+  background: rgba(66, 190, 101, 0.15);
+  border-color: var(--cds-support-success);
+}
+.freshness-pill[data-freshness="stale"] {
+  color: var(--cds-support-warning);
+  background: rgba(241, 194, 27, 0.15);
+  border-color: var(--cds-support-warning);
+}
+.freshness-pill[data-freshness="missing"] {
+  color: var(--cds-support-error);
+  background: rgba(250, 77, 86, 0.15);
+  border-color: var(--cds-support-error);
+}
+
+</style>
+<style>
 .dla-date-field {
   position: relative;
   display: flex;
@@ -122,530 +967,6 @@
 }
 
 :root {
-  color-scheme: light;
-  --bg: #f4f6f8;
-  --panel: #ffffff;
-  --surface-raised: #f8fafc;
-  --ink: #0f172a;
-  --muted: #475569;
-  --line: #e2e8f0;
-  --accent: #0f766e;
-  --accent-strong: #115e59;
-  --accent-soft: #ccfbf1;
-  --hero-bg: #134e4a;
-  --shadow: 0 4px 14px rgba(15, 23, 42, 0.07);
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
-  --radius: 10px;
-  --radius-lg: 12px;
-  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --transition: 160ms cubic-bezier(0.22, 1, 0.36, 1);
-  --focus-ring: 0 0 0 3px var(--accent-soft);
-  --sidebar: #eef3f9;
-  --danger: #b91c1c;
-  --danger-soft: #fee2e2;
-  --success: #166534;
-  --success-soft: #dcfce7;
-  --warning: #92400e;
-  --warning-soft: #fef3c7;
-  --control-height: 40px;
-  --type-kpi: 1.75rem;
-  --type-section: 1.0625rem;
-  --type-label: 0.75rem;
-}
-
-
-* { box-sizing: border-box; }
-html { overflow-x: clip; }
-body {
-  margin: 0;
-  font-family: var(--font);
-  color: var(--ink);
-  background: var(--bg);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: clip;
-  max-width: 100%;
-}
-.table-wrap, .compliance-wrap, .heatmap-wrap {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  overflow-x: auto;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-x: contain;
-}
-.table-wrap > table,
-.compliance-wrap > table,
-.heatmap-wrap > table {
-  max-width: none;
-}
-main, .wrap, .shell, .app, .bento-grid, .bento-nested, .bento-cell,
-.project-stack, .project-section, .member-section, .member, .panel, .card {
-  max-width: 100%;
-  min-width: 0;
-}
-@media (max-width: 767px) {
-  .project-stack, .project-section, .member-section, .member, .members {
-    overflow-x: clip;
-  }
-}
-.chip button, .filter-chip button, [data-clear] {
-  min-width: 28px;
-  min-height: 28px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-button, input, select { font: inherit; }
-button { cursor: pointer; }
-button:focus-visible, input:focus-visible, select:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  box-shadow: var(--focus-ring);
-}
-.skip-link {
-  position: absolute;
-  left: 8px;
-  top: 8px;
-  z-index: 1000;
-  padding: 8px 12px;
-  background: var(--ink);
-  color: #fff;
-  border-radius: var(--radius);
-  text-decoration: none;
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  height: 1px;
-  width: 1px;
-  overflow: hidden;
-  white-space: nowrap;
-}
-.skip-link:focus, .skip-link:focus-visible {
-  clip: auto;
-  clip-path: none;
-  height: auto;
-  width: auto;
-  overflow: visible;
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
-}
-a:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-
-:root { --bento-gap: 14px; }
-.bento-grid {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--bento-gap);
-  align-items: start;
-}
-.bento-cell { min-width: 0; }
-.bento-span-12 { grid-column: span 12; }
-.bento-span-8 { grid-column: span 8; }
-.bento-span-6 { grid-column: span 6; }
-.bento-span-4 { grid-column: span 4; }
-.bento-span-3 { grid-column: span 3; }
-.bento-span-2 { grid-column: span 2; }
-.bento-nested {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--bento-gap);
-  width: 100%;
-  grid-column: span 12;
-  align-items: start;
-}
-@media (max-width: 1199px) {
-  .bento-span-8, .bento-span-6 { grid-column: span 12; }
-  .bento-span-4, .bento-span-3 { grid-column: span 6; }
-  .bento-span-2 { grid-column: span 4; }
-}
-@media (max-width: 767px) {
-  .bento-span-8, .bento-span-6, .bento-span-4, .bento-span-3, .bento-span-2 {
-    grid-column: span 12;
-  }
-  .bento-grid, .shell, .wrap, .app { max-width: 100%; width: 100%; }
-  .bento-grid, .bento-nested, .bento-cell, .panel, .card, .member, .project-section {
-    min-width: 0;
-  }
-  .filters, .toolbar, .grid.filters { grid-template-columns: 1fr !important; }
-}
-@media print {
-  .bento-grid, .bento-nested { display: block; }
-  .bento-grid > *, .bento-nested > * { break-inside: avoid; margin-bottom: 12px; }
-}
-
-
-.meta-strip {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  padding: 14px 18px;
-}
-.meta-strip-main {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px 16px;
-}
-.meta-title {
-  margin: 0;
-  font-size: 1.375rem;
-  font-weight: 700;
-  line-height: 1.25;
-  text-wrap: balance;
-  color: var(--ink);
-}
-.meta-sub { margin: 4px 0 0; color: var(--muted); font-size: 0.875rem; }
-.meta-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-  max-width: 100%;
-  min-width: 0;
-}
-.meta-pill {
-  border-radius: 999px;
-  padding: 5px 10px;
-  font-size: 0.75rem;
-  background: var(--surface-raised);
-  border: 1px solid var(--line);
-  color: var(--muted);
-  white-space: normal;
-  overflow-wrap: anywhere;
-  max-width: min(100%, 36ch);
-}
-.meta-strip-main,
-.meta-strip-main > div {
-  min-width: 0;
-  max-width: 100%;
-}
-.meta-strip .source-panel {
-  margin-top: 10px;
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface-raised);
-}
-.meta-warning { color: #b91c1c; font-weight: 600; font-size: 0.8125rem; margin: 8px 0 0; }
-
-
-.empty-state {
-  display: grid;
-  gap: 8px;
-  justify-items: start;
-  padding: 28px 24px;
-  border: 1px dashed var(--line);
-  border-radius: var(--radius-lg);
-  background: var(--surface-raised);
-  color: var(--ink);
-}
-.empty-state[hidden] { display: none !important; }
-.empty-state-title {
-  margin: 0;
-  font-size: var(--type-section, 1.0625rem);
-  font-weight: 700;
-  line-height: 1.3;
-}
-.empty-state-message {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.875rem;
-  max-width: 52ch;
-}
-.empty-state-action {
-  margin-top: 4px;
-  min-height: var(--control-height, 40px);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 14px;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  background: var(--accent);
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-}
-.empty-state-action:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
-.empty-state--filter { border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
-.empty-state--nodata { border-style: solid; }
-.empty-state--error {
-  border-color: color-mix(in srgb, var(--danger, #b91c1c) 40%, var(--line));
-  background: var(--danger-soft, #fee2e2);
-}
-.skeleton-panel {
-  display: grid;
-  gap: 10px;
-  padding: 16px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: var(--panel);
-}
-.skeleton-panel[hidden] { display: none !important; }
-.skeleton-line, .skeleton-kpi, .skeleton-row {
-  display: block;
-  border-radius: 6px;
-  background: linear-gradient(90deg, var(--line) 0%, var(--surface-raised) 50%, var(--line) 100%);
-  background-size: 200% 100%;
-  animation: dla-skeleton-shimmer 1.2s ease-in-out infinite;
-}
-.skeleton-line { height: 12px; width: 100%; }
-.skeleton-line.w-60 { width: 60%; }
-.skeleton-line.w-40 { width: 40%; }
-.skeleton-kpi { height: 44px; width: 100%; }
-.skeleton-row { height: 32px; width: 100%; }
-.skeleton-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 10px;
-}
-.is-loading {
-  position: relative;
-  pointer-events: none;
-}
-.is-loading > *:not(.skeleton-panel) { opacity: 0.35; }
-@keyframes dla-skeleton-shimmer {
-  0% { background-position: 100% 0; }
-  100% { background-position: -100% 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .skeleton-line, .skeleton-kpi, .skeleton-row {
-    animation: none;
-    background: var(--line);
-  }
-}
-.freshness-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  border: 1px solid var(--line);
-}
-.freshness-pill[data-freshness="fresh"] {
-  color: var(--success, #166534);
-  background: var(--success-soft, #dcfce7);
-  border-color: color-mix(in srgb, var(--success, #166534) 25%, var(--line));
-}
-.freshness-pill[data-freshness="stale"] {
-  color: var(--warning, #92400e);
-  background: var(--warning-soft, #fef3c7);
-  border-color: color-mix(in srgb, var(--warning, #92400e) 25%, var(--line));
-}
-.freshness-pill[data-freshness="missing"] {
-  color: var(--danger, #b91c1c);
-  background: var(--danger-soft, #fee2e2);
-  border-color: color-mix(in srgb, var(--danger, #b91c1c) 25%, var(--line));
-}
-
-
-.bento-grid.bento-layout-root {
-  position: relative;
-  grid-auto-rows: minmax(72px, auto);
-}
-[data-bento-host] { display: contents; }
-.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]) {
-  outline: 2px dashed var(--accent, #0f766e);
-  outline-offset: -2px;
-  cursor: default;
-  touch-action: none;
-  position: relative;
-}
-.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id])[data-bento-locked="true"] {
-  outline: 2px solid rgba(15, 118, 110, 0.35);
-  outline-offset: -2px;
-  cursor: not-allowed;
-  opacity: 0.92;
-}
-.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]):not([data-bento-locked="true"]) .bento-drag-handle {
-  display: flex;
-}
-.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]):not([data-bento-locked="true"]) .bento-resize-handle {
-  display: block;
-}
-.bento-drag-handle {
-  display: none;
-  align-items: center;
-  gap: 6px;
-  margin: -4px 0 8px;
-  padding: 8px 12px;
-  min-height: 28px;
-  border-radius: 6px;
-  background: var(--accent-soft, #ccfbf1);
-  color: var(--accent-strong, #115e59);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  cursor: grab;
-  user-select: none;
-  touch-action: none;
-  width: fit-content;
-  max-width: 100%;
-  z-index: 4;
-}
-.bento-drag-handle::before {
-  content: "⋮⋮";
-  font-size: 0.875rem;
-  line-height: 1;
-}
-.bento-drag-handle:active { cursor: grabbing; }
-.bento-resize-handle {
-  display: none;
-  position: absolute;
-  right: 4px;
-  bottom: 4px;
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  background: var(--accent, #0f766e);
-  cursor: nwse-resize;
-  opacity: 0.92;
-  z-index: 5;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35);
-}
-.bento-resize-handle::after {
-  content: "";
-  position: absolute;
-  right: 5px;
-  bottom: 5px;
-  width: 10px;
-  height: 10px;
-  border-right: 2px solid #fff;
-  border-bottom: 2px solid #fff;
-}
-.bento-resize-row-handle {
-  display: none;
-  position: absolute;
-  left: 50%;
-  bottom: 4px;
-  transform: translateX(-50%);
-  width: 48px;
-  height: 8px;
-  min-height: 8px;
-  border-radius: 999px;
-  background: var(--accent, #0f766e);
-  cursor: ns-resize;
-  opacity: 0.55;
-  z-index: 5;
-}
-.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]):not([data-bento-locked="true"]) {
-  padding-bottom: 28px;
-}
-.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]):not([data-bento-locked="true"]) .bento-resize-row-handle {
-  display: block;
-}
-.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]):not([data-bento-locked="true"]):hover .bento-resize-row-handle {
-  opacity: 0.9;
-  height: 10px;
-}
-@media (prefers-reduced-motion: reduce) {
-  .bento-layout-drop-indicator,
-  .bento-drag-handle,
-  .bento-resize-handle,
-  .bento-resize-row-handle {
-    transition: none !important;
-  }
-}
-.bento-layout-toolbar {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-}
-.bento-layout-toolbar.meta-inline {
-  margin-left: auto;
-}
-.bento-layout-toolbar button {
-  border: 1px solid var(--line, #e2e8f0);
-  border-radius: 8px;
-  background: #fff;
-  color: var(--ink, #0f172a);
-  padding: 6px 11px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.bento-layout-toolbar button:hover { background: var(--surface-raised, #f8fafc); }
-.bento-layout-toolbar button.primary {
-  background: var(--accent, #0f766e);
-  border-color: var(--accent, #0f766e);
-  color: #fff;
-}
-.bento-layout-toolbar button.layout-edit-btn {
-  background: #0f766e;
-  border-color: #0f766e;
-  color: #fff;
-}
-.bento-layout-toolbar button.layout-edit-btn:hover { background: #115e59; }
-.bento-grid.bento-layout-editing [data-bento-id]:not([data-bento-id] [data-bento-id]).bento-tile-dragging {
-  opacity: 0.38;
-  pointer-events: none;
-}
-.bento-layout-drop-indicator {
-  position: absolute;
-  border: 2px solid var(--accent, #0f766e);
-  border-radius: 10px;
-  background: rgba(15, 118, 110, 0.12);
-  box-shadow: 0 8px 24px rgba(15, 118, 110, 0.18);
-  pointer-events: none;
-  z-index: 100;
-  display: none;
-  box-sizing: border-box;
-  will-change: transform, width, height;
-}
-@media (max-width: 767px) {
-  .bento-layout-toolbar.meta-inline {
-    margin-left: 0;
-    width: 100%;
-    justify-content: flex-end;
-  }
-  .bento-grid.bento-layout-root:not(.bento-layout-editing) > [data-bento-id]:not([data-bento-id] [data-bento-id]) {
-    grid-column: 1 / -1 !important;
-    grid-row: auto !important;
-  }
-}
-@media print {
-  .bento-grid.bento-layout-root [data-bento-id]:not([data-bento-id] [data-bento-id]) {
-    grid-column: 1 / -1 !important;
-    grid-row: auto !important;
-    break-inside: avoid;
-  }
-  .bento-drag-handle, .bento-resize-handle, .bento-resize-row-handle, .bento-layout-drop-indicator { display: none !important; }
-}
-
-
-:root {
   --deep: var(--hero-bg);
   --teal: var(--accent);
   --teal-soft: var(--accent-soft);
@@ -670,7 +991,7 @@ body { margin: 0; color: var(--ink); background: var(--bg); }
 #app { display: contents; min-height: 100vh; }
 #tt-root { display: contents; }
 .shell { width: calc(100% - 32px); max-width: none; margin: 0 auto; padding: 18px 0; }
-.shell.bento-grid { width: 100%; padding: 16px; max-width: 1840px; }
+.shell.dashboard-grid { width: 100%; padding: 16px; max-width: 1840px; }
 .tt-toolbar { grid-column: span 12; }
 .tt-chips { grid-column: span 12; }
 .tt-metrics { grid-column: span 12; }
@@ -1070,7 +1391,84 @@ tr.clickable:hover { background: var(--surface-raised); }
   .bar-row { grid-template-columns: 1fr; gap: 4px; }
 }
 
-  </style>
+
+#tt-root.carbon-grid > .tt-toolbar,
+#tt-root.carbon-grid > .tt-chips,
+#tt-root.carbon-grid > .tt-metrics,
+#tt-root.carbon-grid > .tt-compliance-panel,
+#tt-root.carbon-grid > .tt-entries,
+#tt-root.carbon-grid > .forecast-snippet-wrap { grid-column: span 16; }
+#tt-root.carbon-grid > .tt-project,
+#tt-root.carbon-grid > .tt-detail,
+#tt-root.carbon-grid > .tt-breakdown { grid-column: span 8; }
+#tt-root.carbon-grid > .tt-metrics {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 1px;
+  padding: 0;
+  background: var(--cds-border-subtle-01);
+  border: 0;
+}
+#tt-root.carbon-grid > .tt-metrics > .carbon-kpi { grid-column: span 4; margin: 0; }
+.tt-toolbar.carbon-tile,
+.tt-chips.carbon-tile,
+.tt-compliance-panel.carbon-tile,
+.tt-project.carbon-tile,
+.tt-detail.carbon-tile,
+.tt-breakdown.carbon-tile,
+.tt-entries.carbon-tile {
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+  padding: 16px;
+  min-width: 0;
+}
+.tt-toolbar {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(120px, 1fr)) auto;
+  gap: 10px 12px;
+  align-items: end;
+}
+.tt-toolbar .control label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--cds-text-secondary);
+  font-size: var(--cds-type-label-01);
+  font-weight: 400;
+  letter-spacing: 0.32px;
+  text-transform: none;
+}
+.tt-toolbar .control input,
+.tt-toolbar .control select,
+.tt-toolbar .carbon-btn {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  border: 1px solid var(--cds-border-subtle-01);
+  background: var(--cds-layer-02);
+  color: var(--cds-text-primary);
+  padding: 0 12px;
+}
+.tt-toolbar .carbon-btn--ghost { width: auto; white-space: nowrap; padding: 0 16px; }
+.compliance-legend { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.cell-button.ok { background: rgba(66, 190, 101, 0.18); border-color: var(--cds-support-success); }
+.cell-button.miss { background: rgba(250, 77, 86, 0.15); border-color: var(--cds-support-error); }
+.cell-button.offday { background: var(--cds-layer-02); border-color: var(--cds-border-subtle-01); }
+.cell-button.pending { background: rgba(141, 141, 141, 0.12); border-color: var(--cds-border-subtle-01); }
+.cell-button.leave { background: rgba(69, 137, 255, 0.15); border-color: var(--cds-support-info); }
+.cell-button.leave.half { border-style: dashed; }
+.cell-button.active { outline: 2px solid var(--cds-focus); outline-offset: 1px; }
+@media (max-width: 1055px) {
+  #tt-root.carbon-grid > .tt-project,
+  #tt-root.carbon-grid > .tt-detail,
+  #tt-root.carbon-grid > .tt-breakdown { grid-column: span 16; }
+  #tt-root.carbon-grid > .tt-metrics > .carbon-kpi { grid-column: span 8; }
+}
+@media (max-width: 671px) {
+  .tt-toolbar { grid-template-columns: 1fr; }
+  #tt-root.carbon-grid > .tt-metrics > .carbon-kpi { grid-column: span 16; }
+}
+
+</style>
   <style id="dla-full-frame-style">
 html, body {
   width: 100% !important;
@@ -1093,11 +1491,10 @@ body {
 }
 </style>
 </head>
-<body>
-  <a class="skip-link" href="#main">Skip to main content</a>
-  <div id="app"></div>
-  <script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-15T17:18:49","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["hu.dam"],"2026-07-21":["hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
-  <script>
+<body class="cds--g100">
+<div class="carbon-page cds--g100" data-carbon-theme="g100"><a class="skip-link" href="#main-content">Skip to main content</a><header class="carbon-page-header"><nav aria-label="Breadcrumb"><ol class="carbon-page-header__breadcrumb"><li><a href="#">Digital Team</a></li><li>Digital Team Time Tracking</li></ol></nav><div class="carbon-page-header__row"><h1 class="carbon-page-header__title">Digital Team Time Tracking</h1><div class="carbon-page-header__actions"><span class="meta-pill">Period: 20/07/2026 - 26/07/2026</span><span class="meta-pill">Generated 2026-07-16T09:18:42</span></div></div></header><main id="main-content" class="carbon-page__content" role="main"><div id="tt-root" class="carbon-grid"></div></main></div>
+<script id="dashboard-data" type="application/json">{"month":{"label":"2026-07-20_to_2026-07-26","start":"2026-07-20","end":"2026-07-27","end_inclusive":"2026-07-26","period_display":"20/07/2026 - 26/07/2026","range_start_display":"20/07/2026","range_end_exclusive_display":"27/07/2026"},"teamName":"Digital Team","teamUsernames":["nd.huynh","hu.dam","lk.dang","dahn.nguyen","kd.doan","ht.nguyen","qd.nguyen","qn.ha"],"generatedAt":"2026-07-16T09:18:42","workdayTargetHours":7.5,"members":[{"id":355,"username":"dahn.nguyen","realname":"Danh Hong Nguyen","email":"dahn@dcmvn.com","enabled":1},{"id":386,"username":"ht.nguyen","realname":"Hung Tien Nguyen","email":"htn@dcmvn.com","enabled":1},{"id":347,"username":"hu.dam","realname":"Huy Duc Dam","email":"hud@dcmvn.com","enabled":1},{"id":416,"username":"kd.doan","realname":"Khoa Dang Doan","email":"kdd@dcmvn.com","enabled":1},{"id":411,"username":"lk.dang","realname":"Long Kim Dang","email":"lkd@dcmvn.com","enabled":1},{"id":356,"username":"nd.huynh","realname":"Nhan Danh Huynh","email":"ndh@dcmvn.com","enabled":1},{"id":526,"username":"qd.nguyen","realname":"Quan Dinh Nguyen","email":"qdn@dcmvn.com","enabled":1},{"id":527,"username":"qn.ha","realname":"Quy Ngoc Ha","email":"qnh@dcmvn.com","enabled":1}],"summary":{"total_hours":0,"active_members":0,"tickets_worked":0,"projects_worked":0,"time_entries":0,"configured_members":8,"matched_members":8},"timeEntries":[],"forecastWorkload":null,"leaveDays":{"2026-07-20":["hu.dam"],"2026-07-21":["hu.dam"]},"halfDayLeaves":{},"specialOffDays":{}}</script>
+<script>
   (function () {
     function fmtIsoDate(iso) {
   const day = String(iso || "").slice(0, 10);
@@ -1349,854 +1746,7 @@ function localIsoFromDate(dt) {
 function bindDdMmDateInput(el, onChange, options) {
   bindDdMmDatePicker(el, onChange, options);
 }
-    function loadDashboardPrefs(key) {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-function loadLayout(dashboardId) {
-  try {
-    for (const ver of [6, 5, 4, 3, 2, 1]) {
-      const raw = localStorage.getItem(`dla-bento-layout:v${ver}:${dashboardId}`);
-      if (!raw) continue;
-      const parsed = JSON.parse(raw);
-      parsed._loadedFromVersion = ver;
-      return parsed;
-    }
-  } catch {
-    // ignore parse errors
-  }
-  return null;
-}
-function saveDashboardPrefs(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // ignore quota / private mode
-  }
-}
-const DlaBentoLayout = (() => {
-  const VERSION = 6;
-  const COLS = 12;
-  const mounted = new WeakMap();
-
-  function storageKey(dashboardId) {
-    return `dla-bento-layout:v${VERSION}:${dashboardId}`;
-  }
-
-  function inIframe() {
-    try {
-      return window.self !== window.top;
-    } catch {
-      return true;
-    }
-  }
-
-  function resolveToolbarMode(options) {
-    const mode = options?.toolbar;
-    if (mode === "none" || mode === "meta") return mode;
-    return inIframe() ? "none" : "meta";
-  }
-
-  function layoutRoot() {
-    return (
-      document.querySelector("[data-bento-dashboard]") ||
-      document.querySelector(".bento-grid.bento-layout-root") ||
-      document.querySelector(".bento-grid")
-    );
-  }
-
-  function tiles(grid) {
-    if (!grid) return [];
-    return [...grid.querySelectorAll("[data-bento-id]")].filter((el) => {
-      let parent = el.parentElement;
-      while (parent && parent !== grid) {
-        if (parent.matches("[data-bento-id]")) return false;
-        parent = parent.parentElement;
-      }
-      return true;
-    });
-  }
-
-  function defaultSpan(el) {
-    const attr = Number(el.dataset.bentoSpan || el.getAttribute("data-bento-span") || 0);
-    if (attr > 0) return Math.min(COLS, attr);
-    const match = String(el.className || "").match(/bento-span-(\d+)/);
-    if (match) return Math.min(COLS, Number(match[1]));
-    if (el.classList.contains("tt-compliance-panel") || el.classList.contains("tt-entries")) return 12;
-    if (el.classList.contains("tt-project")) return 7;
-    if (el.classList.contains("tt-detail")) return 5;
-    if (el.classList.contains("tt-breakdown")) return 4;
-    if (el.classList.contains("tt-toolbar") || el.classList.contains("tt-chips") || el.classList.contains("tt-metrics")) return 12;
-    return 6;
-  }
-
-  function readPlacement(el) {
-    const cs = getComputedStyle(el);
-    const col = Number(el.dataset.bentoCol || 0);
-    const span = Number(el.dataset.bentoColSpan || 0);
-    const row = Number(el.dataset.bentoRow || 0);
-    const rowSpan = Number(el.dataset.bentoRowSpan || 1);
-    if (col && span) {
-      return { c: col, cs: span, r: row || 1, rs: rowSpan || 1 };
-    }
-    const gc = cs.gridColumnStart;
-    const gspan = cs.gridColumnEnd;
-    const gr = cs.gridRowStart;
-    const grs = cs.gridRowEnd;
-    let c = 1;
-    let csVal = defaultSpan(el);
-    let r = 1;
-    let rs = 1;
-    if (gc && gc !== "auto") c = Number(gc);
-    if (gspan && gspan !== "auto" && String(gspan).includes("span")) {
-      csVal = Number(String(gspan).replace("span", "").trim()) || csVal;
-    }
-    if (gr && gr !== "auto") r = Number(gr);
-    if (grs && grs !== "auto" && String(grs).includes("span")) {
-      rs = Number(String(grs).replace("span", "").trim()) || 1;
-    }
-    return { c, cs: csVal, r, rs };
-  }
-
-  function applyPlacement(el, p) {
-    const c = Math.max(1, Math.min(COLS, Number(p.c || 1)));
-    const cs = Math.max(1, Math.min(COLS, Number(p.cs || defaultSpan(el))));
-    const safeC = Math.min(c, COLS - cs + 1);
-    const r = Math.max(1, Number(p.r || 1));
-    const rs = Math.max(1, Number(p.rs || 1));
-    el.style.setProperty("grid-column", `${safeC} / span ${cs}`, "important");
-    el.style.setProperty("grid-row", `${r} / span ${rs}`, "important");
-    el.dataset.bentoCol = String(safeC);
-    el.dataset.bentoColSpan = String(cs);
-    el.dataset.bentoRow = String(r);
-    el.dataset.bentoRowSpan = String(rs);
-  }
-
-  function rowFromTop(topPx, metrics) {
-    return Math.max(1, Math.floor(Math.max(0, topPx) / metrics.rowUnit) + 1);
-  }
-
-  function columnFromLeft(leftPx, cs, metrics) {
-    let c = Math.floor(Math.max(0, leftPx) / metrics.colUnit) + 1;
-    return Math.max(1, Math.min(COLS - cs + 1, c));
-  }
-
-  function packLayoutDefault(grid, onlyMissing = true) {
-    const list = sortedTiles(grid).filter((el) => !(onlyMissing && el.dataset.bentoCol));
-    let row = 1;
-    let col = 1;
-    for (const el of list) {
-      const cs = Math.max(1, Math.min(COLS, Number(el.dataset.bentoColSpan || defaultSpan(el))));
-      const rs = defaultRowSpan(el);
-      const breakBefore =
-        el.dataset.bentoBreak === "before" ||
-        el.getAttribute("data-bento-break") === "before";
-      if (breakBefore && col > 1) {
-        row += 1;
-        col = 1;
-      }
-      if (cs >= COLS) {
-        if (col > 1) {
-          row += 1;
-          col = 1;
-        }
-        applyPlacement(el, { c: 1, cs: COLS, r: row, rs });
-        row += rs;
-        col = 1;
-        continue;
-      }
-      if (col + cs - 1 > COLS) {
-        row += 1;
-        col = 1;
-      }
-      applyPlacement(el, { c: col, cs, r: row, rs });
-      col += cs;
-      if (col > COLS) {
-        row += 1;
-        col = 1;
-      }
-    }
-  }
-
-  function sortedTiles(grid) {
-    return tiles(grid)
-      .map((el, idx) => ({
-        el,
-        idx,
-        order: Number(el.dataset.bentoOrder || 0),
-      }))
-      .sort((a, b) => (a.order - b.order) || (a.idx - b.idx))
-      .map((item) => item.el);
-  }
-
-  function defaultRowSpan(el) {
-    const rs = Number(el.dataset.bentoRowSpan || 0);
-    return rs > 0 ? rs : 1;
-  }
-
-  function packOrphans(grid) {
-    for (const el of tiles(grid).filter((t) => !t.dataset.bentoCol)) {
-      const cs = Math.max(1, Math.min(COLS, Number(el.dataset.bentoColSpan || defaultSpan(el))));
-      const rs = defaultRowSpan(el);
-      let placed = false;
-      for (let row = 1; row < 400 && !placed; row += 1) {
-        for (let col = 1; col <= COLS - cs + 1; col += 1) {
-          const test = { c: col, cs, r: row, rs };
-          if (!findOccupants(grid, el, test).length) {
-            applyPlacement(el, test);
-            placed = true;
-            break;
-          }
-        }
-      }
-      if (!placed) applyPlacement(el, { c: 1, cs, r: 1, rs });
-    }
-  }
-
-  function packLayoutFromVisual(grid, onlyMissing = true) {
-    packLayoutDefault(grid, onlyMissing);
-  }
-
-  function isLayoutCorrupt(layout) {
-    // Only treat "almost everything forced to column 1" as corruption.
-    // Dense KPI boards (many cs<=4 across many rows) are valid custom layouts
-    // and must not be wiped on refreshTiles / Done.
-    const items = Object.values(layout?.items || {});
-    if (items.length < 4) return false;
-    const atCol1 = items.filter((p) => Number(p.c || 1) === 1).length;
-    if (atCol1 / items.length >= 0.85) return true;
-    const rows = [...new Set(items.map((p) => Number(p.r || 1)))].sort((a, b) => a - b);
-    const maxR = rows[rows.length - 1] || 1;
-    // Huge empty bands (e.g. Ticket Status parked at row 20) look broken in edit mode.
-    if (maxR > items.length + 3) return true;
-    for (let i = 1; i < rows.length; i += 1) {
-      if (rows[i] - rows[i - 1] > 3) return true;
-    }
-    return false;
-  }
-
-  function applyLayoutFromStorageOrDefault(grid, dashboardId) {
-    const saved = loadLayout(dashboardId);
-    const staleEngine =
-      Boolean(saved?._loadedFromVersion) && saved._loadedFromVersion !== VERSION;
-    if (saved?.items && !isLayoutCorrupt(saved) && !staleEngine) {
-      applySaved(grid, saved);
-      return;
-    }
-    if (saved?.items && (isLayoutCorrupt(saved) || staleEngine)) {
-      try {
-        localStorage.removeItem(storageKey(dashboardId));
-        for (const ver of [6, 5, 4, 3, 2, 1]) {
-          localStorage.removeItem(`dla-bento-layout:v${ver}:${dashboardId}`);
-        }
-      } catch {
-        // ignore
-      }
-    }
-    packLayoutDefault(grid, false);
-  }
-
-  function findRowForTop(grid, dragging, topPx) {
-    const gridRect = grid.getBoundingClientRect();
-    const scrollTop = grid.scrollTop || 0;
-    const bands = tiles(grid)
-      .filter((t) => t !== dragging)
-      .map((t) => {
-        const rect = t.getBoundingClientRect();
-        return {
-          row: Number(t.dataset.bentoRow || 1),
-          mid: (rect.top + rect.bottom) / 2 - gridRect.top + scrollTop,
-        };
-      })
-      .sort((a, b) => a.mid - b.mid);
-    for (const band of bands) {
-      if (topPx < band.mid) return Math.max(1, band.row);
-    }
-    return (bands.length ? Math.max(...bands.map((b) => b.row)) : 0) + 1;
-  }
-
-  function columnsOverlap(c1, cs1, c2, cs2) {
-    const e1 = c1 + cs1 - 1;
-    const e2 = c2 + cs2 - 1;
-    return !(e1 < c2 || c1 > e2);
-  }
-
-  function isLocked(el) {
-    if (!el) return false;
-    if (el.dataset.bentoLocked === "true") return true;
-    const id = String(el.dataset.bentoId || "");
-    return id.endsWith("-meta") || id.includes("-toolbar") || id.includes("-filter");
-  }
-
-  function placementBox(p) {
-    return {
-      c: Number(p.c || 1),
-      cs: Number(p.cs || 1),
-      r: Number(p.r || 1),
-      rs: Number(p.rs || 1),
-    };
-  }
-
-  function boxesOverlap(a, b) {
-    return !(
-      a.c + a.cs - 1 < b.c ||
-      b.c + b.cs - 1 < a.c ||
-      a.r + a.rs - 1 < b.r ||
-      b.r + b.rs - 1 < a.r
-    );
-  }
-
-  function findOccupants(grid, tile, placement) {
-    const box = placementBox(placement);
-    return tiles(grid).filter((other) => {
-      if (other === tile || isLocked(other)) return false;
-      return boxesOverlap(box, placementBox(readPlacement(other)));
-    });
-  }
-
-  function placeTile(grid, tile, placement) {
-    const next = placementBox(placement);
-    const moved = new Set();
-    function resolveOverlaps(box, depth) {
-      if (depth > tiles(grid).length + 2) return;
-      for (const other of findOccupants(grid, tile, box)) {
-        if (moved.has(other)) continue;
-        const op = placementBox(readPlacement(other));
-        const pushed = { c: op.c, cs: op.cs, r: box.r + box.rs, rs: op.rs };
-        applyPlacement(other, pushed);
-        moved.add(other);
-        resolveOverlaps(placementBox(readPlacement(other)), depth + 1);
-      }
-    }
-    resolveOverlaps(next, 0);
-    applyPlacement(tile, next);
-  }
-
-  function defaultLayout(grid) {
-    const items = {};
-    for (const el of tiles(grid)) {
-      items[el.dataset.bentoId] = readPlacement(el);
-    }
-    return { version: VERSION, items };
-  }
-
-  function clearPlacements(grid) {
-    for (const el of tiles(grid)) {
-      el.style.removeProperty("grid-column");
-      el.style.removeProperty("grid-row");
-      delete el.dataset.bentoCol;
-      delete el.dataset.bentoColSpan;
-      delete el.dataset.bentoRow;
-      delete el.dataset.bentoRowSpan;
-    }
-  }
-
-  function serialize(grid) {
-    const items = {};
-    for (const el of tiles(grid)) {
-      items[el.dataset.bentoId] = readPlacement(el);
-    }
-    return { version: VERSION, items };
-  }
-
-  function applySaved(grid, layout) {
-    const items = layout?.items || {};
-    for (const el of tiles(grid)) {
-      const saved = items[el.dataset.bentoId];
-      if (saved) applyPlacement(el, saved);
-    }
-    const orphans = tiles(grid).filter((el) => !el.dataset.bentoCol);
-    if (orphans.length) packOrphans(grid);
-  }
-
-  function metaToolbarHost(grid) {
-    const scope = grid.closest(".bento-grid") || grid.parentElement || grid;
-    const strip = scope.querySelector(":scope > .meta-strip") || scope.querySelector(".meta-strip");
-    if (!strip) return null;
-    let main = strip.querySelector(".meta-strip-main");
-    if (!main) {
-      main = document.createElement("div");
-      main.className = "meta-strip-main";
-      strip.prepend(main);
-    }
-    main.style.display = "flex";
-    main.style.alignItems = "flex-start";
-    main.style.justifyContent = "space-between";
-    main.style.gap = "12px";
-    main.style.width = "100%";
-    return main;
-  }
-
-  function ensureIndicator(grid, state) {
-    if (state.indicator) return;
-    const indicator = document.createElement("div");
-    indicator.className = "bento-layout-drop-indicator";
-    grid.appendChild(indicator);
-    state.indicator = indicator;
-  }
-
-  function ensureToolbar(grid, state, mode) {
-    ensureIndicator(grid, state);
-    if (mode === "none") {
-      state.toolbarMode = "none";
-      if (state.toolbar) {
-        state.toolbar.remove();
-        state.toolbar = null;
-      }
-      return;
-    }
-    if (state.toolbar && state.toolbarMode === mode) return;
-    if (state.toolbar) state.toolbar.remove();
-
-    const bar = document.createElement("div");
-    bar.className = "bento-layout-toolbar meta-inline";
-    bar.innerHTML = `
-      <button type="button" class="layout-edit-btn" data-bento-edit>Edit layout</button>
-      <button type="button" data-bento-reset hidden>Reset default</button>
-      <button type="button" data-bento-done class="primary" hidden>Done</button>
-    `;
-    const host = metaToolbarHost(grid);
-    if (host) {
-      host.appendChild(bar);
-    } else {
-      bar.style.margin = "8px 0 0";
-      grid.parentElement?.insertBefore(bar, grid) || grid.prepend(bar);
-    }
-    state.toolbar = bar;
-    state.toolbarMode = mode;
-
-    bar.querySelector("[data-bento-edit]").addEventListener("click", () => setEditing(state, true));
-    bar.querySelector("[data-bento-done]").addEventListener("click", () => setEditing(state, false));
-    bar.querySelector("[data-bento-reset]").addEventListener("click", () => resetLayout());
-  }
-
-  function decorateTiles(state) {
-    for (const el of tiles(state.grid)) {
-      if (isLocked(el)) {
-        el.dataset.bentoLocked = "true";
-        el.title = el.title || "Locked tile — layout fixed";
-        continue;
-      }
-      el.dataset.bentoLocked = "false";
-      if (!el.querySelector(".bento-drag-handle")) {
-        const handle = document.createElement("div");
-        handle.className = "bento-drag-handle";
-        handle.textContent = "Drag to move";
-        el.prepend(handle);
-      }
-      if (!el.querySelector(".bento-resize-handle")) {
-        const resize = document.createElement("div");
-        resize.className = "bento-resize-handle";
-        resize.title = "Drag to resize width";
-        el.appendChild(resize);
-      }
-      if (!el.querySelector(".bento-resize-row-handle")) {
-        const rowResize = document.createElement("div");
-        rowResize.className = "bento-resize-row-handle";
-        rowResize.title = "Drag to resize height";
-        el.appendChild(rowResize);
-      }
-    }
-  }
-
-  function persist(state) {
-    saveDashboardPrefs(storageKey(state.dashboardId), serialize(state.grid));
-  }
-
-  function syncToolbarButtons(state) {
-    if (!state.toolbar) return;
-    const on = state.editing;
-    const edit = state.toolbar.querySelector("[data-bento-edit]");
-    const reset = state.toolbar.querySelector("[data-bento-reset]");
-    const done = state.toolbar.querySelector("[data-bento-done]");
-    if (edit) edit.hidden = on;
-    if (reset) reset.hidden = !on;
-    if (done) done.hidden = !on;
-  }
-
-  function setEditing(state, on) {
-    state.editing = on;
-    state.grid.classList.toggle("bento-layout-editing", on);
-    if (on) {
-      const saved = loadLayout(state.dashboardId);
-      if (!saved?.items) packLayoutDefault(state.grid, true);
-      decorateTiles(state);
-    } else {
-      for (const el of tiles(state.grid)) el.classList.remove("bento-tile-dragging");
-      hideIndicator(state);
-    }
-    syncToolbarButtons(state);
-    if (!on) persist(state);
-  }
-
-  function isManagedTile(grid, el) {
-    if (!el?.matches?.("[data-bento-id]")) return false;
-    let parent = el.parentElement;
-    while (parent && parent !== grid) {
-      if (parent.matches("[data-bento-id]")) return false;
-      parent = parent.parentElement;
-    }
-    return parent === grid;
-  }
-
-  function gridMetrics(grid) {
-    const rect = grid.getBoundingClientRect();
-    const style = getComputedStyle(grid);
-    const gap = parseFloat(style.gap) || 16;
-    const colGap = parseFloat(style.columnGap) || gap;
-    const rowGap = parseFloat(style.rowGap) || gap;
-    const colWidth = (rect.width - colGap * (COLS - 1)) / COLS;
-    const rowMin = 72;
-    return { rect, colWidth, colGap, rowGap, rowMin, colUnit: colWidth + colGap, rowUnit: rowMin + rowGap };
-  }
-
-  function snapColumn(metrics, clientX, cs) {
-    const x = clientX - metrics.rect.left;
-    let c = Math.floor(x / metrics.colUnit) + 1;
-    return Math.max(1, Math.min(COLS - cs + 1, c));
-  }
-
-  function tileBox(grid, tile, c, cs) {
-    const m = gridMetrics(grid);
-    const left = (c - 1) * m.colUnit;
-    const width = cs * m.colWidth + (cs - 1) * m.colGap;
-    const height = Math.max(tile.offsetHeight || 0, tile.getBoundingClientRect().height);
-    return { left, width, height, metrics: m };
-  }
-
-  function showIndicatorAt(state, tile, c, topPx, cs) {
-    const box = tileBox(state.grid, tile, c, cs);
-    const ind = state.indicator;
-    ind.style.display = "block";
-    ind.style.left = `${box.left}px`;
-    ind.style.top = `${Math.max(0, topPx)}px`;
-    ind.style.width = `${box.width}px`;
-    ind.style.height = `${box.height}px`;
-  }
-
-  function hideIndicator(state) {
-    if (state.indicator) state.indicator.style.display = "none";
-  }
-
-  function canStartDrag(ev, tile) {
-    if (isLocked(tile)) return false;
-    if (ev.target.closest(".bento-resize-handle, .bento-resize-row-handle")) return false;
-    if (ev.target.closest("button, a, input, select, textarea, label, .cell-button, .bar-row")) return false;
-    if (ev.target.closest(".bento-drag-handle")) return true;
-    if (ev.target.closest(".panel-head")) return true;
-    const rect = tile.getBoundingClientRect();
-    return ev.clientY - rect.top <= 52;
-  }
-
-  function bindInteractions(state) {
-    if (state.bound) return;
-    state.bound = true;
-    let moveFrame = 0;
-    let lastMoveEv = null;
-
-    function flushMove() {
-      moveFrame = 0;
-      const ev = lastMoveEv;
-      if (!ev) return;
-      if (state.dragging) {
-        const cs = Number(state.dragging.dataset.bentoColSpan || defaultSpan(state.dragging));
-        const m = gridMetrics(state.grid);
-        const c = snapColumn(m, ev.clientX, cs);
-        const scrollTop = state.grid.scrollTop || 0;
-        const topPx = ev.clientY - m.rect.top + scrollTop - state.dragOffsetY;
-        showIndicatorAt(state, state.dragging, c, topPx, cs);
-        state.pendingDrop = { c, topPx, cs };
-      }
-      if (state.resizing) {
-        const m = gridMetrics(state.grid);
-        const delta = ev.clientX - state.resizeStartX;
-        const next = Math.max(1, Math.min(COLS, Math.round(state.resizeStartSpan + delta / m.colUnit)));
-        applyPlacement(state.resizing, {
-          c: Number(state.resizing.dataset.bentoCol || 1),
-          cs: next,
-          r: Number(state.resizing.dataset.bentoRow || 1),
-          rs: Number(state.resizing.dataset.bentoRowSpan || 1),
-        });
-      }
-      if (state.rowResizing) {
-        const m = gridMetrics(state.grid);
-        const delta = ev.clientY - state.resizeStartY;
-        const nextRs = Math.max(1, Math.min(24, Math.round(state.resizeStartRowSpan + delta / m.rowUnit)));
-        applyPlacement(state.rowResizing, {
-          c: Number(state.rowResizing.dataset.bentoCol || 1),
-          cs: Number(state.rowResizing.dataset.bentoColSpan || defaultSpan(state.rowResizing)),
-          r: Number(state.rowResizing.dataset.bentoRow || 1),
-          rs: nextRs,
-        });
-      }
-    }
-
-    function onPointerMove(ev) {
-      if (!state.dragging && !state.resizing && !state.rowResizing) return;
-      lastMoveEv = ev;
-      if (!moveFrame) moveFrame = requestAnimationFrame(flushMove);
-    }
-
-    function finishPointer(ev) {
-      if (state.dragPointerId != null && state.dragCaptureEl?.releasePointerCapture) {
-        try { state.dragCaptureEl.releasePointerCapture(state.dragPointerId); } catch { /* ignore */ }
-      }
-      state.dragPointerId = null;
-      state.dragCaptureEl = null;
-
-      if (state.dragging) {
-        const cs = Number(state.dragging.dataset.bentoColSpan || defaultSpan(state.dragging));
-        const rs = Number(state.dragging.dataset.bentoRowSpan || 1);
-        const m = gridMetrics(state.grid);
-        const c = state.pendingDrop?.c ?? snapColumn(m, ev.clientX, cs);
-        const scrollTop = state.grid.scrollTop || 0;
-        const topPx = state.pendingDrop?.topPx ?? (ev.clientY - m.rect.top + scrollTop - state.dragOffsetY);
-        const r = findRowForTop(state.grid, state.dragging, topPx);
-        placeTile(state.grid, state.dragging, { c, cs, r, rs });
-        state.dragging.classList.remove("bento-tile-dragging");
-        persist(state);
-      }
-      if (state.resizing || state.rowResizing) persist(state);
-      state.dragging = null;
-      state.resizing = null;
-      state.rowResizing = null;
-      state.pendingDrop = null;
-      hideIndicator(state);
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerup", onPointerUp);
-      window.removeEventListener("pointercancel", onPointerUp);
-    }
-
-    function onPointerUp(ev) {
-      finishPointer(ev);
-    }
-
-    state.grid.addEventListener("pointerdown", (ev) => {
-      if (!state.editing || ev.button !== 0) return;
-      const colHandle = ev.target.closest(".bento-resize-handle");
-      const rowHandle = ev.target.closest(".bento-resize-row-handle");
-      let tile = ev.target.closest("[data-bento-id]");
-      if (!tile || !isManagedTile(state.grid, tile) || isLocked(tile)) return;
-
-      if (colHandle) {
-        state.resizing = tile;
-        state.resizeStartX = ev.clientX;
-        state.resizeStartSpan = Number(tile.dataset.bentoColSpan || defaultSpan(tile));
-        state.dragCaptureEl = colHandle;
-        state.dragPointerId = ev.pointerId;
-        try { colHandle.setPointerCapture(ev.pointerId); } catch { /* ignore */ }
-        ev.preventDefault();
-        window.addEventListener("pointermove", onPointerMove);
-        window.addEventListener("pointerup", onPointerUp);
-        window.addEventListener("pointercancel", onPointerUp);
-        return;
-      }
-
-      if (rowHandle) {
-        state.rowResizing = tile;
-        state.resizeStartY = ev.clientY;
-        state.resizeStartRowSpan = Number(tile.dataset.bentoRowSpan || 1);
-        state.dragCaptureEl = rowHandle;
-        state.dragPointerId = ev.pointerId;
-        try { rowHandle.setPointerCapture(ev.pointerId); } catch { /* ignore */ }
-        ev.preventDefault();
-        window.addEventListener("pointermove", onPointerMove);
-        window.addEventListener("pointerup", onPointerUp);
-        window.addEventListener("pointercancel", onPointerUp);
-        return;
-      }
-
-      if (!canStartDrag(ev, tile)) return;
-
-      state.dragging = tile;
-      tile.classList.add("bento-tile-dragging");
-      const tileRect = tile.getBoundingClientRect();
-      state.dragOffsetY = ev.clientY - tileRect.top;
-      state.pendingDrop = null;
-      state.dragCaptureEl = ev.target.closest(".bento-drag-handle") || tile;
-      state.dragPointerId = ev.pointerId;
-      try { state.dragCaptureEl.setPointerCapture(ev.pointerId); } catch { /* ignore */ }
-      ev.preventDefault();
-      onPointerMove(ev);
-      window.addEventListener("pointermove", onPointerMove);
-      window.addEventListener("pointerup", onPointerUp);
-      window.addEventListener("pointercancel", onPointerUp);
-    });
-  }
-
-  function getState(grid) {
-    return mounted.get(grid) || null;
-  }
-
-  function mount(grid, options) {
-    if (!grid) return null;
-    const dashboardId = options?.dashboardId || grid.dataset.bentoDashboard;
-    if (!dashboardId) return null;
-    grid.classList.add("bento-layout-root");
-    grid.dataset.bentoDashboard = dashboardId;
-
-    const toolbarMode = resolveToolbarMode(options);
-    let state = mounted.get(grid);
-    if (!state) {
-      state = { grid, dashboardId, editing: false };
-      mounted.set(grid, state);
-      bindInteractions(state);
-    }
-    state.dashboardId = dashboardId;
-    ensureToolbar(grid, state, toolbarMode);
-
-    const saved = loadLayout(dashboardId);
-    applyLayoutFromStorageOrDefault(grid, dashboardId);
-    if (state.editing) decorateTiles(state);
-    window.__dlaBentoReady = true;
-    return state;
-  }
-
-  function apply(grid, dashboardId, options) {
-    const id = dashboardId || grid?.dataset?.bentoDashboard;
-    if (!grid || !id) return;
-    grid.dataset.bentoDashboard = id;
-    mount(grid, Object.assign({ dashboardId: id }, options || {}));
-    const state = getState(grid);
-    if (!state) return;
-    applyLayoutFromStorageOrDefault(grid, id);
-    if (state.editing) decorateTiles(state);
-    window.__dlaBentoReady = true;
-  }
-
-  function refreshTiles(grid, dashboardId, options) {
-    const id = dashboardId || grid?.dataset?.bentoDashboard;
-    if (!grid || !id) return;
-    grid.dataset.bentoDashboard = id;
-    const state = getState(grid) || mount(grid, Object.assign({ dashboardId: id }, options || {}));
-    if (!state) return;
-    state.dashboardId = id;
-    applyLayoutFromStorageOrDefault(grid, id);
-    if (state.editing) decorateTiles(state);
-  }
-
-  function restoreEditing(grid, on) {
-    const state = getState(grid);
-    if (!state) return false;
-    setEditing(state, Boolean(on));
-    return true;
-  }
-
-  function openEditor() {
-    const root = layoutRoot();
-    if (!root) return false;
-    const state = getState(root);
-    const id = state?.dashboardId || root.dataset.bentoDashboard;
-    apply(root, id, { toolbar: "none" });
-    const next = getState(root);
-    if (next) setEditing(next, true);
-    return Boolean(next);
-  }
-
-  function closeEditor() {
-    const root = layoutRoot();
-    if (!root) return false;
-    const state = getState(root);
-    if (!state) return false;
-    setEditing(state, false);
-    return true;
-  }
-
-  function resetLayout() {
-    const root = layoutRoot();
-    if (!root) return false;
-    const state = getState(root) || mount(root, { dashboardId: root.dataset.bentoDashboard, toolbar: "none" });
-    if (!state) return false;
-    localStorage.removeItem(storageKey(state.dashboardId));
-    for (const ver of [6, 5, 4, 3, 2, 1]) {
-      try { localStorage.removeItem(`dla-bento-layout:v${ver}:${state.dashboardId}`); } catch { /* ignore */ }
-    }
-    clearPlacements(state.grid);
-    packLayoutDefault(state.grid, false);
-    if (state.editing) decorateTiles(state);
-    return true;
-  }
-
-  function isEditing() {
-    const root = layoutRoot();
-    const state = root ? getState(root) : null;
-    return Boolean(state?.editing);
-  }
-
-  function exportLayout(dashboardId) {
-    const root = layoutRoot();
-    if (!root) return null;
-    const state = getState(root);
-    const id = dashboardId || state?.dashboardId || root.dataset.bentoDashboard;
-    if (!id) return null;
-    const layout = serialize(root);
-    layout.dashboardId = id;
-    layout.exportedAt = new Date().toISOString();
-    return layout;
-  }
-
-  function importLayout(payload, options) {
-    const root = layoutRoot();
-    const items = payload?.items;
-    if (!root || !items || typeof items !== "object" || Array.isArray(items)) return false;
-    if (!Object.keys(items).length) return false;
-    const id = payload.dashboardId || options?.dashboardId || root.dataset.bentoDashboard;
-    if (!id) return false;
-    // Reject only the stacked-col-1 corruption pattern — dense custom layouts
-    // (many small spans / many rows) are valid and must remain importable.
-    const placements = Object.values(items);
-    if (placements.length >= 4) {
-      const atCol1 = placements.filter((p) => Number(p.c || 1) === 1).length;
-      if (atCol1 / placements.length >= 0.85) return false;
-    }
-    const normalized = { version: VERSION, items };
-    applySaved(root, normalized);
-    saveDashboardPrefs(storageKey(id), normalized);
-    const state = getState(root) || mount(root, { dashboardId: id, toolbar: "none" });
-    if (state) {
-      state.dashboardId = id;
-      root.dataset.bentoDashboard = id;
-      if (state.editing) decorateTiles(state);
-    }
-    return true;
-  }
-
-  function downloadLayoutExport(dashboardId) {
-    const layout = exportLayout(dashboardId);
-    if (!layout) return false;
-    const blob = new Blob([JSON.stringify(layout, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `dla-layout-${layout.dashboardId || "dashboard"}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
-    return true;
-  }
-
-  if (!window.__dlaBentoMessageBound) {
-    window.__dlaBentoMessageBound = true;
-    window.addEventListener("message", (ev) => {
-      if (ev.origin && ev.origin !== "null" && ev.origin !== window.location.origin) return;
-      const msg = ev.data;
-      if (!msg || typeof msg !== "object") return;
-      if (msg.type === "dla-bento-open") openEditor();
-      if (msg.type === "dla-bento-close") closeEditor();
-      if (msg.type === "dla-bento-reset") resetLayout();
-      if (msg.type === "dla-bento-export") downloadLayoutExport(msg.dashboardId);
-      if (msg.type === "dla-bento-import" && msg.payload) importLayout(msg.payload, { dashboardId: msg.dashboardId });
-    });
-  }
-
-  return { mount, apply, refreshTiles, restoreEditing, exportLayout, importLayout, downloadLayoutExport, openEditor, closeEditor, resetLayout, isEditing, getState, storageKey, VERSION };
-})();
-window.DlaBentoLayout = DlaBentoLayout;
     const DATA = JSON.parse(document.getElementById("dashboard-data").textContent);
-    const LAYOUT_ID = "digital-team-time-tracking:" + (DATA.month?.label || "default");
     const FILTER_PREFS_KEY = "dla-tt-filters:" + (DATA.month?.label || "default");
     const TARGET = Number(DATA.workdayTargetHours || 7.5);
     const FILTER_DEFAULTS = { user: "all", project: "all", from: "all", to: "all", ticket: "all", search: "" };
@@ -2557,42 +2107,110 @@ window.DlaBentoLayout = DlaBentoLayout;
       });
     }
 
-    const PIE_COLORS = ["#1d857d", "#3f6fb5", "#c4702b", "#7f8f3a", "#9b4f7e", "#4d7f99", "#aa5c5c", "#b29028", "#5e8c63", "#6a6bb4"];
+    let projectChart = null;
+    let dailyTrendChart = null;
+    let memberChart = null;
 
-    function polar(cx, cy, radius, angle) {
-      return { x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle) };
+    function destroyChart(instance) {
+      if (instance && typeof instance.destroy === "function") instance.destroy();
     }
 
-    function pieSlicePath(cx, cy, radius, startAngle, endAngle) {
-      const start = polar(cx, cy, radius, startAngle);
-      const end = polar(cx, cy, radius, endAngle);
-      const largeArc = endAngle - startAngle > Math.PI ? 1 : 0;
-      return [
-        "M", cx, cy,
-        "L", start.x, start.y,
-        "A", radius, radius, 0, largeArc, 1, end.x, end.y,
-        "Z"
-      ].join(" ");
+    function carbonKpiTile(label, value, subtitle, titleAttr) {
+      const subtitleHtml = subtitle ? `<p class="carbon-kpi__subtitle">${esc(subtitle)}</p>` : "";
+      const titleHtml = titleAttr ? ` title="${esc(titleAttr)}"` : "";
+      return `<article class="carbon-tile carbon-tile--span-4 carbon-kpi"${titleHtml}><p class="carbon-kpi__label">${esc(label)}</p><p class="carbon-kpi__value">${esc(value)}</p>${subtitleHtml}</article>`;
+    }
+
+    function carbonStatusBadge(status, label) {
+      const map = { success: "success", ok: "success", error: "error", miss: "error", warning: "warning", info: "info", pending: "info", neutral: "neutral", leave: "info" };
+      const key = map[String(status || "neutral").toLowerCase()] || "neutral";
+      return `<span class="carbon-status-badge carbon-status-badge--${key}"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>${esc(label)}</span></span>`;
+    }
+
+    function carbonEmptyState(title, description) {
+      return `<div class="carbon-empty-state" role="status"><h2 class="carbon-empty-state__title">${esc(title)}</h2><p class="carbon-empty-state__description">${esc(description)}</p></div>`;
+    }
+
+    function carbonChartShell(chartId, title, height) {
+      return `<section class="carbon-chart-container"><h2 class="carbon-chart-container__title">${esc(title)}</h2><div id="${esc(chartId)}" class="carbon-chart-container__plot cds--chart-container" style="height:${esc(height)}"></div></section>`;
+    }
+
+    function carbonDataTableShell(title, headHtml, bodyHtml, note) {
+      const noteHtml = note ? `<p class="panel-note">${esc(note)}</p>` : "";
+      return `<section class="carbon-data-table-container"><div class="carbon-data-table-container__head"><h2 class="carbon-data-table-container__title">${esc(title)}</h2></div>${noteHtml}<div class="carbon-data-table-wrap"><table class="carbon-data-table cds--data-table"><caption>${esc(title)}</caption><thead>${headHtml}</thead><tbody>${bodyHtml}</tbody></table></div></section>`;
+    }
+
+    function chartOptions(title, leftTitle, bottomTitle, height) {
+      return {
+        title: title,
+        theme: "g100",
+        accessibility: { svgAriaLabel: title },
+        axes: {
+          left: { mapsTo: "value", title: leftTitle },
+          bottom: { mapsTo: "key", title: bottomTitle, scaleType: "labels" },
+        },
+        height: height || "320px",
+      };
+    }
+
+    function renderProjectChart(projects, filters) {
+      destroyChart(projectChart);
+      projectChart = null;
+      const host = document.getElementById("chart-project-hours");
+      if (!host) return;
+      if (!projects.length || typeof Charts === "undefined") {
+        host.innerHTML = carbonEmptyState("No project hours in scope", "Clear chart or table filters to widen the scope.");
+        return;
+      }
+      const data = projects.map((row) => ({ group: "Hours", key: row.label, value: row.amount }));
+      host.innerHTML = "";
+      projectChart = new Charts.StackedBarChart(host, { data: data, options: chartOptions("Hours by project", "Hours", "Project", "280px") });
+    }
+
+    function renderDailyTrendChart(days) {
+      destroyChart(dailyTrendChart);
+      dailyTrendChart = null;
+      const host = document.getElementById("chart-daily-trend");
+      if (!host) return;
+      if (!days.length || typeof Charts === "undefined") {
+        host.innerHTML = carbonEmptyState("No workdays in scope", "Clear chart or table filters to widen the scope.");
+        return;
+      }
+      const data = days.map((row) => ({ group: "Daily hours", key: row.label, value: row.amount }));
+      host.innerHTML = "";
+      dailyTrendChart = new Charts.LineChart(host, { data: data, options: chartOptions("Daily hours trend", "Hours", "Workday", "280px") });
+    }
+
+    function renderMemberChart(members) {
+      destroyChart(memberChart);
+      memberChart = null;
+      const host = document.getElementById("chart-member-comparison");
+      if (!host) return;
+      if (!members.length || typeof Charts === "undefined") {
+        host.innerHTML = carbonEmptyState("No member hours in scope", "Clear chart or table filters to widen the scope.");
+        return;
+      }
+      const data = members.map((row) => ({ group: row.label, key: "Hours", value: row.amount }));
+      host.innerHTML = "";
+      memberChart = new Charts.GroupedBarChart(host, { data: data, options: chartOptions("Member hours comparison", "Hours", "Member", "280px") });
     }
 
     function ensureGridShell() {
-      let grid = document.getElementById("main");
-      if (!grid) {
-        document.getElementById("app").innerHTML =
-          `<main id="main" class="shell bento-grid" data-bento-dashboard="${LAYOUT_ID}"><div id="tt-root"></div></main>`;
-        grid = document.getElementById("main");
-        DlaBentoLayout.mount(grid, { dashboardId: LAYOUT_ID, toolbar: "none" });
-      } else {
-        grid.dataset.bentoDashboard = LAYOUT_ID;
+      let root = document.getElementById("tt-root");
+      if (!root) {
+        const main = document.getElementById("main-content");
+        if (main) {
+          main.innerHTML = '<div id="tt-root" class="carbon-grid"></div>';
+          root = document.getElementById("tt-root");
+        }
       }
-      return { grid, root: document.getElementById("tt-root") };
+      return { root };
     }
 
     function render() {
       const shell = ensureGridShell();
-      const grid = shell.grid;
       const root = shell.root;
-      const wasEditing = Boolean(DlaBentoLayout.getState(grid)?.editing);
+      if (!root) return;
       const filters = readFilters();
       const entries = DATA.timeEntries.filter((row) => matches(row, filters));
       const totalHours = entries.reduce((sum, row) => sum + asNumber(row.hours), 0);
@@ -2605,6 +2223,8 @@ window.DlaBentoLayout = DlaBentoLayout;
       const complianceThroughDay = complianceSnapshotDay(DATA.timeEntries);
       const compliance = complianceRows(DATA.timeEntries, DATA.members, allCalendarDays, complianceThroughDay);
       const activeMembers = new Set(entries.map((row) => row.logged_by_username).filter(Boolean)).size;
+      const workdaysInScope = allCalendarDays.filter((meta) => meta.weekday >= 1 && meta.weekday <= 5 && !specialOffdayLabel(meta.day)).length;
+      const avgHoursPerDay = workdaysInScope ? totalHours / workdaysInScope : 0;
       const options = {
         users: uniqueOptions(DATA.members.map((row) => ({ username: row.username, label: row.realname || row.username })), "username", "label"),
         projects: uniqueOptions(DATA.timeEntries, "project_name", "project_name"),
@@ -2615,292 +2235,193 @@ window.DlaBentoLayout = DlaBentoLayout;
       const detailBase = selectedEntries[0] || tickets.find((row) => String(row.bugId) === selectedTicket) || null;
 
       const activeFilterKeys = Object.keys(filters).filter((key) => filters[key] && filters[key] !== FILTER_DEFAULTS[key]);
-      const maxProject = Math.max(1, ...projects.map((row) => row.amount));
-      const maxMember = Math.max(1, ...members.map((row) => row.amount));
-      const maxDay = Math.max(1, ...days.map((row) => row.amount));
 
       const forecastWorkloadHtml = (() => {
         const fw = DATA.forecastWorkload;
         if (!fw) return "";
         const cols = fw.columns || [];
         const prev = fw.previewRows || [];
-        const head = cols.length ? `<tr>${cols.map((c) => `<th>${esc(c)}</th>`).join("")}</tr>` : "";
+        const head = cols.length ? `<tr>${cols.map((c) => `<th scope="col">${esc(c)}</th>`).join("")}</tr>` : "";
         const colSpan = Math.max(1, cols.length);
         const body = prev.length
           ? prev.map((row) => `<tr>${cols.map((c) => `<td>${esc(row[c] != null ? row[c] : "")}</td>`).join("")}</tr>`).join("")
-          : `<tr><td colspan="${colSpan}"><div class="empty-state empty-state--nodata" role="status"><p class="empty-state-title">No rows in CSV preview</p><p class="empty-state-message">The forecast CSV has no preview rows to display.</p></div></td></tr>`;
+          : `<tr><td colspan="${colSpan}">${carbonEmptyState("No rows in CSV preview", "The forecast CSV has no preview rows to display.")}</td></tr>`;
         return `
-        <section class="forecast-snippet-wrap">
-          <div class="panel">
-            <div class="panel-head">
-              <h2>Forecast workload (CSV)</h2>
-              <div class="panel-note">${esc(fw.sourcePath || "")}</div>
-            </div>
-            <p class="forecast-disclaimer">Supplementary model output for planning only; not a commitment or booking instruction. Confirm with the forecasting pipeline and owning team before acting on these figures.</p>
-            <div class="table-wrap" style="max-height:240px">
-              <table class="entry-table" style="min-width:360px">
-                <thead>${head}</thead>
-                <tbody>${body}</tbody>
-              </table>
-            </div>
+        <section class="forecast-snippet-wrap carbon-tile">
+          <div class="panel-head">
+            <h2 class="carbon-data-table-container__title">Forecast workload (CSV)</h2>
+            <div class="panel-note">${esc(fw.sourcePath || "")}</div>
           </div>
+          <p class="forecast-disclaimer">Supplementary model output for planning only; not a commitment or booking instruction. Confirm with the forecasting pipeline and owning team before acting on these figures.</p>
+          ${carbonDataTableShell("Forecast preview", head, body, "")}
         </section>`;
       })();
-
-      let pieSlices = "";
-      let pieLegend = "";
-      if (projects.length) {
-        let angle = -Math.PI / 2;
-        projects.forEach((row, index) => {
-          const span = totalHours ? (row.amount / totalHours) * Math.PI * 2 : 0;
-          const end = angle + span;
-          const color = PIE_COLORS[index % PIE_COLORS.length];
-          const active = filters.project === row.value;
-          pieSlices += `<path data-project="${esc(row.value)}" d="${pieSlicePath(140, 140, active ? 108 : 100, angle, end)}" fill="${color}" stroke="white" stroke-width="2" style="cursor:pointer;opacity:${active || filters.project === "all" ? 1 : 0.78}"></path>`;
-          pieLegend += `<button type="button" data-project="${esc(row.value)}" class="${active ? "active" : ""}"><span class="swatch" style="background:${color}"></span><span>${esc(row.label)}</span><span>${fmtPct(row.percent)}</span></button>`;
-          angle = end;
-        });
-      }
 
       function filterChipLabel(key, value) {
         if ((key === "from" || key === "to" || key === "day") && value && value !== "all") return fmtIsoDate(value);
         return value;
       }
 
+      const filterTagsHtml = activeFilterKeys.length
+        ? activeFilterKeys.map((key) => `<span class="carbon-filter-tag"><span class="carbon-filter-tag__label">${esc(key)}: ${esc(filterChipLabel(key, filters[key]))}</span><button type="button" class="carbon-filter-tag__dismiss" data-clear="${esc(key)}" aria-label="Remove filter ${esc(key)}">×</button></span>`).join("")
+        : `<span class="chips-hint">Click any chart, project row, compliance cell, or ticket row to drill down.</span>`;
+
+      const projectTableHead = `<tr><th scope="col">Project</th><th scope="col" class="num">Hours</th><th scope="col" class="num">%</th></tr>`;
+      const projectTableBody = projectTableRows.length
+        ? projectTableRows.map((row) => `<tr class="clickable ${filters.project === row.value ? "active-row" : ""}" data-project-row="${esc(row.value)}"><td>${esc(row.label)}</td><td class="num">${fmtHours(row.amount)}</td><td class="num">${fmtPct(row.percent)}</td></tr>`).join("")
+        : `<tr><td colspan="3">${carbonEmptyState("No project hours in scope", "Clear chart or table filters to widen the scope.")}</td></tr>`;
+
+      const ticketTableHead = `<tr><th scope="col">Ticket</th><th scope="col">Project</th><th scope="col">Summary</th><th scope="col" class="num">Hours</th></tr>`;
+      const ticketTableBody = tickets.length
+        ? tickets.slice(0, 20).map((row) => `<tr class="clickable ${selectedTicket === String(row.bugId) ? "active-row" : ""}" data-ticket="${esc(row.bugId)}"><td>#${esc(row.bugId)}</td><td>${esc(row.project)}</td><td>${esc(row.summary)}</td><td class="num">${fmtHours(row.hours)}</td></tr>`).join("")
+        : `<tr><td colspan="4">${carbonEmptyState("No tickets in scope", "Clear chart or table filters to widen the scope.")}</td></tr>`;
+
+      const entryTableHead = `<tr><th scope="col">Day</th><th scope="col">User</th><th scope="col">Ticket</th><th scope="col">Project</th><th scope="col" class="num">Hours</th><th scope="col">Category</th><th scope="col">Info</th><th scope="col">Created</th></tr>`;
+      const entryTableBody = entries.length
+        ? entries.map((row) => `<tr class="clickable ${selectedTicket && String(row.bug_id) === selectedTicket ? "active-row" : ""}" data-ticket="${esc(row.bug_id || "")}"><td>${esc(fmtIsoDate(row.day))}</td><td>${esc(row.logged_by_name || row.logged_by_username)}</td><td>${row.bug_id ? "#" + esc(row.bug_id) : ""}</td><td>${esc(row.project_name)}</td><td class="num">${fmtHours(row.hours)}</td><td>${esc(row.category)}</td><td>${esc(row.info)}</td><td>${esc(fmtIsoDateTime(row.created_timestamp))}</td></tr>`).join("")
+        : `<tr><td colspan="8">${carbonEmptyState("No time entries match the current filters", "Clear chart or table filters to widen the scope.")}</td></tr>`;
+
       root.innerHTML = `
-        <header class="meta-strip bento-span-12" data-bento-id="tt-meta" data-bento-span="12" data-bento-locked="true">
-          <div class="meta-strip-main">
-            <div>
-              <h1 class="meta-title">Digital Team Time Tracking Dashboard</h1>
-              <p class="meta-sub">Period: ${esc(DATA.month.period_display || (DATA.month.start + " to before " + DATA.month.end))}</p>
-            </div>
-            <div class="meta-pills">
-              <span class="meta-pill">Generated ${esc(fmtIsoDateTime(DATA.generatedAt))}</span>
+        ${forecastWorkloadHtml}
+        <section class="carbon-tile tt-toolbar" aria-label="Filters">
+          <div class="control">
+            <label for="filter-user">User</label>
+            <select id="filter-user">
+              <option value="all">All users</option>
+              ${options.users.map((opt) => `<option value="${esc(opt.value)}" ${filters.user === opt.value ? "selected" : ""}>${esc(opt.label)}</option>`).join("")}
+            </select>
+          </div>
+          <div class="control">
+            <label for="filter-project">Project</label>
+            <select id="filter-project">
+              <option value="all">All projects</option>
+              ${options.projects.map((opt) => `<option value="${esc(opt.value)}" ${filters.project === opt.value ? "selected" : ""}>${esc(opt.label)}</option>`).join("")}
+            </select>
+          </div>
+          <div class="control">
+            <label for="filter-from">From</label>
+            <input type="text" id="filter-from" readonly placeholder="Start (dd/mm/yyyy)" autocomplete="off" />
+          </div>
+          <div class="control">
+            <label for="filter-to">To</label>
+            <input type="text" id="filter-to" readonly placeholder="End (dd/mm/yyyy)" autocomplete="off" />
+          </div>
+          <div class="control">
+            <label for="filter-ticket">Ticket</label>
+            <input id="filter-ticket" value="${filters.ticket === "all" ? "" : esc(filters.ticket)}" placeholder="Ticket ID">
+          </div>
+          <div class="control">
+            <label for="filter-search">Search</label>
+            <input id="filter-search" value="${esc(filters.search)}" placeholder="Project, ticket, note...">
+          </div>
+          <button type="button" class="carbon-btn carbon-btn--ghost tt-reset" id="reset-filters">Reset filters</button>
+        </section>
+
+        <section class="carbon-filter-summary tt-chips" role="region" aria-label="Active filters">
+          <span class="carbon-filter-summary__label">Filters:</span>
+          ${filterTagsHtml}
+        </section>
+
+        <section class="tt-metrics" aria-label="Summary metrics">
+          ${carbonKpiTile("Total Hours", fmtHours(totalHours), `${fmtInt(entries.length)} filtered entries`, `${fmtInt(entries.length)} filtered time entries`)}
+          ${carbonKpiTile("Avg Hours / Day", fmtHours(avgHoursPerDay), `${fmtInt(workdaysInScope)} workdays in scope`)}
+          ${carbonKpiTile("Active Members", fmtInt(activeMembers), `Out of ${fmtInt(DATA.summary.matched_members)} matched`)}
+          ${carbonKpiTile("Projects", fmtInt(projects.length), "Projects with booked hours")}
+          ${carbonKpiTile("Off-target Hours", fmtHours(compliance.reduce((sum, row) => sum + row.offTargetHours, 0)), `Target ${fmtHours(TARGET)}h per workday`)}
+        </section>
+
+        <section class="carbon-tile tt-compliance-panel">
+          <div class="panel-head">
+            <h2 class="carbon-data-table-container__title">Daily ${fmtHours(TARGET)}h Compliance by Member</h2>
+            <div class="compliance-legend panel-note">
+              ${carbonStatusBadge("success", "Exactly " + fmtHours(TARGET) + "h")}
+              ${carbonStatusBadge("error", "Not exactly " + fmtHours(TARGET) + "h")}
+              ${carbonStatusBadge("info", "Leave Day")}
+              ${carbonStatusBadge("info", "Half Leave")}
+              ${carbonStatusBadge("neutral", "Weekend / Public Holiday")}
+              ${carbonStatusBadge("pending", "Pending future workday")}
             </div>
           </div>
-        </header>
-        ${forecastWorkloadHtml ? `<div class="bento-span-12" data-bento-id="tt-forecast" data-bento-span="12">${forecastWorkloadHtml}</div>` : ""}
-          <section class="toolbar tt-toolbar" data-bento-id="tt-toolbar" data-bento-span="12" data-bento-locked="true">
-            <div class="control">
-              <label>User</label>
-              <select id="filter-user">
-                <option value="all">All users</option>
-                ${options.users.map((opt) => `<option value="${esc(opt.value)}" ${filters.user === opt.value ? "selected" : ""}>${esc(opt.label)}</option>`).join("")}
-              </select>
-            </div>
-            <div class="control">
-              <label>Project</label>
-              <select id="filter-project">
-                <option value="all">All projects</option>
-                ${options.projects.map((opt) => `<option value="${esc(opt.value)}" ${filters.project === opt.value ? "selected" : ""}>${esc(opt.label)}</option>`).join("")}
-              </select>
-            </div>
-            <div class="control">
-              <label>From</label>
-              <input type="text" id="filter-from" readonly placeholder="Start (dd/mm/yyyy)" autocomplete="off" />
-            </div>
-            <div class="control">
-              <label>To</label>
-              <input type="text" id="filter-to" readonly placeholder="End (dd/mm/yyyy)" autocomplete="off" />
-            </div>
-            <div class="control">
-              <label>Ticket</label>
-              <input id="filter-ticket" value="${filters.ticket === "all" ? "" : esc(filters.ticket)}" placeholder="Ticket ID">
-            </div>
-            <div class="control">
-              <label>Search</label>
-              <input id="filter-search" value="${esc(filters.search)}" placeholder="Project, ticket, note...">
-            </div>
-            <button type="button" class="action-button tt-reset" id="reset-filters">Reset filters</button>
-          </section>
+          <div class="compliance-wrap">
+            <table class="compliance carbon-data-table" aria-label="Daily compliance by member">
+              <colgroup>
+                <col class="user-col">
+                ${allCalendarDays.map(() => `<col class="day-col">`).join("")}
+              </colgroup>
+              <thead>
+                <tr>
+                  <th scope="col">User</th>
+                  ${allCalendarDays.map((meta) => `<th scope="col">${compactDate(meta.day)}</th>`).join("")}
+                </tr>
+              </thead>
+              <tbody>
+                ${compliance.map((row) => `<tr><th scope="row">${esc(row.name)}</th>${row.days.map((item) => {
+                  const active = filters.user === row.username && isDaySelected(filters, item.day);
+                  const cellClass = item.isLeave ? "leave" : (item.isHalfLeave ? "leave half" : (item.isOffday ? "offday" : (item.isPending ? "pending" : (item.onTarget ? "ok" : "miss"))));
+                  const cellLabel = item.isLeave ? "Leave Day" : (item.isHalfLeave ? (item.hours > 0 ? fmtHours(item.hours) : "Half Leave") : (item.isOffday ? "—" : (item.isPending ? "Pending" : (item.hours <= 0 ? "No hours" : fmtHours(item.hours)))));
+                  const gapRaw = item.isHalfLeave ? "Half-day Leave" : (item.gapLabel || "");
+                  const gapText = esc(gapRaw);
+                  const showGap = Boolean(gapRaw)
+                    && gapRaw !== cellLabel
+                    && !item.onTarget
+                    && !item.isLeave
+                    && !item.isOffday
+                    && !item.isPending
+                    && cellLabel !== "No hours"
+                    && /^(Over by|Short by|Half-day)/.test(gapRaw);
+                  const tip = gapRaw || cellLabel;
+                  const aria = `${esc(row.name)} ${esc(compactDate(item.day))}: ${esc(tip)}`;
+                  return `<td><button type="button" class="cell-button ${cellClass} ${active ? "active" : ""}" data-user-day="${esc(row.username)}|${esc(item.day)}" title="${esc(tip)}" aria-label="${aria}"><div class="cell-hours">${cellLabel}</div>${showGap ? `<div class="cell-gap">${gapText}</div>` : ""}</button></td>`;
+                }).join("")}</tr>`).join("")}
+              </tbody>
+            </table>
+          </div>
+        </section>
 
-          <section class="chips tt-chips" data-bento-id="tt-chips" data-bento-span="12" data-bento-locked="true">
-            ${activeFilterKeys.length
-              ? activeFilterKeys.map((key) => `<span class="chip">${esc(key)}: ${esc(filterChipLabel(key, filters[key]))}<button type="button" data-clear="${esc(key)}">x</button></span>`).join("")
-              : `<p class="chips-hint">Click any chart, project row, compliance cell, or ticket row to drill down.</p>`}
-          </section>
+        <section class="carbon-tile tt-project">
+          ${carbonChartShell("chart-project-hours", "Hours by Project", "280px")}
+          <div style="margin-top:12px">${carbonDataTableShell("Project hours", projectTableHead, projectTableBody, projects.length ? "Click a project row to filter" : "")}</div>
+        </section>
 
-          <section class="tt-metrics" data-bento-id="tt-metrics" data-bento-span="12" data-bento-locked="true" aria-label="Summary metrics">
-            <div class="metric" title="${fmtInt(entries.length)} filtered time entries">
-              <span class="metric-label">Total Hours</span>
-              <span class="metric-value">${fmtHours(totalHours)}</span>
+        <section class="carbon-tile tt-detail">
+          <div class="panel-head">
+            <h2 class="carbon-data-table-container__title">Ticket Detail</h2>
+            <div class="panel-note">${selectedTicket ? "Selected from the current filters" : "Pick a ticket from any chart or table"}</div>
+          </div>
+          ${detailBase ? `
+            <div class="detail-grid">
+              <div class="detail-box"><div class="detail-label">Ticket</div><div class="detail-value">#${esc(detailBase.bugId || detailBase.bug_id || "")}</div></div>
+              <div class="detail-box"><div class="detail-label">Project</div><div class="detail-value">${esc(detailBase.project || detailBase.project_name || "")}</div></div>
+              <div class="detail-box"><div class="detail-label">Summary</div><div class="detail-value">${esc(detailBase.summary || detailBase.ticket_summary || "")}</div></div>
+              <div class="detail-box"><div class="detail-label">Hours in scope</div><div class="detail-value">${fmtHours(selectedEntries.reduce((sum, row) => sum + asNumber(row.hours), 0) || detailBase.hours || 0)}</div></div>
+              <div class="detail-box"><div class="detail-label">People logging to this ticket</div><div class="detail-value">${esc(Array.from(new Set(selectedEntries.map((row) => row.logged_by_name || row.logged_by_username).filter(Boolean))).join(", ") || "-")}</div></div>
+              <div class="detail-box"><div class="detail-label">Entries in scope</div><div class="detail-value">${fmtInt(selectedEntries.length || detailBase.entries || 0)}</div></div>
             </div>
-            <div class="metric" title="Projects with booked hours">
-              <span class="metric-label">Projects</span>
-              <span class="metric-value">${fmtInt(projects.length)}</span>
-            </div>
-            <div class="metric" title="Tickets behind filtered hours">
-              <span class="metric-label">Tickets</span>
-              <span class="metric-value">${fmtInt(tickets.length)}</span>
-            </div>
-            <div class="metric" title="Out of ${fmtInt(DATA.summary.matched_members)} matched members">
-              <span class="metric-label">Active Members</span>
-              <span class="metric-value">${fmtInt(activeMembers)}</span>
-            </div>
-            <div class="metric" title="Total deviation from ${fmtHours(TARGET)}h per workday">
-              <span class="metric-label">Off-target Hours</span>
-              <span class="metric-value">${fmtHours(compliance.reduce((sum, row) => sum + row.offTargetHours, 0))}</span>
-            </div>
-          </section>
+          ` : carbonEmptyState("No ticket selected yet", "Pick a ticket from any chart or table to see details.")}
+        </section>
 
-          <section class="panel tt-compliance-panel" data-bento-id="tt-compliance" data-bento-span="12">
-              <div class="panel-head">
-                <h2>Daily 7.5h Compliance by Member</h2>
-                <div class="panel-note">
-                  <span class="legend-swatch ok"></span> = exactly ${fmtHours(TARGET)}h &nbsp;
-                  <span class="legend-swatch miss"></span> = not exactly ${fmtHours(TARGET)}h &nbsp;
-                  <span class="legend-swatch leave"></span> = Leave Day &nbsp;
-                  <span class="legend-swatch leave-half"></span> = Half Leave &nbsp;
-                  <span class="legend-swatch offday"></span> = Weekend / Public Holiday &nbsp;
-                  <span class="legend-swatch pending"></span> = Pending future workday
-                </div>
-              </div>
-              <div class="compliance-wrap">
-                <table class="compliance">
-                  <colgroup>
-                    <col class="user-col">
-                    ${allCalendarDays.map(() => `<col class="day-col">`).join("")}
-                  </colgroup>
-                  <thead>
-                    <tr>
-                      <th>User</th>
-                      ${allCalendarDays.map((meta) => `<th>${compactDate(meta.day)}</th>`).join("")}
-                    </tr>
-                  </thead>
-                  <tbody>
-                      ${compliance.map((row) => `<tr><th>${esc(row.name)}</th>${row.days.map((item) => {
-                        const active = filters.user === row.username && isDaySelected(filters, item.day);
-                        const cellClass = item.isLeave ? "leave" : (item.isHalfLeave ? "leave half" : (item.isOffday ? "offday" : (item.isPending ? "pending" : (item.onTarget ? "ok" : "miss"))));
-                        const cellLabel = item.isLeave ? "Leave Day" : (item.isHalfLeave ? (item.hours > 0 ? fmtHours(item.hours) : "Half Leave") : (item.isOffday ? "—" : (item.isPending ? "Pending" : (item.hours <= 0 ? "No hours" : fmtHours(item.hours)))));
-                        const gapRaw = item.isHalfLeave ? "Half-day Leave" : (item.gapLabel || "");
-                        const gapText = esc(gapRaw);
-                        // Heatmap density: show gap only when it adds info beyond the primary cell label.
-                        const showGap = Boolean(gapRaw)
-                          && gapRaw !== cellLabel
-                          && !item.onTarget
-                          && !item.isLeave
-                          && !item.isOffday
-                          && !item.isPending
-                          && cellLabel !== "No hours"
-                          && /^(Over by|Short by|Half-day)/.test(gapRaw);
-                        const tip = gapRaw || cellLabel;
-                        const aria = `${esc(row.name)} ${esc(compactDate(item.day))}: ${esc(tip)}`;
-                        return `<td><button type="button" class="cell-button ${cellClass} ${active ? "active" : ""}" data-user-day="${esc(row.username)}|${esc(item.day)}" title="${esc(tip)}" aria-label="${aria}"><div class="cell-hours">${cellLabel}</div>${showGap ? `<div class="cell-gap">${gapText}</div>` : ""}</button></td>`;
-                      }).join("")}</tr>`).join("")}
-                  </tbody>
-                </table>
-              </div>
-          </section>
+        <section class="carbon-tile tt-breakdown">
+          ${carbonChartShell("chart-member-comparison", "By Team Member", "280px")}
+          <div class="panel-note" style="margin-top:8px">Use the User filter or click a compliance cell to drill down.</div>
+        </section>
 
-          <section class="panel tt-project" data-bento-id="tt-project" data-bento-span="7">
-                <div class="panel-head">
-                  <h2>Project Hours Share</h2>
-                  <div class="panel-note">${projects.length ? "Pie chart, legend, and project table are linked" : "No data"}</div>
-                </div>
-                ${projects.length ? `
-                  <div class="project-combo">
-                    <div>
-                      <div class="pie-shell">
-                        <div class="pie-area">
-                          <svg viewBox="0 0 280 280" aria-label="Project hours pie chart">
-                            ${pieSlices}
-                            <circle cx="140" cy="140" r="58" fill="white"></circle>
-                            <text x="140" y="134" text-anchor="middle" class="pie-center-main">${fmtHours(totalHours)}</text>
-                            <text x="140" y="156" text-anchor="middle" class="pie-center-sub">team hours</text>
-                          </svg>
-                        </div>
-                        <div class="legend">${pieLegend}</div>
-                      </div>
-                    </div>
-                    <div class="table-wrap">
-                      <table class="project-table">
-                        <thead><tr><th>Project</th><th class="num">Hours</th><th class="num">%</th></tr></thead>
-                        <tbody>
-                          ${projectTableRows.map((row) => `<tr class="clickable ${filters.project === row.value ? "active-row" : ""}" data-project-row="${esc(row.value)}"><td>${esc(row.label)}</td><td class="num">${fmtHours(row.amount)}</td><td class="num">${fmtPct(row.percent)}</td></tr>`).join("")}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>` : `<div class="empty-state empty-state--filter" role="status"><p class="empty-state-title">No project hours in scope</p><p class="empty-state-message">Clear chart or table filters to widen the scope.</p></div>`}
-          </section>
+        <section class="carbon-tile tt-breakdown">
+          ${carbonChartShell("chart-daily-trend", "By Workday", "280px")}
+          <div class="panel-note" style="margin-top:8px">Click a compliance day cell to filter by date range.</div>
+        </section>
 
-          <section class="panel tt-detail" data-bento-id="tt-detail" data-bento-span="5">
-                <div class="panel-head">
-                  <h2>Ticket Detail</h2>
-                  <div class="panel-note">${selectedTicket ? "Selected from the current filters" : "Pick a ticket from any chart or table"}</div>
-                </div>
-                ${detailBase ? `
-                  <div class="detail-grid">
-                    <div class="detail-box"><div class="detail-label">Ticket</div><div class="detail-value">#${esc(detailBase.bugId || detailBase.bug_id || "")}</div></div>
-                    <div class="detail-box"><div class="detail-label">Project</div><div class="detail-value">${esc(detailBase.project || detailBase.project_name || "")}</div></div>
-                    <div class="detail-box"><div class="detail-label">Summary</div><div class="detail-value">${esc(detailBase.summary || detailBase.ticket_summary || "")}</div></div>
-                    <div class="detail-box"><div class="detail-label">Hours in scope</div><div class="detail-value">${fmtHours(selectedEntries.reduce((sum, row) => sum + asNumber(row.hours), 0) || detailBase.hours || 0)}</div></div>
-                    <div class="detail-box"><div class="detail-label">People logging to this ticket</div><div class="detail-value">${esc(Array.from(new Set(selectedEntries.map((row) => row.logged_by_name || row.logged_by_username).filter(Boolean))).join(", ") || "-")}</div></div>
-                    <div class="detail-box"><div class="detail-label">Entries in scope</div><div class="detail-value">${fmtInt(selectedEntries.length || detailBase.entries || 0)}</div></div>
-                  </div>
-                ` : `<div class="empty-state empty-state--nodata" role="status"><p class="empty-state-title">No ticket selected yet</p><p class="empty-state-message">Pick a ticket from any chart or table to see details.</p></div>`}
-          </section>
+        <section class="carbon-tile tt-breakdown">
+          ${carbonDataTableShell("By Ticket", ticketTableHead, ticketTableBody, "Click a ticket row to lock the detail panel")}
+        </section>
 
-          <section class="panel tt-breakdown" data-bento-id="tt-breakdown-member" data-bento-span="4">
-            <div class="panel-head">
-              <h2>By Team Member</h2>
-              <div class="panel-note">Click a member bar</div>
-            </div>
-            <div class="bar-list">
-              ${members.length ? members.map((row) => `<button type="button" class="bar-row ${filters.user === row.raw ? "active" : ""}" data-user="${esc(row.raw)}"><div class="bar-label">${esc(row.label)}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.max(2, row.amount / maxMember * 100).toFixed(2)}%"></div></div><div class="bar-value">${fmtHours(row.amount)}</div></button>`).join("") : `<div class="empty-state empty-state--filter" role="status"><p class="empty-state-title">No member hours in scope</p><p class="empty-state-message">Clear chart or table filters to widen the scope.</p></div>`}
-            </div>
-          </section>
-
-          <section class="panel tt-breakdown" data-bento-id="tt-breakdown-day" data-bento-span="4">
-            <div class="panel-head">
-              <h2>By Workday</h2>
-              <div class="panel-note">Click a day bar</div>
-            </div>
-            <div class="bar-list">
-              ${days.length ? days.map((row) => `<button type="button" class="bar-row ${isDaySelected(filters, row.raw) ? "active" : ""}" data-day="${esc(row.raw)}"><div class="bar-label">${esc(row.label)}</div><div class="bar-track"><div class="bar-fill blue" style="width:${Math.max(2, row.amount / maxDay * 100).toFixed(2)}%"></div></div><div class="bar-value">${fmtHours(row.amount)}</div></button>`).join("") : `<div class="empty-state empty-state--filter" role="status"><p class="empty-state-title">No workdays in scope</p><p class="empty-state-message">Clear chart or table filters to widen the scope.</p></div>`}
-            </div>
-          </section>
-
-          <section class="panel tt-breakdown" data-bento-id="tt-breakdown-ticket" data-bento-span="4">
-            <div class="panel-head">
-              <h2>By Ticket</h2>
-              <div class="panel-note">Click a ticket row</div>
-            </div>
-            <div class="table-wrap">
-              <table class="ticket-table">
-                <thead><tr><th>Ticket</th><th>Project</th><th>Summary</th><th class="num">Hours</th></tr></thead>
-                <tbody>
-                  ${tickets.length ? tickets.slice(0, 20).map((row) => `<tr class="clickable ${selectedTicket === String(row.bugId) ? "active-row" : ""}" data-ticket="${esc(row.bugId)}"><td>#${esc(row.bugId)}</td><td>${esc(row.project)}</td><td>${esc(row.summary)}</td><td class="num">${fmtHours(row.hours)}</td></tr>`).join("") : `<tr><td colspan="4"><div class="empty-state empty-state--filter" role="status"><p class="empty-state-title">No tickets in scope</p><p class="empty-state-message">Clear chart or table filters to widen the scope.</p></div></td></tr>`}
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <section class="panel tt-entries" data-bento-id="tt-entries" data-bento-span="12">
-              <div class="panel-head">
-                <h2>Time Tracking Details</h2>
-                <div class="panel-note">Every filtered Mantis time entry. Click a row to lock the ticket detail.</div>
-              </div>
-              <div class="table-wrap">
-                <table class="entry-table">
-                  <thead>
-                    <tr>
-                      <th>Day</th>
-                      <th>User</th>
-                      <th>Ticket</th>
-                      <th>Project</th>
-                      <th class="num">Hours</th>
-                      <th>Category</th>
-                      <th>Info</th>
-                      <th>Created</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    ${entries.length ? entries.map((row) => `<tr class="clickable ${selectedTicket && String(row.bug_id) === selectedTicket ? "active-row" : ""}" data-ticket="${esc(row.bug_id || "")}"><td>${esc(fmtIsoDate(row.day))}</td><td>${esc(row.logged_by_name || row.logged_by_username)}</td><td>${row.bug_id ? "#" + esc(row.bug_id) : ""}</td><td>${esc(row.project_name)}</td><td class="num">${fmtHours(row.hours)}</td><td>${esc(row.category)}</td><td>${esc(row.info)}</td><td>${esc(fmtIsoDateTime(row.created_timestamp))}</td></tr>`).join("") : `<tr><td colspan="8"><div class="empty-state empty-state--filter" role="status"><p class="empty-state-title">No time entries match the current filters</p><p class="empty-state-message">Clear chart or table filters to widen the scope.</p></div></td></tr>`}
-                  </tbody>
-                </table>
-              </div>
-          </section>
+        <section class="carbon-tile tt-entries">
+          ${carbonDataTableShell("Time Tracking Details", entryTableHead, entryTableBody, "Every filtered Mantis time entry. Click a row to lock the ticket detail.")}
+        </section>
       `;
+
+      renderProjectChart(projects, filters);
+      renderDailyTrendChart(days);
+      renderMemberChart(members);
 
       function setFilter(key, value) {
         const next = Object.assign({}, filters, { [key]: value });
@@ -2938,15 +2459,9 @@ window.DlaBentoLayout = DlaBentoLayout;
       document.getElementById("filter-ticket").addEventListener("change", (event) => setFilter("ticket", event.target.value.trim() || "all"));
       document.getElementById("filter-search").addEventListener("input", (event) => setFilter("search", event.target.value));
       document.getElementById("reset-filters").addEventListener("click", () => { writeFilters(FILTER_DEFAULTS); render(); });
-      grid.querySelectorAll("[data-clear]").forEach((node) => node.addEventListener("click", () => setFilter(node.dataset.clear, FILTER_DEFAULTS[node.dataset.clear])));
-      grid.querySelectorAll("[data-project]").forEach((node) => node.addEventListener("click", () => setFilter("project", filters.project === node.dataset.project ? "all" : node.dataset.project)));
-      grid.querySelectorAll("[data-project-row]").forEach((node) => node.addEventListener("click", () => setFilter("project", filters.project === node.dataset.projectRow ? "all" : node.dataset.projectRow)));
-      grid.querySelectorAll("[data-user]").forEach((node) => node.addEventListener("click", () => setFilter("user", filters.user === node.dataset.user ? "all" : node.dataset.user)));
-      grid.querySelectorAll("[data-day]").forEach((node) => node.addEventListener("click", () => {
-        writeFilters(toggleDayFilter(filters, node.dataset.day));
-        render();
-      }));
-      grid.querySelectorAll("[data-user-day]").forEach((node) => node.addEventListener("click", () => {
+      root.querySelectorAll("[data-clear]").forEach((node) => node.addEventListener("click", () => setFilter(node.dataset.clear, FILTER_DEFAULTS[node.dataset.clear])));
+      root.querySelectorAll("[data-project-row]").forEach((node) => node.addEventListener("click", () => setFilter("project", filters.project === node.dataset.projectRow ? "all" : node.dataset.projectRow)));
+      root.querySelectorAll("[data-user-day]").forEach((node) => node.addEventListener("click", () => {
         const [user, day] = node.dataset.userDay.split("|");
         const same = filters.user === user && filters.from === day && filters.to === day;
         const next = Object.assign({}, filters, {
@@ -2957,15 +2472,7 @@ window.DlaBentoLayout = DlaBentoLayout;
         writeFilters(normalizeRangeFilters(next));
         render();
       }));
-      grid.querySelectorAll("[data-ticket]").forEach((node) => node.addEventListener("click", () => setFilter("ticket", filters.ticket === node.dataset.ticket ? "all" : node.dataset.ticket || "all")));
-      try {
-        if (grid && window.DlaBentoLayout) {
-          DlaBentoLayout.refreshTiles(grid, LAYOUT_ID, { toolbar: "none" });
-          if (wasEditing) DlaBentoLayout.restoreEditing(grid, true);
-        }
-      } catch (err) {
-        console.error("Bento layout init failed", err);
-      }
+      root.querySelectorAll("[data-ticket]").forEach((node) => node.addEventListener("click", () => setFilter("ticket", filters.ticket === node.dataset.ticket ? "all" : node.dataset.ticket || "all")));
     }
 
     render();
