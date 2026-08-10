@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en" data-carbon-theme="g100" class="cds--g100">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dashboard Control Center</title>
+<title>Annotation Project Coverage</title>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@carbon/styles@1/css/styles.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@carbon/charts@1.27.16/styles.min.css">
@@ -888,403 +888,118 @@ a:focus-visible {
 </style>
 <style>
 
-[hidden] { display: none !important; }
-.cc-catalog-section { margin-bottom: 0; }
-.cc-catalog-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+.carbon-grid--ann-project { margin-bottom: 1px; }
+.ax-section-title {
+  margin: 0;
+  padding: 10px 16px;
   background: var(--cds-layer-01);
   border: 1px solid var(--cds-border-subtle-01);
-  flex-wrap: wrap;
-}
-.cc-catalog-label {
-  font-size: var(--cds-type-heading-compact-01);
+  font-size: var(--cds-type-label-01);
   font-weight: 600;
-  color: var(--cds-text-primary);
-  white-space: nowrap;
+  letter-spacing: 0.32px;
+  color: var(--cds-text-secondary);
+  text-transform: uppercase;
 }
-.cc-catalog-select {
-  flex: 1 1 220px;
-  min-height: 40px;
-  min-width: 180px;
-  max-width: 420px;
-  border: 1px solid var(--cds-border-strong-01);
-  background: var(--cds-layer-02);
-  color: var(--cds-text-primary);
-  padding: 0 12px;
+.ax-section-note {
+  margin: 0 0 1px;
+  padding: 8px 16px;
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+  color: var(--cds-text-helper);
+  font-size: var(--cds-type-label-01);
+}
+.carbon-grid--kpi-lib {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--cds-border-subtle-01);
+  margin-bottom: 1px;
+}
+.carbon-grid--kpi-tidp {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--cds-border-subtle-01);
+  margin-bottom: 1px;
+}
+.carbon-grid--kpi-lib > .carbon-tile,
+.carbon-grid--kpi-tidp > .carbon-tile { border: 0; }
+.ax-headline {
+  margin: 0 0 1px;
+  padding: 10px 16px;
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
   font-size: var(--cds-type-body-compact-01);
-  font-family: var(--cds-font-family);
-  cursor: pointer;
-}
-.cc-catalog-select:focus {
-  outline: 2px solid var(--cds-focus);
-  outline-offset: -2px;
-}
-.cc-catalog-select optgroup {
-  font-weight: 600;
   color: var(--cds-text-secondary);
 }
-.cc-catalog-select option {
-  font-weight: 400;
-  color: var(--cds-text-primary);
-}
-.cc-period-select {
-  flex: 0 1 260px;
-  min-height: 40px;
-  min-width: 180px;
-  max-width: 320px;
-  border: 1px solid var(--cds-border-strong-01);
-  background: var(--cds-layer-02);
-  color: var(--cds-text-primary);
-  padding: 0 12px;
-  font-size: var(--cds-type-body-compact-01);
-  font-family: var(--cds-font-family);
-  cursor: pointer;
-}
-.cc-period-select:focus {
-  outline: 2px solid var(--cds-focus);
-  outline-offset: -2px;
-}
-.cc-period-wrap.hidden,
-.cc-period-select.hidden { display: none !important; }
-.cc-catalog-freshness {
+.ax-links {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: var(--cds-type-label-01);
-  color: var(--cds-text-helper);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-.cc-open-tab-btn {
-  margin-left: auto;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.cc-viewer-section {
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  padding: 12px 16px;
+  margin: 0;
+  list-style: none;
   background: var(--cds-layer-01);
   border: 1px solid var(--cds-border-subtle-01);
-  border-top: none;
 }
-.cc-viewer-frame-wrap {
-  height: calc(100vh - 160px);
-  min-height: 560px;
-  margin: 0;
-  background: var(--cds-background);
-  border: 1px solid var(--cds-border-subtle-01);
-  position: relative;
+.ax-warning {
+  color: var(--cds-support-error);
+  font-weight: 600;
+  margin: 0 0 1px;
+  padding: 8px 12px;
+  background: var(--cds-layer-01);
+  border-left: 3px solid var(--cds-support-error);
 }
-.cc-viewer-frame-wrap.is-loading .cc-viewer-frame { opacity: 0.35; transition: opacity .18s ease; }
-.cc-viewer-frame {
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: block;
-  background: var(--cds-background);
+@media (max-width: 1100px) {
+  .carbon-grid--kpi-lib { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .carbon-grid--kpi-tidp { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
-.cc-toast {
-  position: fixed;
-  right: 16px;
-  bottom: 16px;
-  min-width: 240px;
-  max-width: 420px;
-  background: var(--cds-layer-02);
-  color: var(--cds-text-primary);
-  border: 1px solid var(--cds-border-subtle-01);
-  padding: 12px 16px;
-  box-shadow: var(--shadow);
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity var(--cds-transition), transform var(--cds-transition);
-  pointer-events: none;
-  z-index: 9000;
+@media (max-width: 720px) {
+  .carbon-grid--kpi-lib,
+  .carbon-grid--kpi-tidp { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-.cc-toast.show { opacity: 1; transform: translateY(0); }
-@media (max-width: 671px) {
-  .cc-catalog-bar { gap: 8px; }
-  .cc-catalog-select { max-width: none; }
-  .cc-open-tab-btn { margin-left: 0; }
-  .cc-viewer-frame-wrap { height: 65vh; min-height: 420px; }
+@media (max-width: 480px) {
+  .carbon-grid--kpi-lib,
+  .carbon-grid--kpi-tidp { grid-template-columns: 1fr; }
 }
 
 </style>
-
-</head>
-<body>
-<div class="carbon-page cds--g100" data-carbon-theme="g100"><a class="skip-link" href="#main-content">Skip to main content</a><header class="carbon-page-header"><nav aria-label="Breadcrumb"><ol class="carbon-page-header__breadcrumb"><li><a href="#">Digital Lead Assistant</a></li><li><a href="#">Dashboards</a></li><li>Control Center</li></ol></nav><div class="carbon-page-header__row"><h1 class="carbon-page-header__title">Dashboard Control Center</h1><div class="carbon-page-header__actions"><a class="carbon-btn carbon-btn--ghost" href=".">Open folder</a><button class="carbon-btn carbon-btn--primary" type="button" id="refreshBtn">Refresh catalog</button></div></div></header><main id="main-content" class="carbon-page__content" role="main">
-<section class="cc-catalog-section" aria-labelledby="catalogHeading">
-  <div class="cc-catalog-bar">
-    <label class="cc-catalog-label" for="dashboardCatalog" id="catalogHeading">Dashboard</label>
-    <select class="cc-catalog-select" id="dashboardCatalog" aria-label="Dashboard catalog"></select>
-    <label class="cc-catalog-label cc-period-wrap hidden" for="periodSelect" id="periodLabel">Period</label>
-    <select class="cc-period-select hidden" id="periodSelect" aria-label="Dashboard period"></select>
-    <span class="cc-catalog-freshness" id="catalogFreshness"></span>
-    <a class="carbon-btn carbon-btn--ghost cc-open-tab-btn" id="viewerOpen" href="#" target="_blank" rel="noopener noreferrer">Open in tab</a>
-  </div>
-</section>
-
-<section class="cc-viewer-section" id="viewer" aria-label="Dashboard preview">
-  <div class="cc-viewer-frame-wrap viewer-frame-wrap">
-    <iframe class="cc-viewer-frame viewer-frame" id="dashboardFrame" title="Dashboard preview"></iframe>
-  </div>
-</section>
-<div class="cc-toast" id="toast" role="status" aria-live="polite"></div>
-<script id="dashboard-data" type="application/json">{"generatedAt":"10/08/2026 17:17","dashboards":[{"title":"Annotation Digital Productivity","file":"annotation_digital_productivity_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/refresh_mantis_dashboard_cache.py --start 2025-01-01 --end YYYY-MM-DD; python scripts/extract_annotation_digital_productivity.py --project-id 396 --source cache; python scripts/build_annotation_productivity_dashboard.py --data-dir data/reports/annotation_digital_productivity --output dashboard_reports/annotation_digital_productivity_dashboard.html","source":"Mantis cache project 396 (after cache refresh)","memory":"Interactive tickets count only when note, status change, and handler change come from the same actor.","exists":true,"href":"annotation_digital_productivity_dashboard.html","bytes":1718051,"size":"1.6 MB","modified":"2026-08-10T06:08:23.565074+00:00","modifiedDisplay":"10/08/2026 13:08","ageDays":0,"freshness":"fresh","dataSignal":"10/08/2026 12:58","registered":true,"layoutId":"annotation-productivity"},{"title":"Annotation Member Workload","file":"digital_team_annotation_status_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/build_annotation_member_ticket_dashboard_html.py --cutoff 2026-W33 --output dashboard_reports/digital_team_annotation_status_dashboard.html --source cache","source":"TIDP Master Rev6 + Mantis cache project 396 (stepwise uses same cache)","memory":"COO primary member workload; active TIDP family tickets handled by Digital Team.","exists":true,"href":"digital_team_annotation_status_dashboard.html","bytes":546936,"size":"534.1 KB","modified":"2026-08-10T06:08:23.608394+00:00","modifiedDisplay":"10/08/2026 13:08","ageDays":0,"freshness":"fresh","dataSignal":"10/08/2026 12:58","registered":true,"layoutId":"annotation-member-workload"},{"title":"Digital Team Time Tracking","file":"digital_team_time_tracking_dashboard_2026-08.html","group":"Time Tracking","owner":"Digital Team","status":"Primary","refresh":"python -m dashboard_assistant --month 2026-08 --team digital --react --limit 20 --strict-dq --source cache","source":"Mantis cache time tracking","memory":"Generalized time tracking dashboard: pick a month/range in the Dashboard catalog; run cache refresh then rebuild with --source cache before reporting.","exists":true,"href":"digital_team_time_tracking_dashboard_2026-08.html","bytes":241099,"size":"235.4 KB","modified":"2026-08-10T09:58:45.063405+00:00","modifiedDisplay":"10/08/2026 16:58","ageDays":0,"freshness":"fresh","dataSignal":"10/08/2026 13:08","registered":true,"layoutId":"digital-team-time-tracking:2026-08","variants":[{"label":"01/08/2026 to 31/08/2026","file":"digital_team_time_tracking_dashboard_2026-08.html","href":"digital_team_time_tracking_dashboard_2026-08.html","layoutId":"digital-team-time-tracking:2026-08","sortKey":"2026-08","start":"2026-08-01","end":"2026-08-31","cw":"","exists":true,"bytes":241099,"size":"235.4 KB","modified":"2026-08-10T09:58:45.063405+00:00","modifiedDisplay":"10/08/2026 16:58","ageDays":0,"freshness":"fresh","dataSignal":"10/08/2026 13:08"}],"variantCount":1,"currentVariantFile":"digital_team_time_tracking_dashboard_2026-08.html","rangeRefreshTemplate":"python -m dashboard_assistant --month {from}..{to} --team digital --react --limit 20 --strict-dq --source cache"},{"title":"Digital Team Work Current","file":"digital_team_work_dashboard_current.html","group":"Digital Team","owner":"Digital Team","status":"Operational","refresh":"python build_digital_dashboard.py --output dashboard_reports/digital_team_work_dashboard_current.html --source cache","source":"Mantis cache open work","memory":"Open ticket dashboard grouped by project with due assessment and status badges.","exists":true,"href":"digital_team_work_dashboard_current.html","bytes":29855628,"size":"28.5 MB","modified":"2026-08-10T06:08:25.901328+00:00","modifiedDisplay":"10/08/2026 13:08","ageDays":0,"freshness":"fresh","dataSignal":"2026-08-10T12:58:44+07:00","registered":true,"layoutId":"digital-team-work-current"},{"title":"Annotation Project Coverage","file":"digital_team_annotation_project_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/refresh_revit_library_family_cache.py; python scripts/build_annotation_project_dashboard.py --cutoff 2026-W33 --source cache","source":"AnnotationDB\u00d7Revit Library upload + TIDP Master\u00d7Mantis; metrics/annotation-family-upload-coverage.md","memory":"Combined Annotation Project dual-axis overview; existing Annotation Primaries remain.","exists":true,"href":"digital_team_annotation_project_dashboard.html","bytes":34238,"size":"33.4 KB","modified":"2026-08-10T10:17:34.066935+00:00","modifiedDisplay":"10/08/2026 17:17","ageDays":0,"freshness":"fresh","dataSignal":"10/08/2026 17:12","registered":true,"layoutId":"digital_team_annotation_project_dashboard"},{"title":"Annotation Family Library Upload","file":"annotation_family_library_upload_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/refresh_revit_library_family_cache.py; python scripts/build_annotation_family_upload_dashboard.py","source":"AnnotationDB.public.annotation_framework (2390 to track) \u00d7 DCMvn_Revit_Library active uploads; cache data/revit_library_family_cache/","memory":"Comparison basis for Annotation library upload progress; independent of TIDP Master ticket coverage.","exists":true,"href":"annotation_family_library_upload_dashboard.html","bytes":762532,"size":"744.7 KB","modified":"2026-08-10T10:17:33.921147+00:00","modifiedDisplay":"10/08/2026 17:17","ageDays":0,"freshness":"fresh","dataSignal":"2026-08-10T17:12:44+07:00","registered":true,"layoutId":"annotation_family_library_upload_dashboard"},{"title":"Annotation TIDP Ticket Overview","file":"digital_team_annotation_ticket_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/build_annotation_tidp_dashboard_html.py --cutoff 2026-W33 --source cache --output dashboard_reports/digital_team_annotation_ticket_dashboard.html; python scripts/build_tidp_report_sheet1.py --cutoff 2026-W33 --source cache --output data/reports/TIDP_Report_Stepwise.xlsx --no-open","source":"TIDP Master Rev6 + Mantis cache project 396 (paired with stepwise Excel)","memory":"COO executive TIDP mirror; rebuild together with TIDP_Report_Stepwise.xlsx on refresh.","exists":true,"href":"digital_team_annotation_ticket_dashboard.html","bytes":1271623,"size":"1.2 MB","modified":"2026-08-10T10:17:34.283585+00:00","modifiedDisplay":"10/08/2026 17:17","ageDays":0,"freshness":"fresh","dataSignal":"10/08/2026 17:12","registered":true,"layoutId":"annotation-tidp"}],"groups":["Annotation","Digital Team","Time Tracking"],"cache":{"generated_at":"2026-08-10T12:56:58+07:00","cache_schema_version":3,"source":"MariaDB/Mantis","database":"mantis","range":{"start":"2025-01-01","end":"2026-09-01"},"project_ids":[396,357,400,401],"digital_team_users":["hu.dam","ht.nguyen","dahn.nguyen","nd.huynh","kd.doan","lk.dang","qd.nguyen","qn.ha"],"files":{"sqlite":"data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite","manifest":"data/mantis_dashboard_cache/manifest.json","extracts":"data/mantis_dashboard_cache/extracts"},"tables":{"projects":4,"users":93,"tickets":16389,"time_entries":27510,"bug_history":225467,"bugnotes":25097,"work_dashboard_team_members":8,"work_dashboard_rows":848,"work_dashboard_notes":4270,"work_dashboard_history":37981,"annotation_p396_tickets":2289,"annotation_p396_history":25754,"annotation_p396_rename":337,"annotation_p396_note_authors":6575,"annotation_p396_users":408},"usage":{"refresh":"python scripts/refresh_mantis_dashboard_cache.py --start YYYY-MM-DD --end YYYY-MM-DD","sqlite":"Read data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite from dashboard builders."}},"cacheDisplay":"01/01/2025 to 01/09/2026","duplicateGroups":[],"metrics":{"total":7,"registered":7,"fresh":7,"stale":0,"missing":0,"latest":"Annotation TIDP Ticket Overview","cacheRows":373030},"templateSource":"https://github.com/HuyDamDCMvn/DigitalLeadAssistant.git"}</script>
-<script>
-const payload = JSON.parse(document.getElementById('dashboard-data').textContent);
-const PREFS_KEY = 'dla-control-center-v3';
-const state = { selectedFile: '', savedPerDashboard: {} };
-const $ = (id) => document.getElementById(id);
-const toast = $('toast');
-
-function freshnessBadge(freshness) {
-  const map = { fresh: 'success', stale: 'warning', missing: 'error' };
-  const tone = map[freshness] || 'neutral';
-  const label = String(freshness || 'unknown');
-  return `<span class="carbon-status-badge carbon-status-badge--${tone}"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>${escapeHtml(label)}</span></span>`;
+  <style id="dla-full-frame-style">
+html, body {
+  width: 100% !important;
+  max-width: none !important;
+  overflow-x: hidden !important;
 }
-
-function saveControlCenterPrefs() {
-  const item = selectedDashboard();
-  const perDashboard = Object.assign({}, state.savedPerDashboard || {});
-  if (item?.variants?.length) {
-    perDashboard[item.file] = {
-      variantFile: item.currentVariantFile || ''
-    };
-  }
-  state.savedPerDashboard = perDashboard;
-  try {
-    localStorage.setItem(PREFS_KEY, JSON.stringify({
-      selectedFile: state.selectedFile,
-      perDashboard
-    }));
-  } catch {
-    // ignore quota / private mode
-  }
+body {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
-
-function restoreControlCenterPrefs() {
-  let prefs = null;
-  try {
-    prefs = JSON.parse(localStorage.getItem(PREFS_KEY) || 'null');
-  } catch {
-    prefs = null;
-  }
-  if (!prefs) {
-    try {
-      prefs = JSON.parse(localStorage.getItem('dla-control-center-v2') || 'null');
-    } catch {
-      prefs = null;
-    }
-  }
-  if (!prefs) return;
-  if (prefs.selectedFile) state.selectedFile = String(prefs.selectedFile).split('||')[0];
-  if (prefs.perDashboard && typeof prefs.perDashboard === 'object') {
-    state.savedPerDashboard = prefs.perDashboard;
-    Object.entries(prefs.perDashboard).forEach(([file, cfg]) => {
-      const item = payload.dashboards.find(row => row.file === file);
-      if (item && cfg?.variantFile) item.currentVariantFile = cfg.variantFile;
-    });
-  }
+.wrap, .shell, .main, .container, .dashboard, .dashboard-shell, .page, main,
+.app-main, .content, .report, .report-shell {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
-
-function init() {
-  restoreControlCenterPrefs();
-  bindEvents();
-  render();
+.card, .panel, .section, .project-section, .chart-panel, .table-section {
+  max-width: none !important;
 }
-
-function bindEvents() {
-  $('dashboardCatalog').addEventListener('change', (event) => {
-    selectDashboard(event.target.value);
-  });
-  $('periodSelect').addEventListener('change', (event) => {
-    selectPeriod(event.target.value);
-  });
-  $('dashboardFrame').addEventListener('load', () => {
-    document.querySelector('.viewer-frame-wrap')?.classList.remove('is-loading');
-    setTimeout(expandFrameContent, 120);
-    setTimeout(checkIframeRenderHealth, 220);
-  });
-  $('dashboardFrame').addEventListener('load', expandFrameContent);
-  const refreshBtn = $('refreshBtn');
-  if (refreshBtn) refreshBtn.addEventListener('click', () => location.reload());
-}
-
-function filteredDashboards() {
-  return payload.dashboards.filter(item => item.exists);
-}
-
-function render() {
-  const rows = filteredDashboards();
-  ensureSelection(rows);
-  renderCatalog(rows);
-  renderPeriodSelect(selectedDashboard());
-  renderViewer();
-}
-
-function ensureSelection(rows) {
-  const stillVisible = rows.some(item => item.exists && item.file === state.selectedFile);
-  if (state.selectedFile && stillVisible) return;
-  const first = rows.find(item => item.exists);
-  state.selectedFile = first ? first.file : '';
-}
-
-function selectedDashboard() {
-  return payload.dashboards.find(item => item.file === state.selectedFile) || null;
-}
-
-function selectedVariant(item) {
-  if (!item?.variants?.length) return null;
-  return item.variants.find(row => row.file === item.currentVariantFile) || item.variants[0];
-}
-
-function renderCatalog(rows) {
-  const select = $('dashboardCatalog');
-  if (!rows.length) {
-    select.innerHTML = '<option value="" disabled>No dashboards available</option>';
-    updateCatalogFreshness(null);
-    renderPeriodSelect(null);
-    return;
-  }
-  const groups = [...new Set(rows.map(item => item.group))];
-  let html = '';
-  for (const group of groups) {
-    const items = rows.filter(item => item.group === group);
-    html += `<optgroup label="${escapeAttr(group)}">`;
-    for (const item of items) {
-      const sel = item.file === state.selectedFile ? ' selected' : '';
-      html += `<option value="${escapeAttr(item.file)}"${sel}>${escapeHtml(item.title)}</option>`;
-    }
-    html += '</optgroup>';
-  }
-  select.innerHTML = html;
-  select.value = state.selectedFile;
-  updateCatalogFreshness(selectedDashboard());
-}
-
-function renderPeriodSelect(item) {
-  const select = $('periodSelect');
-  const label = $('periodLabel');
-  if (!item?.variants?.length) {
-    select.classList.add('hidden');
-    label?.classList.add('hidden');
-    select.innerHTML = '';
-    return;
-  }
-  select.classList.remove('hidden');
-  label?.classList.remove('hidden');
-  const current = selectedVariant(item) || item.variants[0];
-  select.innerHTML = item.variants.map(row => {
-    const sel = row.file === current.file ? ' selected' : '';
-    return `<option value="${escapeAttr(row.file)}"${sel}>${escapeHtml(row.label)}</option>`;
-  }).join('');
-  select.value = current.file;
-}
-
-function updateCatalogFreshness(item) {
-  const el = $('catalogFreshness');
-  if (!item) { el.innerHTML = ''; return; }
-  const variant = selectedVariant(item);
-  const updated = (variant || item).modifiedDisplay || item.modifiedDisplay || '';
-  const parts = [];
-  if (updated) parts.push(escapeHtml(updated));
-  parts.push(freshnessBadge(item.freshness));
-  el.innerHTML = parts.join(' · ');
-}
-
-function selectDashboard(file) {
-  const item = payload.dashboards.find(row => row.file === file && row.exists);
-  if (!item) return;
-  state.selectedFile = file;
-  $('dashboardCatalog').value = file;
-  renderPeriodSelect(item);
-  updateCatalogFreshness(item);
-  renderViewer();
-  saveControlCenterPrefs();
-}
-
-function selectPeriod(variantFile) {
-  const item = selectedDashboard();
-  if (!item?.variants?.length) return;
-  const variant = item.variants.find(row => row.file === variantFile);
-  if (!variant) return;
-  item.currentVariantFile = variant.file;
-  renderPeriodSelect(item);
-  updateCatalogFreshness(item);
-  renderViewer();
-  saveControlCenterPrefs();
-}
-
-function renderViewer() {
-  const frameWrap = document.querySelector('.viewer-frame-wrap');
-  const item = selectedDashboard();
-  if (!item) {
-    $('dashboardFrame').removeAttribute('src');
-    $('viewerOpen').removeAttribute('href');
-    frameWrap?.classList.remove('is-loading');
-    return;
-  }
-  const variant = selectedVariant(item);
-  const frameItem = variant || item;
-  const bust = frameItem.modified ? String(frameItem.modified).replace(/[^0-9]/g, '').slice(0, 14) : Date.now();
-  frameWrap?.classList.add('is-loading');
-  $('dashboardFrame').src = `${frameItem.href}?v=${bust}`;
-  $('viewerOpen').href = `${frameItem.href}?v=${bust}`;
-  setTimeout(expandFrameContent, 250);
-  setTimeout(expandFrameContent, 900);
-}
-
-function checkIframeRenderHealth() {
-  const frame = $('dashboardFrame');
-  try {
-    const doc = frame.contentDocument || frame.contentWindow?.document;
-    const app = doc?.getElementById('app');
-    const root = doc?.querySelector('.dashboard-grid, main.shell, #main');
-    const htmlLen = (app?.innerHTML || root?.innerHTML || doc?.body?.innerHTML || '').trim().length;
-    if (doc && htmlLen < 40) {
-      showToast('Preview failed to render. Hard refresh (Ctrl+Shift+R) or use Open in tab.');
-    }
-  } catch {
-    // ignore cross-origin
-  }
-}
-
-function expandFrameContent() {
-  const frame = $('dashboardFrame');
-  try {
-    const doc = frame.contentDocument || frame.contentWindow.document;
-    if (!doc || doc.getElementById('dla-full-frame-style')) return;
-    const style = doc.createElement('style');
-    style.id = 'dla-full-frame-style';
-    style.textContent = `
-      html, body { width: 100% !important; max-width: none !important; overflow-x: hidden !important; }
-      body { margin-left: 0 !important; margin-right: 0 !important; }
-      .wrap, .shell, .main, .container, .dashboard, .dashboard-shell, .page, main {
-        width: 100% !important; max-width: none !important; margin-left: 0 !important; margin-right: 0 !important;
-      }
-      .card, .panel, .section, .project-section, .chart-panel { max-width: none !important; }
-    `;
-    doc.head.appendChild(style);
-  } catch {
-    // Cross-origin or protected frame. Local dashboards should allow this.
-  }
-}
-
-function showToast(message) {
-  toast.textContent = message;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 4200);
-}
-
-function escapeHtml(value) {
-  return String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
-}
-function escapeAttr(value) { return escapeHtml(value); }
-init();
-</script>
+</style>
+</head><body>
+<div class="carbon-page cds--g100" data-carbon-theme="g100"><a class="skip-link" href="#main-content">Skip to main content</a><header class="carbon-page-header"><nav aria-label="Breadcrumb"><ol class="carbon-page-header__breadcrumb"><li><a href="#">Digital Lead Assistant</a></li><li><a href="#">Annotation</a></li><li>Project coverage</li></ol></nav><div class="carbon-page-header__row"><h1 class="carbon-page-header__title">Annotation Project Coverage</h1><div class="carbon-page-header__actions"><span class="meta-pill">Cutoff: 2026-W33</span><span class="meta-pill">Generated: 10/08/2026 17:12</span></div></div></header><main id="main-content" class="carbon-page__content" role="main">
+<div class="carbon-grid carbon-grid--ann-project">
+  <p class="ax-section-title carbon-tile--span-16">A — Library upload coverage (AnnotationDB × Revit Library)</p><div class="carbon-grid--kpi-lib carbon-tile--span-16"><article class="carbon-tile carbon-kpi"><p class="carbon-kpi__label">Families to track</p><p class="carbon-kpi__value">2,390</p><p class="carbon-kpi__subtitle">AnnotationDB Active Data</p></article><article class="carbon-tile carbon-kpi" data-status="success"><p class="carbon-kpi__label">Uploaded (matched)</p><p class="carbon-kpi__value">797</p><p class="carbon-kpi__subtitle">33.3% coverage</p></article><article class="carbon-tile carbon-kpi" data-status="error"><p class="carbon-kpi__label">Remaining to upload</p><p class="carbon-kpi__value">1,592</p><p class="carbon-kpi__subtitle">Tracked, not in library</p></article><article class="carbon-tile carbon-kpi" data-status="info"><p class="carbon-kpi__label">Outside tracking</p><p class="carbon-kpi__value">1</p><p class="carbon-kpi__subtitle">Library active not in AnnotationDB list</p></article></div><p class="ax-section-note carbon-tile--span-16">Metric: <code>assistant_knowledge/metrics/annotation-family-upload-coverage.md</code> · cache @ 2026-08-10T17:12:44+07:00 · <a href="annotation_family_library_upload_dashboard.html">Open detail dashboard</a></p>
+  <p class="ax-section-title carbon-tile--span-16">B — TIDP ticket coverage (Master × Mantis)</p><div class="carbon-grid--kpi-tidp carbon-tile--span-16"><article class="carbon-tile carbon-kpi"><p class="carbon-kpi__label">TIDP families to create</p><p class="carbon-kpi__value">2,324</p></article><article class="carbon-tile carbon-kpi"><p class="carbon-kpi__label">Families with ticket</p><p class="carbon-kpi__value">1,796</p><p class="carbon-kpi__subtitle">77.3% coverage</p></article><article class="carbon-tile carbon-kpi"><p class="carbon-kpi__label">No ticket yet</p><p class="carbon-kpi__value">528</p></article><article class="carbon-tile carbon-kpi" data-status="success"><p class="carbon-kpi__label">Ahead</p><p class="carbon-kpi__value">709</p><p class="carbon-kpi__subtitle">plan vs actual</p></article><article class="carbon-tile carbon-kpi"><p class="carbon-kpi__label">Not due yet</p><p class="carbon-kpi__value">102</p><p class="carbon-kpi__subtitle">plan vs actual</p></article><article class="carbon-tile carbon-kpi" data-status="info"><p class="carbon-kpi__label">OnTrack</p><p class="carbon-kpi__value">131</p><p class="carbon-kpi__subtitle">plan vs actual</p></article><article class="carbon-tile carbon-kpi" data-status="error"><p class="carbon-kpi__label">Behind</p><p class="carbon-kpi__value">854</p><p class="carbon-kpi__subtitle">plan vs actual</p></article></div><p class="ax-section-note carbon-tile--span-16">Mantis: cache @ 2026-08-10T12:56:58+07:00 (requested cache) · TIDP: RFA_ISO_Master_Schedule_TIDP_Validation_Rev7.xlsx · <a href="digital_team_annotation_ticket_dashboard.html">TIDP Overview</a> · <a href="digital_team_annotation_status_dashboard.html">Member Workload</a> · <a href="annotation_digital_productivity_dashboard.html">Productivity</a></p>
+  <p class="ax-headline carbon-tile--span-16" role="status">Library: 797 / 2,390 uploaded (33.3%) · TIDP: 1,796 / 2,324 with ticket (77.3%) · 854 behind plan</p>
+  
+<ul class="ax-links carbon-tile--span-16" aria-label="Related Annotation dashboards">
+  <li><a href="annotation_family_library_upload_dashboard.html">Family library upload (detail)</a></li>
+  <li><a href="digital_team_annotation_ticket_dashboard.html">TIDP ticket overview</a></li>
+  <li><a href="digital_team_annotation_status_dashboard.html">Member workload</a></li>
+  <li><a href="annotation_digital_productivity_dashboard.html">Digital productivity</a></li>
+</ul>
+</div>
+<script id="dashboard-data" type="application/json">{"title":"DCMvn Annotation Project — Coverage Overview","cutoff":"2026-W33","generated_at":"10/08/2026 17:12","library_upload":{"available":true,"error":null,"generated_at":"2026-08-10T17:12:44+07:00","kpis":{"total_to_track":2390,"uploaded_matched":797,"remaining_to_upload":1592,"upload_coverage_pct":33.3,"library_active_total":798,"uploaded_not_in_tracking":1},"definitions":{"total_to_track":"DISTINCT FamilyName in AnnotationDB.public.annotation_framework (UI Active Data = 2390)","uploaded_matched":"DCMvn_Revit_Library active families (is_trashed=false) matched to tracking on base name without .rfa","remaining_to_upload":"Tracked families with no matching active library upload"},"detail_file":"annotation_family_library_upload_dashboard.html"},"tidp":{"total":2324,"with_ticket":1796,"no_ticket":528,"coverage_pct":77.3,"ahead":709,"not_due":102,"on_track":131,"late":854,"tidp_source":"RFA_ISO_Master_Schedule_TIDP_Validation_Rev7.xlsx","mantis_line":"Mantis: cache @ 2026-08-10T12:56:58+07:00 (requested cache)","cache_warning":"","detail_file":"digital_team_annotation_ticket_dashboard.html","status_file":"digital_team_annotation_status_dashboard.html","productivity_file":"annotation_digital_productivity_dashboard.html"},"metric_docs":{"library_upload":"assistant_knowledge/metrics/annotation-family-upload-coverage.md","tidp":"assistant_knowledge/memory/tidp.md"}}</script>
 </main></div>
 </body>
 </html>
