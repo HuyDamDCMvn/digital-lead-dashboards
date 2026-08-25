@@ -12,6 +12,165 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@carbon/charts@1.27.16/dist/umd/bundle.umd.js"></script>
 
+
+<script>
+(function () {
+  function csvLabel() {
+    var lang = document.documentElement.getAttribute("data-dla-lang")
+      || localStorage.getItem("dla-annotation-productivity-lang")
+      || localStorage.getItem("dla-annotation-member-lang")
+      || "en";
+    return lang === "vi" ? "Xuất CSV" : "Export CSV";
+  }
+  function csvCell(value) {
+    var text = String(value == null ? "" : value).replace(/\u00a0/g, " ").trim();
+    if (/[",\r\n]/.test(text)) return '"' + text.replace(/"/g, '""') + '"';
+    return text;
+  }
+  function slugify(text) {
+    return String(text || "table")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 80) || "table";
+  }
+  function tableFilename(table) {
+    var title = "";
+    var container = table.closest(".carbon-data-table-container");
+    if (container) {
+      var h = container.querySelector(".carbon-data-table-container__title, caption");
+      if (h) title = h.textContent;
+    }
+    if (!title) {
+      var cap = table.querySelector("caption");
+      if (cap) title = cap.textContent;
+    }
+    if (!title) {
+      var modalTitle = table.closest("[role='dialog']");
+      if (modalTitle) {
+        var ht = modalTitle.querySelector("h2, .heat-modal__title, .member-modal__title, .gap-modal__title");
+        if (ht) title = ht.textContent;
+      }
+    }
+    if (!title) title = table.id || "table";
+    var day = new Date().toISOString().slice(0, 10);
+    return slugify(title) + "-" + day + ".csv";
+  }
+  function tableToCsv(table) {
+    var lines = [];
+    table.querySelectorAll("tr").forEach(function (tr) {
+      if (tr.closest("[hidden]")) return;
+      var cells = [];
+      tr.querySelectorAll("th,td").forEach(function (cell) {
+        if (cell.matches("th input, td input")) return;
+        var clone = cell.cloneNode(true);
+        clone.querySelectorAll("input, select, button, .member-modal__th-filter").forEach(function (n) { n.remove(); });
+        cells.push(csvCell(clone.textContent));
+      });
+      if (cells.length) lines.push(cells.join(","));
+    });
+    return lines.join("\r\n");
+  }
+  function downloadCsv(filename, text) {
+    var blob = new Blob(["\ufeff" + text], { type: "text/csv;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+  function shouldSkip(table) {
+    if (!table || table.dataset.dlaCsvSkip === "1") return true;
+    if (table.id && /head-table$/i.test(table.id)) return true;
+    if (table.closest("#gap-modal-head-wrap")) return true;
+    if (table.closest("svg")) return true;
+    return false;
+  }
+  function findHost(table) {
+    var own = table.closest(".carbon-data-table-container");
+    if (own) {
+      var ownHead = own.querySelector(".carbon-toolbar__actions, .carbon-data-table-container__head");
+      if (ownHead) return ownHead;
+    }
+    var dialog = table.closest("[role='dialog']");
+    if (!dialog) return null;
+    var tables = Array.prototype.slice.call(
+      dialog.querySelectorAll("table.cds--data-table, table.carbon-data-table, table.gap-modal__table")
+    ).filter(function (item) { return !shouldSkip(item); });
+    if (tables[0] === table) {
+      return dialog.querySelector(".heat-modal__header, .member-modal__header, .gap-modal__actions, .gap-modal__head");
+    }
+    return null;
+  }
+  function createButton() {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "cds--btn cds--btn--tertiary cds--btn--sm dla-csv-export";
+    btn.textContent = csvLabel();
+    btn.setAttribute("aria-label", csvLabel());
+    return btn;
+  }
+  function bindTable(table) {
+    if (shouldSkip(table) || table.dataset.dlaCsvBound === "1") return;
+    table.dataset.dlaCsvBound = "1";
+    var host = findHost(table);
+    var btn = null;
+    if (host) {
+      btn = host.querySelector(".dla-csv-export, #gap-modal-export-csv");
+    }
+    if (!btn) {
+      btn = createButton();
+      if (host) {
+        var closeBtn = host.querySelector(".heat-modal__close, .member-modal__close, [data-gap-modal-close]");
+        if (closeBtn && closeBtn.parentNode === host) host.insertBefore(btn, closeBtn);
+        else host.appendChild(btn);
+      } else {
+        var wrap = table.closest(".carbon-data-table-wrap") || table.parentElement;
+        var bar = wrap && wrap.previousElementSibling && wrap.previousElementSibling.classList.contains("dla-table-export-bar")
+          ? wrap.previousElementSibling
+          : null;
+        if (!bar) {
+          bar = document.createElement("div");
+          bar.className = "dla-table-export-bar";
+          if (wrap && wrap.parentNode) wrap.parentNode.insertBefore(bar, wrap);
+          else table.parentNode.insertBefore(bar, table);
+        }
+        bar.appendChild(btn);
+      }
+    }
+    if (btn.dataset.dlaCsvClick === "1") return;
+    btn.dataset.dlaCsvClick = "1";
+    btn.addEventListener("click", function () {
+      var csv = tableToCsv(table);
+      if (!csv) return;
+      downloadCsv(tableFilename(table), csv);
+    });
+  }
+  function bindAll() {
+    document.querySelectorAll("table.cds--data-table, table.carbon-data-table, table.gap-modal__table").forEach(bindTable);
+    document.querySelectorAll(".dla-csv-export").forEach(function (btn) {
+      btn.textContent = csvLabel();
+      btn.setAttribute("aria-label", csvLabel());
+    });
+  }
+  window.dlaBindTableCsvExport = bindAll;
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bindAll);
+  } else {
+    bindAll();
+  }
+  var timer = 0;
+  var obs = new MutationObserver(function () {
+    clearTimeout(timer);
+    timer = setTimeout(bindAll, 80);
+  });
+  obs.observe(document.documentElement, { childList: true, subtree: true });
+})();
+</script>
+
 <style>
 
 :root,
@@ -418,6 +577,7 @@ a:focus-visible {
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
+  margin-left: auto;
 }
 
 .carbon-kpi {
@@ -479,6 +639,21 @@ a:focus-visible {
   gap: 8px;
   padding: 12px 16px;
   border-bottom: 1px solid var(--cds-border-subtle-01);
+}
+.dla-table-export-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-height: 40px;
+  padding: 4px 12px;
+  background: var(--cds-layer-01);
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+}
+.heat-modal__header .dla-csv-export,
+.member-modal__header .dla-csv-export,
+.gap-modal__actions .dla-csv-export {
+  margin-left: auto;
 }
 .carbon-data-table-container__title {
   margin: 0;
@@ -1031,7 +1206,7 @@ a:focus-visible {
   </div>
 </section>
 <div class="cc-toast" id="toast" role="status" aria-live="polite"></div>
-<script id="dashboard-data" type="application/json">{"generatedAt":"25/08/2026 10:36","dashboards":[{"title":"Annotation Digital Productivity","file":"annotation_digital_productivity_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/refresh_mantis_dashboard_cache.py --start 2025-01-01 --end YYYY-MM-DD; python scripts/extract_annotation_digital_productivity.py --project-id 396 --source cache; python scripts/build_annotation_productivity_dashboard.py --data-dir data/reports/annotation_digital_productivity --output dashboard_reports/annotation_digital_productivity_dashboard.html","source":"Mantis cache project 396 (after cache refresh)","memory":"Interactive tickets count only when note, status change, and handler change come from the same actor.","exists":true,"href":"annotation_digital_productivity_dashboard.html","bytes":2269173,"size":"2.2 MB","modified":"2026-08-25T03:36:43.514330+00:00","modifiedDisplay":"25/08/2026 10:36","ageDays":0,"freshness":"fresh","dataSignal":"25/08/2026 10:36","registered":true,"layoutId":"annotation-productivity"},{"title":"Annotation Member Workload","file":"digital_team_annotation_status_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/build_annotation_member_ticket_dashboard_html.py --cutoff 2026-W35 --output dashboard_reports/digital_team_annotation_status_dashboard.html --source cache","source":"TIDP Master Rev8 + Mantis cache project 396 (stepwise uses same cache)","memory":"COO primary member workload; active TIDP family tickets handled by Digital Team.","exists":true,"href":"digital_team_annotation_status_dashboard.html","bytes":499724,"size":"488.0 KB","modified":"2026-08-25T03:36:44.016962+00:00","modifiedDisplay":"25/08/2026 10:36","ageDays":0,"freshness":"fresh","dataSignal":"25/08/2026 09:32","registered":true,"layoutId":"annotation-member-workload"},{"title":"Digital Team Time Tracking","file":"digital_team_time_tracking_dashboard_2026-08.html","group":"Time Tracking","owner":"Digital Team","status":"Primary","refresh":"python -m dashboard_assistant --month 2026-08 --team digital --react --limit 20 --strict-dq --source cache","source":"Mantis cache time tracking","memory":"Generalized time tracking dashboard: pick a month/range in the Dashboard catalog; run cache refresh then rebuild with --source cache before reporting.","exists":true,"href":"digital_team_time_tracking_dashboard_2026-08.html","bytes":528395,"size":"516.0 KB","modified":"2026-08-25T03:36:44.090535+00:00","modifiedDisplay":"25/08/2026 10:36","ageDays":0,"freshness":"fresh","dataSignal":"25/08/2026 09:32","registered":true,"layoutId":"digital-team-time-tracking:2026-08","variants":[{"label":"01/08/2026 to 31/08/2026","file":"digital_team_time_tracking_dashboard_2026-08.html","href":"digital_team_time_tracking_dashboard_2026-08.html","layoutId":"digital-team-time-tracking:2026-08","sortKey":"2026-08","start":"2026-08-01","end":"2026-08-31","cw":"","exists":true,"bytes":528395,"size":"516.0 KB","modified":"2026-08-25T03:36:44.090535+00:00","modifiedDisplay":"25/08/2026 10:36","ageDays":0,"freshness":"fresh","dataSignal":"25/08/2026 09:32"}],"variantCount":1,"currentVariantFile":"digital_team_time_tracking_dashboard_2026-08.html","rangeRefreshTemplate":"python -m dashboard_assistant --month {from}..{to} --team digital --react --limit 20 --strict-dq --source cache"},{"title":"Digital Team Work Current","file":"digital_team_work_dashboard_current.html","group":"Digital Team","owner":"Digital Team","status":"Operational","refresh":"python build_digital_dashboard.py --output dashboard_reports/digital_team_work_dashboard_current.html --source cache","source":"Mantis cache open work","memory":"Open ticket dashboard grouped by project with due assessment and status badges.","exists":true,"href":"digital_team_work_dashboard_current.html","bytes":23811475,"size":"22.7 MB","modified":"2026-08-25T03:36:45.931965+00:00","modifiedDisplay":"25/08/2026 10:36","ageDays":0,"freshness":"fresh","dataSignal":"2026-08-25T09:32:27+07:00","registered":true,"layoutId":"digital-team-work-current"},{"title":"ANNOTATION PROJECT-SUMMARY REPORT TO COO","file":"annotation_project_summary_report_to_coo_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/refresh_revit_library_family_cache.py; python scripts/build_annotation_family_gap_dashboard.py --cutoff 2026-W35 --source cache","source":"Bridge crosswalk: AnnotationDB\u00d7Revit Library \u00d7 TIDP Master \u00d7 Mantis; counts only \u2014 metrics/annotation-family-upload-coverage.md + memory/tidp.md","memory":"Primary COO Annotation summary: 3-layer gap bridge + Catalog + Library / TIDP regions.","exists":true,"href":"annotation_project_summary_report_to_coo_dashboard.html","bytes":4472065,"size":"4.3 MB","modified":"2026-08-25T03:36:43.949739+00:00","modifiedDisplay":"25/08/2026 10:36","ageDays":0,"freshness":"fresh","dataSignal":"25/08/2026 09:32","registered":true,"layoutId":"annotation-project-summary-report-to-coo"}],"groups":["Annotation","Digital Team","Time Tracking"],"cache":{"generated_at":"2026-08-25T09:31:19+07:00","cache_schema_version":3,"source":"MariaDB/Mantis","database":"mantis","range":{"start":"2025-01-01","end":"2026-10-01"},"project_ids":[396,357,400,401],"digital_team_users":["hu.dam","ht.nguyen","dahn.nguyen","nd.huynh","kd.doan","lk.dang","qd.nguyen","qn.ha"],"files":{"sqlite":"data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite","manifest":"data/mantis_dashboard_cache/manifest.json","extracts":"data/mantis_dashboard_cache/extracts"},"tables":{"projects":4,"users":93,"tickets":16794,"time_entries":29083,"bug_history":244888,"bugnotes":28206,"work_dashboard_team_members":8,"work_dashboard_rows":711,"work_dashboard_notes":3575,"work_dashboard_history":29392,"annotation_p396_tickets":2528,"annotation_p396_history":31771,"annotation_p396_rename":431,"annotation_p396_note_authors":8048,"annotation_p396_users":408},"usage":{"refresh":"python scripts/refresh_mantis_dashboard_cache.py --start YYYY-MM-DD --end YYYY-MM-DD","sqlite":"Read data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite from dashboard builders."}},"cacheDisplay":"01/01/2025 to 01/10/2026","duplicateGroups":[],"metrics":{"total":5,"registered":5,"fresh":5,"stale":0,"missing":0,"latest":"Digital Team Work Current","cacheRows":395940},"templateSource":"https://github.com/HuyDamDCMvn/DigitalLeadAssistant.git"}</script>
+<script id="dashboard-data" type="application/json">{"generatedAt":"25/08/2026 10:53","dashboards":[{"title":"Annotation Digital Productivity","file":"annotation_digital_productivity_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/refresh_mantis_dashboard_cache.py --start 2025-01-01 --end YYYY-MM-DD; python scripts/extract_annotation_digital_productivity.py --project-id 396 --source cache; python scripts/build_annotation_productivity_dashboard.py --data-dir data/reports/annotation_digital_productivity --output dashboard_reports/annotation_digital_productivity_dashboard.html","source":"Mantis cache project 396 (after cache refresh)","memory":"Interactive tickets count only when note, status change, and handler change come from the same actor.","exists":true,"href":"annotation_digital_productivity_dashboard.html","bytes":2276274,"size":"2.2 MB","modified":"2026-08-25T03:53:25.399449+00:00","modifiedDisplay":"25/08/2026 10:53","ageDays":0,"freshness":"fresh","dataSignal":"25/08/2026 10:52","registered":true,"layoutId":"annotation-productivity"},{"title":"Annotation Member Workload","file":"digital_team_annotation_status_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/build_annotation_member_ticket_dashboard_html.py --cutoff 2026-W35 --output dashboard_reports/digital_team_annotation_status_dashboard.html --source cache","source":"TIDP Master Rev8 + Mantis cache project 396 (stepwise uses same cache)","memory":"COO primary member workload; active TIDP family tickets handled by Digital Team.","exists":true,"href":"digital_team_annotation_status_dashboard.html","bytes":506848,"size":"495.0 KB","modified":"2026-08-25T03:53:26.023285+00:00","modifiedDisplay":"25/08/2026 10:53","ageDays":0,"freshness":"fresh","dataSignal":"25/08/2026 10:52","registered":true,"layoutId":"annotation-member-workload"},{"title":"Digital Team Time Tracking","file":"digital_team_time_tracking_dashboard_2026-08.html","group":"Time Tracking","owner":"Digital Team","status":"Primary","refresh":"python -m dashboard_assistant --month 2026-08 --team digital --react --limit 20 --strict-dq --source cache","source":"Mantis cache time tracking","memory":"Generalized time tracking dashboard: pick a month/range in the Dashboard catalog; run cache refresh then rebuild with --source cache before reporting.","exists":true,"href":"digital_team_time_tracking_dashboard_2026-08.html","bytes":534896,"size":"522.4 KB","modified":"2026-08-25T03:53:26.141676+00:00","modifiedDisplay":"25/08/2026 10:53","ageDays":0,"freshness":"fresh","dataSignal":"25/08/2026 10:52","registered":true,"layoutId":"digital-team-time-tracking:2026-08","variants":[{"label":"01/08/2026 to 31/08/2026","file":"digital_team_time_tracking_dashboard_2026-08.html","href":"digital_team_time_tracking_dashboard_2026-08.html","layoutId":"digital-team-time-tracking:2026-08","sortKey":"2026-08","start":"2026-08-01","end":"2026-08-31","cw":"","exists":true,"bytes":534896,"size":"522.4 KB","modified":"2026-08-25T03:53:26.141676+00:00","modifiedDisplay":"25/08/2026 10:53","ageDays":0,"freshness":"fresh","dataSignal":"25/08/2026 10:52"}],"variantCount":1,"currentVariantFile":"digital_team_time_tracking_dashboard_2026-08.html","rangeRefreshTemplate":"python -m dashboard_assistant --month {from}..{to} --team digital --react --limit 20 --strict-dq --source cache"},{"title":"Digital Team Work Current","file":"digital_team_work_dashboard_current.html","group":"Digital Team","owner":"Digital Team","status":"Operational","refresh":"python build_digital_dashboard.py --output dashboard_reports/digital_team_work_dashboard_current.html --source cache","source":"Mantis cache open work","memory":"Open ticket dashboard grouped by project with due assessment and status badges.","exists":true,"href":"digital_team_work_dashboard_current.html","bytes":23817982,"size":"22.7 MB","modified":"2026-08-25T03:53:27.923817+00:00","modifiedDisplay":"25/08/2026 10:53","ageDays":0,"freshness":"fresh","dataSignal":"2026-08-25T10:52:36+07:00","registered":true,"layoutId":"digital-team-work-current"},{"title":"ANNOTATION PROJECT-SUMMARY REPORT TO COO","file":"annotation_project_summary_report_to_coo_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/refresh_revit_library_family_cache.py; python scripts/build_annotation_family_gap_dashboard.py --cutoff 2026-W35 --source cache","source":"Bridge crosswalk: AnnotationDB\u00d7Revit Library \u00d7 TIDP Master \u00d7 Mantis; counts only \u2014 metrics/annotation-family-upload-coverage.md + memory/tidp.md","memory":"Primary COO Annotation summary: 3-layer gap bridge + Catalog + Library / TIDP regions.","exists":true,"href":"annotation_project_summary_report_to_coo_dashboard.html","bytes":4478571,"size":"4.3 MB","modified":"2026-08-25T03:53:25.911905+00:00","modifiedDisplay":"25/08/2026 10:53","ageDays":0,"freshness":"fresh","dataSignal":"25/08/2026 10:52","registered":true,"layoutId":"annotation-project-summary-report-to-coo"}],"groups":["Annotation","Digital Team","Time Tracking"],"cache":{"generated_at":"2026-08-25T09:31:19+07:00","cache_schema_version":3,"source":"MariaDB/Mantis","database":"mantis","range":{"start":"2025-01-01","end":"2026-10-01"},"project_ids":[396,357,400,401],"digital_team_users":["hu.dam","ht.nguyen","dahn.nguyen","nd.huynh","kd.doan","lk.dang","qd.nguyen","qn.ha"],"files":{"sqlite":"data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite","manifest":"data/mantis_dashboard_cache/manifest.json","extracts":"data/mantis_dashboard_cache/extracts"},"tables":{"projects":4,"users":93,"tickets":16794,"time_entries":29083,"bug_history":244888,"bugnotes":28206,"work_dashboard_team_members":8,"work_dashboard_rows":711,"work_dashboard_notes":3575,"work_dashboard_history":29392,"annotation_p396_tickets":2528,"annotation_p396_history":31771,"annotation_p396_rename":431,"annotation_p396_note_authors":8048,"annotation_p396_users":408},"usage":{"refresh":"python scripts/refresh_mantis_dashboard_cache.py --start YYYY-MM-DD --end YYYY-MM-DD","sqlite":"Read data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite from dashboard builders."}},"cacheDisplay":"01/01/2025 to 01/10/2026","duplicateGroups":[],"metrics":{"total":5,"registered":5,"fresh":5,"stale":0,"missing":0,"latest":"Digital Team Work Current","cacheRows":395940},"templateSource":"https://github.com/HuyDamDCMvn/DigitalLeadAssistant.git"}</script>
 <script>
 const payload = JSON.parse(document.getElementById('dashboard-data').textContent);
 const PREFS_KEY = 'dla-control-center-v3';
