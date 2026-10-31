@@ -1,0 +1,2287 @@
+<!doctype html>
+<html lang="en" data-carbon-theme="g100" class="cds--g100">
+<head>
+<script id="dla-theme-boot">
+(function () {
+  var KEY = "dla-theme", OK = { g10: 1, g100: 1 };
+  var root = document.documentElement;
+  try { if (window.top !== window) root.classList.add("dla-embedded"); } catch (e) { root.classList.add("dla-embedded"); }
+  function param() { try { var q = new URLSearchParams(location.search).get("theme"); return OK[q] ? q : ""; } catch (e) { return ""; } }
+  function stored() { try { var s = localStorage.getItem(KEY); return OK[s] ? s : ""; } catch (e) { return ""; } }
+  function system() { try { return window.matchMedia("(prefers-color-scheme: light)").matches ? "g10" : "g100"; } catch (e) { return "g100"; } }
+  function resolve() { return param() || stored() || system(); }
+  function retheme(node, t) {
+    if (!node || node.nodeType !== 1) return;
+    if (node.hasAttribute("data-carbon-theme") && node.getAttribute("data-carbon-theme") !== t) node.setAttribute("data-carbon-theme", t);
+    if (node.classList.contains("cds--g100") || node.classList.contains("cds--g10")) {
+      node.classList.remove(t === "g10" ? "cds--g100" : "cds--g10");
+      node.classList.add("cds--" + t);
+    }
+  }
+  function sweep(scope, t) {
+    retheme(scope, t);
+    if (scope.querySelectorAll) Array.prototype.forEach.call(scope.querySelectorAll("[data-carbon-theme], .cds--g100, .cds--g10"), function (n) { retheme(n, t); });
+  }
+  /* The toggle is an action button: its label names the action ("Switch to dark/light theme"),
+     so it carries no aria-pressed (a changing label plus aria-pressed would contradict itself). */
+  var ICONS = {
+    sun: "M16 12.005a4 4 0 1 1-4 4a4.005 4.005 0 0 1 4-4m0-2a6 6 0 1 0 6 6a6 6 0 0 0-6-6zM5.394 6.813l1.414-1.415l3.506 3.506L8.9 10.318zM2 15.005h5v2H2zm3.394 10.193L8.9 21.692l1.414 1.414l-3.506 3.506zM15 25.005h2v5h-2zm6.687-1.9l1.414-1.414l3.506 3.506l-1.414 1.414zm3.313-8.1h5v2h-5zm-3.313-6.101l3.506-3.506l1.414 1.414l-3.506 3.506zM15 2.005h2v5h-2z",
+    moon: "M13.502 5.414a15.075 15.075 0 0 0 11.594 18.194a11.113 11.113 0 0 1-7.975 3.39c-.138 0-.278.005-.418 0a11.094 11.094 0 0 1-3.2-21.584M14.98 3a1.002 1.002 0 0 0-.175.016a13.096 13.096 0 0 0 1.825 25.981c.164.006.328 0 .49 0a13.072 13.072 0 0 0 10.703-5.555a1.01 1.01 0 0 0-.783-1.565A13.08 13.08 0 0 1 15.89 4.38A1.015 1.015 0 0 0 14.98 3z"
+  };
+  function syncToggles(t) {
+    var label = t === "g10" ? "Switch to dark theme" : "Switch to light theme";
+    var icon = t === "g10" ? "moon" : "sun";
+    Array.prototype.forEach.call(document.querySelectorAll(".dla-theme-toggle"), function (b) {
+      b.removeAttribute("aria-pressed");
+      if (b.getAttribute("title") !== label) b.setAttribute("title", label);
+      var l = b.querySelector(".dla-theme-toggle__label");
+      if (l && l.textContent !== label) l.textContent = label;
+      var svg = b.querySelector("svg"), path = svg && svg.querySelector("path");
+      if (svg && svg.getAttribute("data-dla-icon") !== icon) {
+        if (path) path.setAttribute("d", ICONS[icon]);
+        svg.setAttribute("data-dla-icon", icon);
+      }
+    });
+  }
+  function apply(t) {
+    if (!OK[t]) return;
+    var changed = window.__dlaTheme !== t;
+    window.__dlaTheme = t;
+    root.setAttribute("data-carbon-theme", t);
+    sweep(root, t);
+    syncToggles(t);
+    if (changed) { try { window.dispatchEvent(new CustomEvent("dla-theme", { detail: t })); } catch (e) {} }
+  }
+  function set(t) {
+    if (!OK[t]) return;
+    try { localStorage.setItem(KEY, t); } catch (e) {}
+    if (param()) {
+      try { var u = new URL(location.href); u.searchParams.set("theme", t); history.replaceState(history.state, "", u.pathname + u.search + u.hash); } catch (e) {}
+    }
+    apply(t);
+  }
+  window.dlaTheme = { resolve: resolve, apply: apply, set: set, key: KEY };
+  apply(resolve());
+  new MutationObserver(function (records) {
+    var t = window.__dlaTheme;
+    var toggle = false;
+    records.forEach(function (r) { Array.prototype.forEach.call(r.addedNodes, function (n) {
+      if (n.nodeType !== 1) return;
+      sweep(n, t);
+      if (!toggle && (n.matches(".dla-theme-toggle") || n.querySelector(".dla-theme-toggle"))) toggle = true;
+    }); });
+    if (toggle) syncToggles(t);
+  }).observe(root, { childList: true, subtree: true });
+  document.addEventListener("DOMContentLoaded", function () { apply(window.__dlaTheme); });
+  window.addEventListener("storage", function (e) { if (e.key === KEY && !param() && !root.classList.contains("dla-embedded")) apply(resolve()); });
+  try {
+    window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", function () { if (!param() && !stored()) apply(system()); });
+  } catch (e) {}
+  window.addEventListener("message", function (e) {
+    var d = e.data;
+    if (!d || d.type !== "dla-theme" || !OK[d.theme]) return;
+    if (e.source !== window.parent || e.origin !== location.origin) return;
+    apply(d.theme);
+  });
+})();
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://1.www.s81c.com" crossorigin>
+<link rel="icon" href="data:,">
+<title>Dashboard Control Center</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@carbon/styles@1/css/styles.min.css">
+<link rel="stylesheet" href="https://1.www.s81c.com/common/carbon/plex/sans.css">
+
+
+
+<style>
+
+:root,
+[data-carbon-theme="g100"],
+.cds--g100 {
+  color-scheme: dark;
+
+  /* Carbon Gray 100 tokens */
+  --cds-background: #161616;
+  --cds-layer-01: #262626;
+  --cds-layer-02: #393939;
+  --cds-layer-03: #525252;
+  --cds-text-primary: #f4f4f4;
+  --cds-text-secondary: #c6c6c6;
+  --cds-text-helper: #8d8d8d;
+  --cds-interactive: #4589ff;
+  --cds-button-primary: #0f62fe;
+  --cds-button-primary-hover: #0050e6;
+  --cds-text-on-color: #ffffff;
+  --cds-link-primary: #78a9ff;
+  --cds-border-subtle-01: #525252;
+  --cds-border-strong-01: #6f6f6f;
+  --cds-support-error: #fa4d56;
+  --cds-support-success: #42be65;
+  --cds-support-warning: #f1c21b;
+  --cds-support-info: #4589ff;
+  --cds-focus: #ffffff;
+  --cds-layer-hover-01: #333333;
+  --cds-layer-selected-01: #393939;
+  --cds-overlay: rgba(0, 0, 0, 0.7);
+  --cds-skeleton-element: #353535;
+
+  /* Carbon motion */
+  --cds-motion-standard-productive: cubic-bezier(0.2, 0, 0.38, 0.9);
+  --cds-motion-standard-expressive: cubic-bezier(0.4, 0.14, 0.3, 1);
+  --cds-motion-duration-fast-01: 70ms;
+  --cds-motion-duration-moderate-01: 150ms;
+  --cds-motion-duration-moderate-02: 240ms;
+  --cds-transition: var(--cds-motion-duration-fast-01) var(--cds-motion-standard-productive);
+  --cds-transition-panel: var(--cds-motion-duration-moderate-01) var(--cds-motion-standard-productive);
+  --cds-transition-overlay: var(--cds-motion-duration-moderate-02) var(--cds-motion-standard-productive);
+
+  /* Carbon breakpoints (min-width) */
+  --cds-breakpoint-sm: 320px;
+  --cds-breakpoint-md: 672px;
+  --cds-breakpoint-lg: 1056px;
+  --cds-breakpoint-xlg: 1312px;
+  --cds-breakpoint-max: 1584px;
+
+  /* Typography — IBM Plex Sans productive */
+  --cds-font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --cds-type-body-compact-01: 0.875rem;
+  --cds-type-heading-compact-01: 0.875rem;
+  --cds-type-heading-03: 1.25rem;
+  --cds-type-heading-04: 1.75rem;
+  --cds-type-label-01: 0.75rem;
+
+  /* Legacy bridge — existing dashboard CSS */
+  --bg: var(--cds-background);
+  --panel: var(--cds-layer-01);
+  --surface-raised: var(--cds-layer-02);
+  --ink: var(--cds-text-primary);
+  --muted: var(--cds-text-secondary);
+  --line: var(--cds-border-subtle-01);
+  --accent: var(--cds-interactive);
+  --accent-strong: #0f62fe;
+  --accent-soft: rgba(69, 137, 255, 0.15);
+  --hero-bg: var(--cds-layer-02);
+  --shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.32);
+  --radius: 0;
+  --radius-lg: 0;
+  --font: var(--cds-font-family);
+  --transition: var(--cds-transition);
+  --focus-ring: 0 0 0 2px var(--cds-focus);
+  --sidebar: var(--cds-layer-02);
+  --danger: var(--cds-support-error);
+  --danger-soft: rgba(250, 77, 86, 0.15);
+  --success: var(--cds-support-success);
+  --success-soft: rgba(66, 190, 101, 0.15);
+  --warning: var(--cds-support-warning);
+  --warning-soft: rgba(241, 194, 27, 0.15);
+  --control-height: 40px;
+  --type-kpi: var(--cds-type-heading-04);
+  --type-section: var(--cds-type-heading-03);
+  --type-label: var(--cds-type-label-01);
+}
+
+
+* { box-sizing: border-box; }
+html {
+  overflow-x: clip;
+  font-size: 100%;
+}
+body {
+  margin: 0;
+  font-family: var(--cds-font-family);
+  font-size: var(--cds-type-body-compact-01);
+  font-weight: 400;
+  letter-spacing: 0.16px;
+  color: var(--cds-text-primary);
+  background: var(--cds-background);
+  line-height: 1.29;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  max-width: 100%;
+}
+a { color: var(--cds-link-primary); }
+a:hover { color: var(--cds-interactive); }
+.table-wrap, .compliance-wrap, .heatmap-wrap {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.table-wrap > table,
+.compliance-wrap > table,
+.heatmap-wrap > table {
+  max-width: none;
+}
+main, .wrap, .shell, .app, .dashboard-grid, .grid-nested, .grid-cell,
+.project-stack, .project-section, .member-section, .member, .panel, .card {
+  max-width: 100%;
+  min-width: 0;
+}
+@media (max-width: 767px) {
+  .project-stack, .project-section, .member-section, .member, .members {
+    overflow-x: clip;
+  }
+}
+.chip button, .filter-chip button, [data-clear] {
+  min-width: 28px;
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--cds-focus);
+  outline-offset: 2px;
+}
+.skip-link,
+.cds--skip-to-content {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  z-index: 1000;
+  padding: 8px 12px;
+  background: var(--cds-button-primary);
+  color: var(--cds-text-on-color);
+  border-radius: 0;
+  text-decoration: none;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: background var(--cds-transition);
+}
+.skip-link:focus, .skip-link:focus-visible,
+.cds--skip-to-content:focus, .cds--skip-to-content:focus-visible {
+  clip: auto;
+  clip-path: none;
+  height: auto;
+  width: auto;
+  overflow: visible;
+  outline: 2px solid var(--cds-focus);
+  outline-offset: 2px;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+a:focus-visible {
+  outline: 2px solid var(--cds-focus);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Carbon 2x Grid — 16-column condensed (1px gutters)                 */
+/* ------------------------------------------------------------------ */
+.carbon-grid {
+  display: grid;
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+  gap: 1px;
+  align-items: start;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 24px;
+  background: var(--cds-border-subtle-01);
+}
+.carbon-grid--md { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+.carbon-grid--sm { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+.carbon-tile,
+.cds--tile.carbon-tile {
+  background: var(--cds-layer-01);
+  padding: 16px;
+  border: 1px solid var(--cds-border-subtle-01);
+  min-width: 0;
+  transition: background var(--cds-transition);
+}
+.carbon-tile:hover { background: var(--cds-layer-hover-01); }
+.carbon-tile--span-4 { grid-column: span 4; }
+.carbon-tile--span-8 { grid-column: span 8; }
+.carbon-tile--span-16 { grid-column: span 16; }
+
+/* Legacy 12-column grid — backward compat for existing builders */
+:root { --layout-gap: 1px; }
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--layout-gap);
+  align-items: start;
+  background: var(--cds-border-subtle-01);
+}
+.grid-cell { min-width: 0; }
+.grid-span-12 { grid-column: span 12; }
+.grid-span-8 { grid-column: span 8; }
+.grid-span-6 { grid-column: span 6; }
+.grid-span-4 { grid-column: span 4; }
+.grid-span-3 { grid-column: span 3; }
+.grid-span-2 { grid-column: span 2; }
+.grid-nested {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--layout-gap);
+  width: 100%;
+  grid-column: span 12;
+  align-items: start;
+}
+
+/* Carbon breakpoints */
+@media (max-width: 1055px) {
+  .carbon-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); padding: 0 16px; }
+  .carbon-tile--span-16 { grid-column: span 8; }
+  .carbon-tile--span-8 { grid-column: span 8; }
+  .carbon-tile--span-4 { grid-column: span 4; }
+  .grid-span-8, .grid-span-6 { grid-column: span 12; }
+  .grid-span-4, .grid-span-3 { grid-column: span 6; }
+  .grid-span-2 { grid-column: span 4; }
+}
+@media (max-width: 671px) {
+  .carbon-grid,
+  .carbon-grid--md,
+  .carbon-grid--sm {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding: 0 16px;
+  }
+  .carbon-page-header { padding: 12px 16px; }
+  .carbon-page__content { padding: 0 16px 24px; }
+  .carbon-tile--span-16,
+  .carbon-tile--span-8,
+  .carbon-tile--span-4 { grid-column: span 4; }
+  .grid-span-8, .grid-span-6, .grid-span-4, .grid-span-3, .grid-span-2 {
+    grid-column: span 12;
+  }
+  .dashboard-grid, .shell, .wrap, .app { max-width: 100%; width: 100%; }
+  .dashboard-grid, .grid-nested, .grid-cell, .panel, .card, .member, .project-section {
+    min-width: 0;
+  }
+  .filters, .toolbar, .grid.filters { grid-template-columns: 1fr !important; }
+}
+@media (min-width: 1312px) {
+  .carbon-grid { padding: 0 32px; }
+}
+@media (min-width: 1584px) {
+  .carbon-grid { padding: 0 40px; }
+}
+@media print {
+  .dashboard-grid, .grid-nested, .carbon-grid { display: block; background: transparent; }
+  .dashboard-grid > *, .grid-nested > *, .carbon-grid > * {
+    break-inside: avoid;
+    margin-bottom: 12px;
+  }
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Carbon component layer — page shell, toolbar, tables, KPI, charts  */
+/* ------------------------------------------------------------------ */
+.carbon-page {
+  min-height: 100vh;
+  background: var(--cds-background);
+  color: var(--cds-text-primary);
+}
+.carbon-page__content {
+  max-width: 100%;
+  margin: 0;
+  padding: 0 24px 32px;
+}
+.carbon-page-header {
+  background: var(--cds-layer-01);
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  padding: 16px 24px;
+  margin-bottom: 1px;
+}
+.carbon-page-header__breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  font-size: var(--cds-type-label-01);
+  color: var(--cds-text-secondary);
+}
+.carbon-page-header__breadcrumb li:not(:last-child)::after {
+  content: "/";
+  margin-left: 4px;
+  color: var(--cds-text-helper);
+}
+.carbon-page-header__breadcrumb a {
+  color: var(--cds-link-primary);
+  text-decoration: none;
+  transition: color var(--cds-transition);
+}
+.carbon-page-header__breadcrumb a:hover { color: var(--cds-interactive); }
+.carbon-page-header__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px 16px;
+}
+.carbon-page-header__title {
+  margin: 0;
+  font-size: var(--cds-type-heading-04);
+  font-weight: 400;
+  line-height: 1.29;
+  letter-spacing: 0;
+  color: var(--cds-text-primary);
+}
+.carbon-page-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.carbon-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: 12px;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+}
+.carbon-tabs__tab {
+  padding: 11px 16px;
+  font-size: var(--cds-type-body-compact-01);
+  font-weight: 400;
+  color: var(--cds-text-secondary);
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color var(--cds-transition), border-color var(--cds-transition);
+}
+.carbon-tabs__tab:hover { color: var(--cds-text-primary); background: var(--cds-layer-hover-01); }
+.carbon-tabs__tab--active {
+  color: var(--cds-text-primary);
+  border-bottom-color: var(--cds-interactive);
+  font-weight: 600;
+}
+
+.carbon-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--cds-layer-01);
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  min-height: 48px;
+}
+.carbon-toolbar__title {
+  flex: 1 1 auto;
+  margin: 0;
+  font-size: var(--cds-type-heading-compact-01);
+  font-weight: 600;
+  color: var(--cds-text-primary);
+}
+.carbon-toolbar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-left: auto;
+}
+
+.carbon-kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 88px;
+}
+.carbon-kpi__label {
+  font-size: var(--cds-type-label-01);
+  font-weight: 400;
+  letter-spacing: 0.32px;
+  color: var(--cds-text-secondary);
+  text-transform: none;
+}
+.carbon-kpi__value {
+  font-size: var(--cds-type-heading-04);
+  font-weight: 400;
+  line-height: 1.29;
+  font-variant-numeric: tabular-nums;
+  color: var(--cds-text-primary);
+}
+.carbon-kpi__subtitle {
+  font-size: var(--cds-type-label-01);
+  color: var(--cds-text-helper);
+}
+.carbon-kpi__trend {
+  font-size: var(--cds-type-label-01);
+  font-weight: 600;
+}
+.carbon-kpi__trend--up { color: var(--cds-support-success); }
+.carbon-kpi__trend--down { color: var(--cds-support-error); }
+.carbon-kpi__trend--neutral { color: var(--cds-text-secondary); }
+.carbon-kpi[data-status="warning"] {
+  border-left: 3px solid var(--cds-support-warning, #f1c21b);
+}
+.carbon-kpi[data-status="error"] {
+  border-left: 3px solid var(--cds-support-error, #da1e28);
+}
+.carbon-kpi[data-status="success"] {
+  border-left: 3px solid var(--cds-support-success, #24a148);
+}
+.carbon-kpi[data-status="warning"] .carbon-kpi__value {
+  color: var(--cds-support-warning, #f1c21b);
+}
+.carbon-kpi[data-status="error"] .carbon-kpi__value {
+  color: var(--cds-support-error, #da1e28);
+}
+
+.carbon-data-table-container {
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+}
+.carbon-data-table-container__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+}
+.dla-table-export-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-height: 40px;
+  padding: 4px 12px;
+  background: var(--cds-layer-01);
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+}
+.heat-modal__header .dla-csv-export,
+.member-modal__header .dla-csv-export,
+.gap-modal__actions .dla-csv-export {
+  margin-left: auto;
+}
+.carbon-data-table-container__title {
+  margin: 0;
+  font-size: var(--cds-type-heading-compact-01);
+  font-weight: 600;
+  color: var(--cds-text-primary);
+}
+.carbon-data-table-wrap { overflow-x: auto; }
+.carbon-data-table,
+.cds--data-table.carbon-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--cds-type-body-compact-01);
+}
+.carbon-data-table caption {
+  padding: 8px 16px;
+  text-align: left;
+  font-size: var(--cds-type-label-01);
+  color: var(--cds-text-helper);
+}
+.carbon-data-table th,
+.carbon-data-table td {
+  padding: 11px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  vertical-align: top;
+  color: var(--cds-text-primary);
+}
+.carbon-data-table th {
+  position: sticky;
+  top: 0;
+  background: var(--cds-layer-01);
+  font-size: var(--cds-type-heading-compact-01);
+  font-weight: 600;
+  color: var(--cds-text-secondary);
+  z-index: 1;
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--cds-transition);
+}
+.carbon-data-table th:hover { background: var(--cds-layer-hover-01); }
+.carbon-data-table th[aria-sort="ascending"]::after { content: " ↑"; }
+.carbon-data-table th[aria-sort="descending"]::after { content: " ↓"; }
+.carbon-data-table tbody tr:hover td { background: var(--cds-layer-hover-01); }
+
+.carbon-chart-container {
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+  padding: 16px;
+  min-width: 0;
+}
+.carbon-chart-container__title {
+  margin: 0 0 12px;
+  font-size: var(--cds-type-heading-compact-01);
+  font-weight: 600;
+  color: var(--cds-text-primary);
+}
+.carbon-chart-container__plot { width: 100%; min-height: 200px; }
+.carbon-chart-container:empty,
+.carbon-chart-container__plot:empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  background: var(--cds-layer-01);
+  border-radius: 4px;
+}
+.carbon-chart-container:empty::after,
+.carbon-chart-container__plot:empty::after {
+  content: "Loading chart…";
+  color: var(--cds-text-placeholder);
+  font-size: var(--cds-type-body-compact-01, 14px);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.carbon-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  min-height: 24px;
+  font-size: var(--cds-type-label-01);
+  font-weight: 400;
+  letter-spacing: 0.32px;
+  border-radius: 999px;
+  white-space: nowrap;
+  max-width: 100%;
+}
+.carbon-status-badge__icon {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.carbon-status-badge--success {
+  background: rgba(66, 190, 101, 0.15);
+  color: var(--cds-support-success);
+}
+.carbon-status-badge--success .carbon-status-badge__icon { background: var(--cds-support-success); }
+.carbon-status-badge--error {
+  background: rgba(250, 77, 86, 0.15);
+  color: var(--cds-support-error);
+}
+.carbon-status-badge--error .carbon-status-badge__icon { background: var(--cds-support-error); }
+.carbon-status-badge--warning {
+  background: rgba(241, 194, 27, 0.15);
+  color: var(--cds-support-warning);
+}
+.carbon-status-badge--warning .carbon-status-badge__icon { background: var(--cds-support-warning); }
+.carbon-status-badge--info {
+  background: rgba(69, 137, 255, 0.15);
+  color: var(--cds-support-info);
+}
+.carbon-status-badge--info .carbon-status-badge__icon { background: var(--cds-support-info); }
+.carbon-status-badge--neutral {
+  background: var(--cds-layer-02);
+  color: var(--cds-text-secondary);
+}
+.carbon-status-badge--neutral .carbon-status-badge__icon { background: var(--cds-text-helper); }
+
+.carbon-filter-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--cds-layer-01);
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+}
+.carbon-filter-summary__label {
+  font-size: var(--cds-type-label-01);
+  color: var(--cds-text-secondary);
+  margin-right: 4px;
+}
+.carbon-filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  min-height: 24px;
+  font-size: var(--cds-type-label-01);
+  background: var(--cds-layer-02);
+  color: var(--cds-text-primary);
+  border: 1px solid var(--cds-border-subtle-01);
+  border-radius: 999px;
+}
+.carbon-filter-tag__dismiss {
+  border: 0;
+  background: transparent;
+  color: var(--cds-text-secondary);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  font-size: 0.875rem;
+  transition: color var(--cds-transition);
+}
+.carbon-filter-tag__dismiss:hover { color: var(--cds-text-primary); }
+
+.carbon-empty-state {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  padding: 48px 32px;
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+  text-align: left;
+}
+.carbon-empty-state__title {
+  margin: 0;
+  font-size: var(--cds-type-heading-03);
+  font-weight: 400;
+  color: var(--cds-text-primary);
+}
+.carbon-empty-state__description {
+  margin: 0;
+  font-size: var(--cds-type-body-compact-01);
+  color: var(--cds-text-secondary);
+  max-width: 52ch;
+}
+.carbon-empty-state__action {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 16px;
+  background: var(--cds-button-primary);
+  color: var(--cds-text-on-color);
+  border: 0;
+  font-size: var(--cds-type-body-compact-01);
+  font-weight: 400;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--cds-transition);
+}
+.carbon-empty-state__action:hover { background: var(--cds-button-primary-hover); color: var(--cds-text-on-color); }
+
+.carbon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 16px;
+  font-size: var(--cds-type-body-compact-01);
+  font-weight: 400;
+  border: 0;
+  cursor: pointer;
+  transition: background var(--cds-transition), color var(--cds-transition);
+}
+.carbon-btn--primary { background: var(--cds-button-primary); color: var(--cds-text-on-color); }
+.carbon-btn--primary:hover { background: var(--cds-button-primary-hover); }
+.carbon-btn--ghost {
+  background: transparent;
+  color: var(--cds-link-primary);
+  border: 1px solid var(--cds-border-subtle-01);
+}
+.carbon-btn--ghost:hover { background: var(--cds-layer-hover-01); }
+
+.panel, .card {
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+}
+
+
+.meta-strip {
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 16px;
+}
+.meta-strip-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+.meta-title {
+  margin: 0;
+  font-size: var(--cds-type-heading-04);
+  font-weight: 400;
+  line-height: 1.29;
+  text-wrap: balance;
+  color: var(--cds-text-primary);
+}
+.meta-sub { margin: 4px 0 0; color: var(--cds-text-secondary); font-size: var(--cds-type-body-compact-01); }
+.meta-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  max-width: 100%;
+  min-width: 0;
+}
+.meta-pill {
+  border-radius: 999px;
+  padding: 0 8px;
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--cds-type-label-01);
+  background: var(--cds-layer-02);
+  border: 1px solid var(--cds-border-subtle-01);
+  color: var(--cds-text-secondary);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  max-width: min(100%, 36ch);
+}
+/* Overdue count: support-error in light; red-40 (#ff8389) in g100 so it reaches 4.5:1 on layer-02 #393939. */
+.meta-pill--overdue { color: var(--cds-support-error); }
+[data-carbon-theme="g100"] .meta-pill--overdue { color: #ff8389; }
+[data-carbon-theme="g10"] .meta-pill--overdue { color: #da1e28; }
+.meta-strip-main,
+.meta-strip-main > div {
+  min-width: 0;
+  max-width: 100%;
+}
+.meta-strip .source-panel {
+  margin-top: 10px;
+  padding: 12px 16px;
+  border: 1px solid var(--cds-border-subtle-01);
+  border-radius: 0;
+  background: var(--cds-layer-02);
+}
+.meta-warning { color: var(--cds-support-error); font-weight: 600; font-size: 0.8125rem; margin: 8px 0 0; }
+
+
+.empty-state {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  padding: 28px 24px;
+  border: 1px dashed var(--cds-border-subtle-01);
+  border-radius: 0;
+  background: var(--cds-layer-02);
+  color: var(--cds-text-primary);
+}
+.empty-state[hidden] { display: none !important; }
+.empty-state-title {
+  margin: 0;
+  font-size: var(--cds-type-heading-03);
+  font-weight: 400;
+  line-height: 1.4;
+}
+.empty-state-message {
+  margin: 0;
+  color: var(--cds-text-secondary);
+  font-size: var(--cds-type-body-compact-01);
+  max-width: 52ch;
+}
+.empty-state-action {
+  margin-top: 4px;
+  min-height: var(--control-height, 40px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 0;
+  background: var(--cds-button-primary);
+  color: var(--cds-text-on-color);
+  font-weight: 400;
+  cursor: pointer;
+  transition: background var(--cds-transition);
+}
+.empty-state-action:hover { background: var(--cds-button-primary-hover); }
+.empty-state--filter { border-color: var(--cds-border-strong-01); }
+.empty-state--nodata { border-style: solid; }
+.empty-state--error {
+  border-color: var(--cds-support-error);
+  background: rgba(250, 77, 86, 0.1);
+}
+.skeleton-panel {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--cds-border-subtle-01);
+  border-radius: 0;
+  background: var(--cds-layer-01);
+}
+.skeleton-panel[hidden] { display: none !important; }
+.skeleton-line, .skeleton-kpi, .skeleton-row {
+  display: block;
+  border-radius: 0;
+  background: linear-gradient(
+    90deg,
+    var(--cds-skeleton-element) 0%,
+    var(--cds-layer-02) 50%,
+    var(--cds-skeleton-element) 100%
+  );
+  background-size: 200% 100%;
+  animation: dla-skeleton-shimmer 1.2s ease-in-out infinite;
+}
+.skeleton-line { height: 12px; width: 100%; }
+.skeleton-line.w-60 { width: 60%; }
+.skeleton-line.w-40 { width: 40%; }
+.skeleton-kpi { height: 44px; width: 100%; }
+.skeleton-row { height: 32px; width: 100%; }
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+.is-loading {
+  position: relative;
+  pointer-events: none;
+}
+.is-loading > *:not(.skeleton-panel) { opacity: 0.35; }
+@keyframes dla-skeleton-shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-line, .skeleton-kpi, .skeleton-row {
+    animation: none;
+    background: var(--cds-skeleton-element);
+  }
+}
+.freshness-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: var(--cds-type-label-01);
+  font-weight: 600;
+  letter-spacing: 0.32px;
+  text-transform: uppercase;
+  border: 1px solid var(--cds-border-subtle-01);
+}
+.freshness-pill[data-freshness="fresh"] {
+  color: var(--cds-support-success);
+  background: rgba(66, 190, 101, 0.15);
+  border-color: var(--cds-support-success);
+}
+.freshness-pill[data-freshness="stale"] {
+  color: var(--cds-support-warning);
+  background: rgba(241, 194, 27, 0.15);
+  border-color: var(--cds-support-warning);
+}
+.freshness-pill[data-freshness="missing"] {
+  color: var(--cds-support-error);
+  background: rgba(250, 77, 86, 0.15);
+  border-color: var(--cds-support-error);
+}
+
+</style>
+<style>
+
+[hidden] { display: none !important; }
+.cc-catalog-section { margin-bottom: 0; }
+.cc-catalog-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+  flex-wrap: wrap;
+}
+.cc-catalog-label {
+  font-size: var(--cds-type-heading-compact-01);
+  font-weight: 600;
+  color: var(--cds-text-primary);
+  white-space: nowrap;
+}
+.cc-catalog-select {
+  flex: 1 1 220px;
+  min-height: 40px;
+  min-width: 180px;
+  max-width: 420px;
+  border: 1px solid var(--cds-border-strong-01);
+  background: var(--cds-layer-02);
+  color: var(--cds-text-primary);
+  padding: 0 12px;
+  font-size: var(--cds-type-body-compact-01);
+  font-family: var(--cds-font-family);
+  cursor: pointer;
+}
+.cc-catalog-select:focus {
+  outline: 2px solid var(--cds-focus);
+  outline-offset: -2px;
+}
+.cc-catalog-select optgroup {
+  font-weight: 600;
+  color: var(--cds-text-secondary);
+}
+.cc-catalog-select option {
+  font-weight: 400;
+  color: var(--cds-text-primary);
+}
+.cc-period-select {
+  flex: 0 1 260px;
+  min-height: 40px;
+  min-width: 180px;
+  max-width: 320px;
+  border: 1px solid var(--cds-border-strong-01);
+  background: var(--cds-layer-02);
+  color: var(--cds-text-primary);
+  padding: 0 12px;
+  font-size: var(--cds-type-body-compact-01);
+  font-family: var(--cds-font-family);
+  cursor: pointer;
+}
+.cc-period-select:focus {
+  outline: 2px solid var(--cds-focus);
+  outline-offset: -2px;
+}
+.cc-period-wrap.hidden,
+.cc-period-select.hidden { display: none !important; }
+/* B3: the frame's active filter scope, shown beside Period. */
+.cc-period-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 0 4px 0 12px;
+  border-left: 3px solid var(--cds-support-info);
+  background: var(--cds-layer-02);
+  color: var(--cds-text-primary);
+  font-size: var(--cds-type-label-01);
+  font-variant-numeric: tabular-nums;
+  max-width: 100%;
+}
+.cc-period-filter__tag { font-weight: 600; }
+.cc-period-filter__text { min-width: 0; overflow-wrap: anywhere; }
+.cc-period-filter__reset {
+  min-height: 32px;
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+  color: var(--cds-link-primary);
+  font: inherit;
+  cursor: pointer;
+}
+.cc-period-filter__reset:hover { background: var(--cds-layer-hover-01); }
+.cc-period-filter__reset:focus-visible { outline: 2px solid var(--cds-focus); outline-offset: -2px; }
+.cc-catalog-freshness .carbon-status-badge { text-transform: none; }
+.cc-catalog-freshness {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--cds-type-label-01);
+  color: var(--cds-text-secondary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.cc-open-tab-btn {
+  margin-left: auto;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.cc-viewer-section {
+  background: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+  border-top: none;
+}
+.cc-viewer-frame-wrap {
+  height: calc(100vh - 160px);
+  min-height: 420px;
+  margin: 0;
+  background: var(--cds-background);
+  position: relative;
+}
+/* C3 loading: hide the stale dashboard and show Carbon inline loading */
+.cc-viewer-frame-wrap.is-loading .cc-viewer-frame,
+.cc-viewer-frame-wrap.is-error .cc-viewer-frame,
+.cc-viewer-frame-wrap.is-empty .cc-viewer-frame { visibility: hidden; }
+.cc-state {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 24px;
+  background: var(--cds-background);
+}
+.cc-viewer-frame-wrap.is-loading .cc-state--loading,
+.cc-viewer-frame-wrap.is-error .cc-state--error,
+.cc-viewer-frame-wrap.is-empty .cc-state--empty { display: flex; }
+.cc-inline-loading {
+  display: inline-flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--cds-text-secondary);
+  font-size: var(--cds-type-body-compact-01);
+}
+.cc-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--cds-border-subtle-01);
+  border-top-color: var(--cds-interactive);
+  border-radius: 50%;
+  animation: cc-spin 690ms linear infinite;
+}
+@keyframes cc-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .cc-spinner { animation: none; }
+}
+.cc-notification {
+  max-width: 640px;
+  width: 100%;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  background: var(--cds-layer-01);
+  border-left: 3px solid var(--cds-support-error);
+  color: var(--cds-text-primary);
+  font-size: var(--cds-type-body-compact-01);
+}
+.cc-notification__icon { flex: 0 0 16px; margin-top: 1px; color: var(--cds-support-error); }
+.cc-empty { max-width: 480px; color: var(--cds-text-secondary); }
+.cc-empty strong {
+  display: block;
+  color: var(--cds-text-primary);
+  font-size: var(--cds-type-body-01, 1rem);
+  font-weight: 400;
+}
+#viewerOpen[aria-disabled="true"] { opacity: 0.5; pointer-events: none; }
+/* C8 iframe focus ring */
+.cc-viewer-frame:focus-visible { outline: 2px solid var(--cds-focus); outline-offset: -2px; }
+/* C8b: Chrome never matches :focus/:focus-within on an iframe whose document holds focus,
+   so JS marks the wrapper on keyboard entry; the overlay sits above the iframe and is never clipped. */
+.cc-viewer-frame-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.cc-viewer-frame-wrap[data-frame-focus]::after { box-shadow: inset 0 0 0 2px var(--cds-focus); }
+.cc-viewer-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: var(--cds-background);
+}
+.cc-toast {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  min-width: 240px;
+  max-width: 420px;
+  background: var(--cds-layer-02);
+  color: var(--cds-text-primary);
+  border: 1px solid var(--cds-border-subtle-01);
+  padding: 12px 16px;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity var(--cds-transition), transform var(--cds-transition);
+  pointer-events: none;
+  z-index: 9000;
+}
+.cc-toast.show { opacity: 1; transform: translateY(0); }
+/* C2 single scroll: page fits the viewport, the frame scrolls */
+.carbon-page { min-height: 0; }
+.carbon-page__content { padding-bottom: 16px; }
+.carbon-page-header { padding: 12px 24px; }
+.carbon-page-header__breadcrumb { margin-bottom: 4px; }
+.carbon-page-header__row { align-items: center; }
+/* C7 breadcrumb hit area >= 24px (WCAG 2.2 SC 2.5.8) */
+.carbon-page-header__breadcrumb a { display: inline-flex; align-items: center; min-height: 24px; }
+/* C6 compact chrome below the Carbon md breakpoint */
+@media (max-width: 671px) {
+  .carbon-page-header { padding: 8px 16px; }
+  .carbon-page-header__row { flex-wrap: nowrap; gap: 8px; }
+  .carbon-page-header__title {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: var(--cds-type-heading-compact-02, 1rem);
+    font-weight: 600;
+    line-height: 1.375;
+  }
+  .carbon-page-header__actions { flex-wrap: nowrap; gap: 4px; }
+  .carbon-page-header__actions .carbon-btn {
+    min-height: 32px;
+    padding: 0 8px;
+    font-size: var(--cds-type-label-01, 0.75rem);
+    white-space: nowrap;
+  }
+  .cc-catalog-bar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 8px;
+    padding: 8px 12px;
+  }
+  .cc-catalog-select, .cc-period-select { grid-column: 2 / -1; min-width: 0; max-width: none; width: 100%; }
+  .cc-period-filter { grid-column: 1 / -1; }
+  .cc-catalog-freshness { grid-column: 1 / 3; }
+  .cc-open-tab-btn { grid-column: 3 / 4; justify-self: end; margin-left: 0; min-height: 32px; }
+  .carbon-page__content { padding: 0 0 8px; }
+  .cc-viewer-frame-wrap { height: 65vh; min-height: 420px; }
+}
+
+</style>
+
+<style id="dla-theme-style">
+/* ---- Carbon Gray 10 (light) tokens: mirrors the g100 token block 1:1 ---- */
+html[data-carbon-theme="g10"], html[data-carbon-theme="g10"] [data-carbon-theme], html[data-carbon-theme="g10"] .cds--g100, html[data-carbon-theme="g10"] .cds--g10 {
+  color-scheme: light;
+  --cds-background: #f4f4f4;
+  --cds-layer-01: #ffffff;
+  --cds-layer-02: #f4f4f4;
+  --cds-layer-03: #ffffff;
+  --cds-field-01: #ffffff;
+  --cds-field-02: #f4f4f4;
+  --cds-text-primary: #161616;
+  --cds-text-secondary: #525252;
+  --cds-text-helper: #6f6f6f;
+  --cds-text-placeholder: #6f6f6f;
+  --cds-text-disabled: #8d8d8d;
+  --cds-icon-primary: #161616;
+  --cds-icon-secondary: #525252;
+  --cds-interactive: #0f62fe;
+  --cds-button-primary: #0f62fe;
+  --cds-button-primary-hover: #0050e6;
+  --cds-text-on-color: #ffffff;
+  --cds-link-primary: #0f62fe;
+  --cds-link-primary-hover: #0043ce;
+  --cds-border-subtle-00: #e0e0e0;
+  --cds-border-subtle-01: #c6c6c6;
+  --cds-border-subtle-02: #e0e0e0;
+  --cds-border-strong-01: #8d8d8d;
+  --cds-border-interactive: #0f62fe;
+  --cds-support-error: #da1e28;
+  --cds-support-success: #24a148;
+  --cds-support-warning: #f1c21b;
+  --cds-support-info: #0043ce;
+  --cds-focus: #0f62fe;
+  --cds-layer-hover-01: #e8e8e8;
+  --cds-layer-selected-01: #e0e0e0;
+  --cds-overlay: rgba(22, 22, 22, 0.5);
+  --cds-skeleton-element: #e8e8e8;
+  --accent-strong: #0f62fe;
+  --accent-soft: rgba(15, 98, 254, 0.1);
+  --danger-soft: rgba(218, 30, 40, 0.1);
+  --success-soft: rgba(36, 161, 72, 0.12);
+  --warning-soft: rgba(241, 194, 27, 0.2);
+  --shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.16);
+}
+html[data-carbon-theme="g10"] body { background: var(--cds-background); color: var(--cds-text-primary); }
+
+/* ---- Status badges / freshness: Carbon light tag pairs ---- */
+html[data-carbon-theme="g10"] .carbon-status-badge--success, html[data-carbon-theme="g10"] .freshness-pill[data-freshness="fresh"] { background: #defbe6; color: #0e6027; }
+html[data-carbon-theme="g10"] .carbon-status-badge--error, html[data-carbon-theme="g10"] .freshness-pill[data-freshness="missing"] { background: #fff1f1; color: #a2191f; }
+html[data-carbon-theme="g10"] .carbon-status-badge--warning, html[data-carbon-theme="g10"] .freshness-pill[data-freshness="stale"] { background: #fcf4d6; color: #684e00; }
+html[data-carbon-theme="g10"] .carbon-status-badge--info { background: #edf5ff; color: #0043ce; }
+html[data-carbon-theme="g10"] .carbon-kpi[data-status="warning"] .carbon-kpi__value { color: #8e6a00; }
+
+/* ---- TT daily grid, light: same hue families, text darkened for contrast ---- */
+html[data-carbon-theme="g10"] .cell-button.leave .cell-hours, html[data-carbon-theme="g10"] .cell-button.leave .cell-gap { color: #0043ce; }
+html[data-carbon-theme="g10"] .cell-button.leave.half.half-ok .cell-hours { color: #0e6027; }
+html[data-carbon-theme="g10"] .cell-button.leave.half.half-miss .cell-hours { color: #a2191f; }
+html[data-carbon-theme="g10"] .cell-button.leave.half .cell-gap { color: #0043ce; }
+
+/* ---- Light-theme text on page-specific dark literals (fills/meanings unchanged) ---- */
+html[data-carbon-theme="g10"] #heatmap .heat-cell:not(.weekend) { color: #161616 !important; }
+html[data-carbon-theme="g10"] .action-queue .days-stale { color: #8e6a00; }
+html[data-carbon-theme="g10"] .kpi-cluster-label { color: #393939; }
+
+/* ---- B12: dark-theme contrast (Leave Day text, Error/Info badges) ---- */
+html[data-carbon-theme="g100"] .cell-button.leave .cell-hours, html[data-carbon-theme="g100"] .cell-button.leave .cell-gap { color: #a6c8ff; }
+html[data-carbon-theme="g100"] .carbon-status-badge--error { color: #ff8389; }
+html[data-carbon-theme="g100"] .carbon-status-badge--info { color: #a6c8ff; }
+
+/* ---- work_current: dark-theme contrast, Carbon g100 text tokens (fills/meanings unchanged) ---- */
+html[data-carbon-theme="g100"]:has(.kpi-provenance) .kpi-cluster-label, html[data-carbon-theme="g100"]:has(.kpi-provenance) .kpi-provenance { color: #c6c6c6; }
+html[data-carbon-theme="g100"]:has(.kpi-provenance) .action-queue .carbon-data-table-container__title { color: #ff8389; }
+html[data-carbon-theme="g100"]:has(.kpi-provenance) td .carbon-status-badge--success { color: #6fdc8c; }
+
+/* ---- work_current: mobile (< 672px, Carbon sm) layout only, both themes ----
+   The page's span-16 blocks (KPI clusters, provenance, action queue) add implicit tracks to the
+   4-column sm grid, squeezing span-4 tiles (filter panel, Summary, charts) into a sliver.
+   Every direct grid child is full width at sm, so pin them to the explicit grid. */
+@media (max-width: 671px) {
+  html:has(.kpi-provenance) .carbon-grid > * { grid-column: 1 / -1; min-width: 0; }
+  html:has(.kpi-provenance) .carbon-filter-panel .grid.filters { grid-template-columns: minmax(0, 1fr) !important; gap: var(--cds-spacing-05, 1rem); }
+  html:has(.kpi-provenance) .carbon-filter-panel .filter-field > input,
+  html:has(.kpi-provenance) .carbon-filter-panel .filter-field > select,
+  html:has(.kpi-provenance) .carbon-filter-panel .filter-actions > button { width: 100%; max-width: 100%; box-sizing: border-box; }
+}
+
+/* ---- Theme toggle (Carbon ghost button) ---- */
+.dla-theme-toggle { display: inline-flex; align-items: center; gap: 8px; }
+.dla-theme-toggle svg { flex: none; fill: currentColor; }
+html.dla-embedded .dla-theme-toggle { display: none !important; }
+@media (max-width: 671px) {
+  .dla-theme-toggle__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+</style>
+<style id="dla-motion-style">
+/* =====================================================================
+   dla_motion.css: shared motion + UX layer, emitted by dashboard_assistant/dla_theme.py
+   after the Carbon base CSS on every DLA page and the Control Center.
+   Ported from the DashBoard Creator prototype (approved by hu.dam 31/10).
+   Rules: transform/opacity only for movement; colour-only under
+   prefers-reduced-motion; no bounce, spin, parallax or looping.
+   ===================================================================== */
+:root {
+  /* Carbon motion tokens */
+  --dla-ease-productive-standard: cubic-bezier(0.2, 0, 0.38, 0.9);
+  --dla-ease-productive-entrance: cubic-bezier(0, 0, 0.38, 0.9);
+  --dla-ease-productive-exit: cubic-bezier(0.2, 0, 1, 0.9);
+  --dla-ease-expressive-standard: cubic-bezier(0.4, 0.14, 0.3, 1);
+  --dla-ease-expressive-entrance: cubic-bezier(0, 0, 0.3, 1);
+  --dla-ease-expressive-exit: cubic-bezier(0.4, 0.14, 1, 1);
+  --dla-dur-fast-01: 70ms;
+  --dla-dur-fast-02: 110ms;
+  --dla-dur-moderate-01: 150ms;
+  --dla-dur-moderate-02: 240ms;
+  --dla-dur-tween: 300ms;          /* KPI number tween + chart data update */
+  --dla-stagger: 40ms;
+  --dla-enter-distance: 8px;
+}
+
+/* ---------- 1. Load entrance (first paint only; html.dla-motion-enter is removed by JS) ---------- */
+@keyframes dla-enter { from { opacity: 0; transform: translateY(var(--dla-enter-distance)); } to { opacity: 1; transform: none; } }
+@keyframes dla-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dla-soft-in { from { opacity: 0.45; } to { opacity: 1; } }
+@keyframes dla-slide-in { from { opacity: 0; translate: 0 -4px; } to { opacity: 1; translate: 0 0; } }
+
+html.dla-motion-enter [data-dla-enter] {
+  animation: dla-enter var(--dla-dur-moderate-02) var(--dla-ease-expressive-entrance) backwards;
+  animation-delay: calc(var(--dla-i, 0) * var(--dla-stagger));
+}
+html.dla-motion-enter .cc-catalog-section,
+html.dla-motion-enter .cc-viewer-section { animation: dla-fade-in var(--dla-dur-moderate-02) var(--dla-ease-productive-entrance) backwards; }
+
+/* ---------- 2. KPI number tween (real text stays in the DOM; overlay is aria-hidden) ---------- */
+/* The counting number is a pseudo-element, so copy, textContent and innerText only ever see the real value. */
+.carbon-kpi__value.dla-tween { position: relative; color: transparent !important; }
+.carbon-kpi__value.dla-tween > * { visibility: hidden; }
+.carbon-kpi__value.dla-tween::after {
+  content: attr(data-dla-ghost);
+  position: absolute; inset: 0; pointer-events: none; white-space: nowrap;
+  color: var(--dla-ghost-color, currentColor);
+  font: inherit; letter-spacing: inherit; font-variant-numeric: tabular-nums;
+}
+.carbon-kpi__value { font-variant-numeric: tabular-nums; }
+
+/* ---------- 3. Data swap: charts + tables ---------- */
+.dla-swap { animation: dla-soft-in var(--dla-dur-moderate-01) var(--dla-ease-productive-standard) backwards; }
+.dla-chart-swap { animation: dla-fade-in var(--dla-dur-moderate-02) var(--dla-ease-productive-standard) backwards; }
+
+/* ---------- 4. Hover / press (70-110 ms) ---------- */
+tr.clickable, .tt-project-table tr, .carbon-data-table tbody tr {
+  transition: background-color var(--dla-dur-fast-01) var(--dla-ease-productive-standard);
+}
+.carbon-btn, .cell-button, .carbon-filter-tag__dismiss, .tt-kpi-info__btn, .dla-date-trigger, .dla-date-clear,
+.dla-pagination__btn, .cc-period-filter__reset, .tt-filtered-banner button {
+  transition: background-color var(--dla-dur-fast-02) var(--dla-ease-productive-standard),
+              color var(--dla-dur-fast-02) var(--dla-ease-productive-standard),
+              border-color var(--dla-dur-fast-02) var(--dla-ease-productive-standard),
+              transform var(--dla-dur-fast-01) var(--dla-ease-productive-standard);
+}
+.carbon-btn:active, .cell-button:active, .dla-pagination__btn:active:not(:disabled),
+.carbon-filter-tag__dismiss:active, .dla-date-trigger:active { transform: scale(0.97); }
+tr.clickable:active > * { opacity: 0.8; }
+.carbon-tile, .carbon-kpi { transition: background-color var(--dla-dur-fast-02) var(--dla-ease-productive-standard); }
+
+/* ---------- 5. Panels: Avg note, calendar, filter banner/chips ---------- */
+/* Avg note: placement uses inline style.transform, so movement uses the separate `translate` property. */
+.tt-kpi-info__tip {
+  opacity: 0; translate: 0 -4px;
+  transition: opacity var(--dla-dur-fast-02) var(--dla-ease-productive-exit),
+              translate var(--dla-dur-fast-02) var(--dla-ease-productive-exit),
+              display var(--dla-dur-fast-02) allow-discrete;
+}
+.tt-kpi-info:hover .tt-kpi-info__tip,
+.tt-kpi-info:focus-within .tt-kpi-info__tip,
+.tt-kpi-info.is-open .tt-kpi-info__tip {
+  opacity: 1; translate: 0 0;
+  transition-duration: var(--dla-dur-moderate-01);
+  transition-timing-function: var(--dla-ease-productive-entrance);
+}
+@starting-style {
+  .tt-kpi-info:hover .tt-kpi-info__tip,
+  .tt-kpi-info:focus-within .tt-kpi-info__tip,
+  .tt-kpi-info.is-open .tt-kpi-info__tip { opacity: 0; translate: 0 -4px; }
+}
+.tt-kpi-info.is-dismissed .tt-kpi-info__tip { opacity: 0; }
+
+/* Calendar popup ([hidden] toggled by DlaDatePicker; position uses top/left, not transform) */
+.dla-date-popup {
+  transition: opacity var(--dla-dur-fast-02) var(--dla-ease-productive-exit),
+              translate var(--dla-dur-fast-02) var(--dla-ease-productive-exit),
+              display var(--dla-dur-fast-02) allow-discrete;
+}
+.dla-date-popup:not([hidden]) { opacity: 1; translate: 0 0; transition-duration: var(--dla-dur-moderate-01); transition-timing-function: var(--dla-ease-productive-entrance); }
+.dla-date-popup[hidden] { opacity: 0; translate: 0 -4px; }
+@starting-style { .dla-date-popup:not([hidden]) { opacity: 0; translate: 0 -4px; } }
+
+/* Filter banner + chips: only when they newly appear (JS adds .dla-appear once) */
+.dla-appear { animation: dla-slide-in var(--dla-dur-moderate-01) var(--dla-ease-productive-entrance) backwards; }
+
+/* ---------- 6. Theme switch: 150 ms colour transition (allowed under reduced motion) ---------- */
+/* Scoped to surfaces (not `*`): a universal transition costs a ~390 ms first frame on TT (≈5k nodes)
+   vs ~75 ms baseline. Large surfaces crossfade; small text/table cells switch with them in the same frame. */
+html.dla-theme-switching,
+html.dla-theme-switching :is(body, .carbon-page, .carbon-page-header, header, nav, aside, main, section,
+  .carbon-tile, .carbon-kpi, .carbon-chart-container, .carbon-data-table-wrap, .carbon-filter-panel,
+  .tt-compliance-panel, .tt-project, .tt-breakdown, .tt-entries, .cc-viewer-frame-wrap, .cc-sidebar, .dla-pagination) {
+  transition-property: background-color, color, border-color !important;
+  transition-duration: var(--dla-dur-moderate-01) !important;
+  transition-timing-function: var(--dla-ease-productive-standard) !important;
+  transition-delay: 0s !important;
+}
+html[data-carbon-theme="g100"] { background-color: #161616; }
+html[data-carbon-theme="g10"] { background-color: #f4f4f4; }
+
+/* ---------- 7. Control Center: frame crossfade, no white flash ---------- */
+.cc-viewer-frame-wrap { background: var(--cds-layer-01, var(--cds-background)); }
+.cc-viewer-frame-wrap .cc-viewer-frame {
+  opacity: 1;
+  transition: opacity var(--dla-dur-moderate-02) var(--dla-ease-productive-entrance);
+}
+.cc-viewer-frame-wrap.is-loading .cc-viewer-frame { visibility: visible; opacity: 0; transition-duration: var(--dla-dur-fast-02); transition-timing-function: var(--dla-ease-productive-exit); }
+.cc-viewer-frame-wrap.is-loading .cc-state--loading { animation: dla-fade-in var(--dla-dur-moderate-01) var(--dla-ease-productive-entrance) backwards; }
+.cc-period-filter:not([hidden]).dla-appear { animation: dla-slide-in var(--dla-dur-moderate-01) var(--dla-ease-productive-entrance) backwards; }
+
+/* ---------- 8. UX items ---------- */
+/* 8a. One "Filtered" banner: when TT is embedded in CC, CC's banner is the single source. */
+html.dla-embedded .tt-filtered-banner { display: none !important; }
+
+/* 8b. "Leave Day" never splits mid-word: break only between words. */
+/* The day cell is 30 px of content at 1440 (24 px at 390); 13 px bold "Leave" is 35.5 px, which forced
+   the old overflow-wrap:anywhere split ("Lea/ve"). Break only between words and size the label to fit. */
+.cell-button.leave:not(.half) { padding-inline: 1px; }
+.cell-button.leave:not(.half) .cell-hours { overflow-wrap: normal; word-break: normal; hyphens: manual; font-size: 0.6875rem; letter-spacing: 0; }
+@media (max-width: 1055px) { .cell-button.leave:not(.half) .cell-hours { font-size: 0.625rem; } }
+
+/* 8c. Carbon-style pagination for the TT details table (TT renders only the current page) */
+.dla-pagination {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0;
+  min-height: 48px; border-top: 1px solid var(--cds-border-subtle-01, #393939);
+  background: var(--cds-layer-01, transparent); color: var(--cds-text-secondary, #c6c6c6);
+  font-size: 0.875rem; line-height: 1.29;
+}
+.dla-pagination__left, .dla-pagination__right { display: flex; align-items: center; min-height: 48px; }
+.dla-pagination__left { gap: 8px; padding-left: 16px; }
+.dla-pagination__label { white-space: nowrap; }
+.dla-pagination select {
+  height: 48px; padding: 0 28px 0 12px; border: 0; border-left: 1px solid var(--cds-border-subtle-01, #393939);
+  border-right: 1px solid var(--cds-border-subtle-01, #393939);
+  background: transparent; color: var(--cds-text-primary, #f4f4f4); font: inherit; cursor: pointer;
+}
+.dla-pagination select option { background: var(--cds-layer-01, #262626); color: var(--cds-text-primary, #f4f4f4); }
+.dla-pagination__range { padding: 0 16px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.dla-pagination__pages { padding: 0 16px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.dla-pagination__btn {
+  display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px;
+  border: 0; border-left: 1px solid var(--cds-border-subtle-01, #393939); background: transparent;
+  color: var(--cds-icon-primary, #f4f4f4); cursor: pointer;
+}
+.dla-pagination__btn:hover:not(:disabled) { background: var(--cds-layer-hover-01, #333333); }
+.dla-pagination__btn:focus-visible, .dla-pagination select:focus-visible { outline: 2px solid var(--cds-focus, #fff); outline-offset: -2px; }
+.dla-pagination__btn:disabled { cursor: not-allowed; color: var(--cds-icon-disabled, #8d8d8d); }
+.dla-pagination__btn svg { fill: currentColor; }
+@media (max-width: 671px) {
+  .dla-pagination__range { display: none; }
+  .dla-pagination__left { padding-left: 8px; }
+}
+
+/* 8d. Work dashboard (WC) 672-1055 px. Root cause: the grid drops to 8 explicit columns at md, but
+   .kpi-cluster(-label), .kpi-provenance and .action-queue keep `span 16`, which adds 8 implicit auto
+   columns; the explicit fr columns then collapse to 0 px, so every tile that lands in columns 1-8
+   (filter panel, half the chart tiles) renders ~34-70 px wide. Fix: nothing spans past the explicit
+   grid; the filter panel goes full width with a 2-col field grid and the Summary sits below it. */
+@media (min-width: 672px) and (max-width: 1055px) {
+  html:has(.kpi-provenance) .carbon-grid > .carbon-tile--span-16,
+  html:has(.kpi-provenance) .carbon-grid > .carbon-filter-summary,
+  html:has(.kpi-provenance) .carbon-grid > .kpi-cluster-label,
+  html:has(.kpi-provenance) .carbon-grid > .kpi-cluster,
+  html:has(.kpi-provenance) .carbon-grid > .kpi-provenance,
+  html:has(.kpi-provenance) .carbon-grid > .action-queue { grid-column: 1 / -1 !important; min-width: 0; }
+  html:has(.kpi-provenance) .carbon-filter-panel .grid.filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: var(--cds-spacing-05, 1rem);
+  }
+  html:has(.kpi-provenance) .carbon-filter-panel .filter-field > input,
+  html:has(.kpi-provenance) .carbon-filter-panel .filter-field > select { width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; }
+  html:has(.kpi-provenance) .carbon-filter-panel .filter-actions { grid-column: 1 / -1; }
+}
+
+/* ---------- 9. Reduced motion: colour change only ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html.dla-motion-enter [data-dla-enter], .cc-catalog-section, .cc-viewer-section,
+  .dla-swap, .dla-chart-swap, .dla-appear, .cc-state--loading { animation: none !important; }
+  .carbon-btn:active, .cell-button:active, .dla-pagination__btn:active, .carbon-filter-tag__dismiss:active, .dla-date-trigger:active { transform: none !important; }
+  .tt-kpi-info__tip, .dla-date-popup { translate: none !important; transition: none !important; }
+  .tt-kpi-info:hover .tt-kpi-info__tip, .tt-kpi-info:focus-within .tt-kpi-info__tip, .tt-kpi-info.is-open .tt-kpi-info__tip, .dla-date-popup:not([hidden]) { opacity: 1 !important; }
+  .cc-viewer-frame-wrap .cc-viewer-frame { transition: none !important; }
+  tr.clickable:active > * { opacity: 1; }
+  .dla-tip__body { translate: none !important; transition: none !important; }
+  /* One style pass for the theme swap: no per-element transitions at all under reduce. */
+  html.dla-theme-switching, html.dla-theme-switching * { transition: none !important; }
+  /* Same selector as section 6: `:is()` takes its most specific argument (a class), so the bare `*`
+     above loses to it. Repeat the list here so reduce wins on every surface. */
+  html.dla-theme-switching :is(body, .carbon-page, .carbon-page-header, header, nav, aside, main, section,
+    .carbon-tile, .carbon-kpi, .carbon-chart-container, .carbon-data-table-wrap, .carbon-filter-panel,
+    .tt-compliance-panel, .tt-project, .tt-breakdown, .tt-entries, .cc-viewer-frame-wrap, .cc-sidebar, .dla-pagination) {
+    transition: none !important;
+  }
+}
+
+/* ---------- 10. Shared toggletip (.dla-tip) + "Data as of" chip ---------- */
+.dla-tip { position: relative; display: inline-flex; vertical-align: middle; margin-left: 4px; }
+.dla-tip__btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; padding: 0; border: 0; background: transparent; cursor: pointer;
+  color: var(--cds-icon-secondary, var(--cds-text-secondary));
+}
+.dla-tip__btn svg { fill: currentColor; }
+.dla-tip__btn:hover { color: var(--cds-text-primary); }
+.dla-tip__btn:focus-visible { outline: 2px solid var(--cds-focus); outline-offset: -2px; }
+.dla-tip__body {
+  display: none; position: absolute; top: calc(100% + 4px); left: -8px; z-index: 40;
+  width: max-content; max-width: min(20rem, 80vw); padding: 8px 12px;
+  background: var(--cds-layer-01); color: var(--cds-text-primary);
+  border: 1px solid var(--cds-border-strong-01); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  font-size: var(--cds-type-label-01, 0.75rem); font-weight: 400; line-height: 1.34;
+  letter-spacing: 0.32px; text-transform: none; white-space: normal; text-align: left;
+  opacity: 0; translate: 0 -4px;
+  transition: opacity var(--dla-dur-fast-02) var(--dla-ease-productive-exit),
+              translate var(--dla-dur-fast-02) var(--dla-ease-productive-exit),
+              display var(--dla-dur-fast-02) allow-discrete;
+}
+.dla-tip--end .dla-tip__body { left: auto; right: -8px; }
+.dla-tip:hover .dla-tip__body, .dla-tip:focus-within .dla-tip__body, .dla-tip.is-open .dla-tip__body {
+  display: block; opacity: 1; translate: 0 0;
+  transition-duration: var(--dla-dur-moderate-01); transition-timing-function: var(--dla-ease-productive-entrance);
+}
+@starting-style {
+  .dla-tip:hover .dla-tip__body, .dla-tip:focus-within .dla-tip__body, .dla-tip.is-open .dla-tip__body { opacity: 0; translate: 0 -4px; }
+}
+.dla-tip.is-dismissed .dla-tip__body { display: none; }
+.dla-asof { display: inline-flex; align-items: center; gap: 0; white-space: nowrap; }
+.dla-asof .dla-tip { margin-left: 2px; }
+.dla-asof__title { display: block; margin-bottom: 4px; font-weight: 600; }
+.dla-asof__title--ref { margin-top: 8px; }
+.dla-asof__row { display: flex; justify-content: space-between; gap: 16px; padding: 2px 0; }
+.dla-asof__src { color: var(--cds-text-secondary); }
+.dla-asof__time { font-variant-numeric: tabular-nums; white-space: nowrap; }
+</style>
+<script id="dla-motion-script">
+/* =====================================================================
+   dla_motion.js: shared motion layer, emitted by dashboard_assistant/dla_theme.py
+   right after the Carbon Charts UMD bundle (needs window.Charts for chart reuse)
+   or at the end of <head> on pages without charts. Never delays data: every
+   value is written by the page first; motion only decorates it afterwards.
+   Carbon motion tokens; reduced motion = colour change only.
+   Ported from the DashBoard Creator prototype (approved by hu.dam 31/10).
+   ===================================================================== */
+(function () {
+  "use strict";
+  var doc = document, html = doc.documentElement;
+  var mq = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : { matches: false };
+  function reduced() { return !!mq.matches; }
+  var T = { fast01: 70, fast02: 110, mod01: 150, mod02: 240, tween: 300, stagger: 40, enterCap: 8 };
+  var EASE = { // JS copies of the CSS tokens (for rAF tweens)
+    productiveStandard: [0.2, 0, 0.38, 0.9],
+    expressiveEntrance: [0, 0, 0.3, 1]
+  };
+  function bezier(p) { // cubic-bezier evaluator (x->y) for rAF tweens
+    var x1 = p[0], y1 = p[1], x2 = p[2], y2 = p[3];
+    function a(a1, a2) { return 1 - 3 * a2 + 3 * a1; }
+    function b(a1, a2) { return 3 * a2 - 6 * a1; }
+    function c(a1) { return 3 * a1; }
+    function calc(t, a1, a2) { return ((a(a1, a2) * t + b(a1, a2)) * t + c(a1)) * t; }
+    function slope(t, a1, a2) { return 3 * a(a1, a2) * t * t + 2 * b(a1, a2) * t + c(a1); }
+    return function (x) {
+      if (x <= 0) return 0; if (x >= 1) return 1;
+      var t = x;
+      for (var i = 0; i < 6; i++) { var s = slope(t, x1, x2); if (!s) break; t -= (calc(t, x1, x2) - x) / s; }
+      return calc(t, y1, y2);
+    };
+  }
+  var easeTween = bezier(EASE.productiveStandard);
+
+  html.classList.add("dla-motion");
+  if (!reduced()) html.classList.add("dla-motion-enter");
+  var enterDone = false;
+  function endEnter() { if (enterDone) return; enterDone = true; html.classList.remove("dla-motion-enter"); }
+  // The entrance plays once: the flag is removed 1.4 s after DOMContentLoaded (see onReady).
+
+  /* ---------- Theme: 150 ms colour transition + state-accurate toggle label ---------- */
+  var themeTimer = 0, lastTheme = html.getAttribute("data-carbon-theme");
+  function armTheme() {
+    // Must be on <html> BEFORE the theme attribute flips: page code reads computed style synchronously
+    // after apply(), so a class added later (MutationObserver microtask) misses body/page backgrounds.
+    html.classList.add("dla-theme-switching");
+    clearTimeout(themeTimer);
+    themeTimer = setTimeout(function () { html.classList.remove("dla-theme-switching"); }, T.mod01 + 60);
+  }
+  // Capture phase runs before the page's own toggle / postMessage / storage handlers.
+  document.addEventListener("click", function (e) {
+    if (e.target && e.target.closest && e.target.closest(".dla-theme-toggle, #themeToggle")) armTheme();
+  }, true);
+  window.addEventListener("message", function (e) {
+    var d = e.data; if (d && d.type === "dla-theme" && d.theme !== html.getAttribute("data-carbon-theme")) armTheme();
+  }, true);
+  window.addEventListener("storage", function (e) { if (e.key === "dla-theme") armTheme(); }, true);
+  new MutationObserver(function () {
+    var t = html.getAttribute("data-carbon-theme");
+    if (t !== lastTheme) { lastTheme = t; armTheme(); } // fallback for any other theme source
+  }).observe(html, { attributes: true, attributeFilter: ["data-carbon-theme"] });
+
+  /* ---------- Carbon Charts reuse: animated update instead of destroy + rebuild ---------- */
+  function patchCharts() {
+    var C = window.Charts;
+    if (!C || C.__dlaPatched) return;
+    C.__dlaPatched = true;
+    var parked = {}; // host id -> {chart, host}
+    ["DonutChart", "LineChart", "SimpleBarChart", "GroupedBarChart", "StackedBarChart", "PieChart", "AreaChart"].forEach(function (name) {
+      var Orig = C[name];
+      if (typeof Orig !== "function") return;
+      function Wrapped(host, cfg) {
+        var id = host && host.id;
+        var p = id && parked[id];
+        cfg = cfg || {};
+        // Reduced motion: no chart animation. Otherwise keep the page's own setting (Carbon default: on).
+        if (cfg.options && reduced()) cfg.options.animations = false;
+        if (p && p.ctor === name && p.host !== host && !p.host.isConnected && host.isConnected) {
+          // Same chart, new data: move the live SVG host into the fresh shell and let Carbon animate.
+          delete parked[id];
+          clearTimeout(p.timer);
+          host.replaceWith(p.host);
+          try {
+            if (cfg.options) p.chart.model.setOptions(cfg.options);
+            p.chart.model.setData(cfg.data);
+            return p.chart;
+          } catch (e) { try { p.realDestroy(); } catch (e2) {} p.host.replaceWith(host); }
+        } else if (p) {
+          // Rebuild on the same (or a still-mounted) host: destroy the old chart first, as the page intended.
+          delete parked[id]; clearTimeout(p.timer); try { p.realDestroy(); } catch (e3) {}
+        }
+        var chart = new Orig(host, cfg);
+        if (id) {
+          var realDestroy = chart.destroy ? chart.destroy.bind(chart) : function () {};
+          chart.destroy = function () { // park instead of destroying; reclaim in the same task or really destroy
+            var entry = { chart: chart, host: host, ctor: name, realDestroy: realDestroy };
+            entry.timer = setTimeout(function () { if (parked[id] === entry) { delete parked[id]; realDestroy(); } }, 0);
+            parked[id] = entry;
+          };
+          if (!html.classList.contains("dla-motion-enter") && !reduced()) {
+            host.classList.remove("dla-chart-swap"); void host.offsetWidth; host.classList.add("dla-chart-swap");
+          }
+        }
+        return chart;
+      }
+      Wrapped.prototype = Orig.prototype;
+      C[name] = Wrapped;
+    });
+  }
+  patchCharts();
+
+  /* ---------- Entrance tagging ---------- */
+  var ENTER_SEL = ".carbon-kpi, .carbon-chart-container, .tt-compliance-panel, .tt-project, .tt-breakdown, .tt-entries, .carbon-tile--span-16, .carbon-grid > .carbon-tile";
+  function tagEnter(root) {
+    if (!html.classList.contains("dla-motion-enter")) return;
+    var i = 0;
+    Array.prototype.forEach.call(root.querySelectorAll(ENTER_SEL), function (el) {
+      if (el.hasAttribute("data-dla-enter") || el.closest("[data-dla-enter]")) return;
+      el.setAttribute("data-dla-enter", "");
+      el.style.setProperty("--dla-i", String(Math.min(i++, T.enterCap)));
+    });
+  }
+
+  /* ---------- KPI tween ---------- */
+  var prevKpi = {};
+  function parseNum(text) {
+    var m = /^([^\d\-]*)(-?[\d,]*\.?\d+)(.*)$/.exec(String(text).trim());
+    if (!m) return null;
+    var raw = m[2], dec = raw.indexOf(".") >= 0 ? raw.length - raw.indexOf(".") - 1 : 0;
+    return { pre: m[1], post: m[3], n: parseFloat(raw.replace(/,/g, "")), dec: dec, group: raw.indexOf(",") >= 0 };
+  }
+  function fmt(n, ref, group) {
+    return ref.pre + n.toLocaleString("en-US", { minimumFractionDigits: ref.dec, maximumFractionDigits: ref.dec, useGrouping: group }) + ref.post;
+  }
+  function kpiKey(tile) { var l = tile.querySelector(".carbon-kpi__label"); return l ? l.textContent.trim() : ""; }
+  function tweenKpis(root) {
+    Array.prototype.forEach.call(root.querySelectorAll(".carbon-kpi"), function (tile) {
+      var key = kpiKey(tile), v = tile.querySelector(".carbon-kpi__value");
+      if (!key || !v) return;
+      var now = v.textContent, before = prevKpi[key];
+      prevKpi[key] = now;
+      if (before == null || before === now || reduced()) return;
+      var a = parseNum(before), b = parseNum(now);
+      if (!a || !b || a.pre !== b.pre || a.post !== b.post) return;
+      var group = a.group || b.group, color = getComputedStyle(v).color;
+      // Final value is already in the DOM (screen readers, copy and textContent see only it); the
+      // counting number is a CSS ::after (attr(data-dla-ghost)), so it never enters the text.
+      v.style.setProperty("--dla-ghost-color", color);
+      v.setAttribute("data-dla-ghost", before);
+      v.classList.add("dla-tween");
+      var t0 = performance.now();
+      (function step(t) {
+        if (!v.isConnected) return;
+        var k = Math.min(1, (t - t0) / T.tween), e = easeTween(k);
+        if (k < 1) { v.setAttribute("data-dla-ghost", fmt(a.n + (b.n - a.n) * e, b, group)); requestAnimationFrame(step); }
+        else { v.classList.remove("dla-tween"); v.removeAttribute("data-dla-ghost"); v.style.removeProperty("--dla-ghost-color"); }
+      })(t0);
+    });
+  }
+
+  /* ---------- Subtle table fade on data swap (visible rows only) ---------- */
+  function fadeTables(root) {
+    if (reduced() || html.classList.contains("dla-motion-enter")) return;
+    Array.prototype.forEach.call(root.querySelectorAll("table tbody"), function (tb) {
+      var r = tb.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight) return; // off-screen: no work at all
+      tb.classList.add("dla-swap");
+      setTimeout(function () { tb.classList.remove("dla-swap"); }, T.mod01 + 40);
+    });
+  }
+
+  /* ---------- Banner / chips appear (only when newly shown) ---------- */
+  var hadBanner = false, prevChips = "";
+  function appear(root) {
+    var banner = root.querySelector(".tt-filtered-banner");
+    if (banner && !hadBanner && !reduced()) banner.classList.add("dla-appear");
+    hadBanner = !!banner;
+    var chips = Array.prototype.map.call(root.querySelectorAll(".tt-chips .carbon-filter-tag"), function (c) { return c.textContent; });
+    var prev = prevChips ? prevChips.split("\u0001") : [];
+    if (!reduced()) Array.prototype.forEach.call(root.querySelectorAll(".tt-chips .carbon-filter-tag"), function (c) {
+      if (prev.indexOf(c.textContent) < 0) c.classList.add("dla-appear");
+    });
+    prevChips = chips.join("\u0001");
+  }
+
+  /* ---------- Table data swap hook (TT pagination renders only the current page itself) ---------- */
+  function swap(el) {
+    if (!el || reduced()) return;
+    el.classList.remove("dla-swap"); void el.offsetWidth; el.classList.add("dla-swap");
+    setTimeout(function () { el.classList.remove("dla-swap"); }, T.mod01 + 40);
+  }
+  /* ---------- Shared toggletip (.dla-tip): hover/focus show it, tap toggles, Escape closes ---------- */
+  function closeTips(except) {
+    Array.prototype.forEach.call(doc.querySelectorAll(".dla-tip.is-open"), function (tip) {
+      if (tip === except) return;
+      tip.classList.remove("is-open");
+      var b = tip.querySelector(".dla-tip__btn"); if (b) b.setAttribute("aria-expanded", "false");
+    });
+  }
+  doc.addEventListener("click", function (e) {
+    var btn = e.target && e.target.closest ? e.target.closest(".dla-tip__btn") : null;
+    if (!btn) { if (!(e.target && e.target.closest && e.target.closest(".dla-tip"))) closeTips(null); return; }
+    e.preventDefault();
+    var tip = btn.closest(".dla-tip"), open = !tip.classList.contains("is-open");
+    closeTips(tip);
+    tip.classList.toggle("is-open", open);
+    tip.classList.remove("is-dismissed");
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  doc.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    var active = doc.activeElement, tip = active && active.closest ? active.closest(".dla-tip") : null;
+    var open = doc.querySelector(".dla-tip.is-open");
+    if (!tip && !open) return;
+    if (tip) tip.classList.add("is-dismissed");
+    closeTips(null);
+  });
+  doc.addEventListener("focusout", function (e) {
+    var tip = e.target && e.target.closest ? e.target.closest(".dla-tip") : null;
+    if (tip) tip.classList.remove("is-dismissed");
+  });
+  doc.addEventListener("mouseout", function (e) {
+    var tip = e.target && e.target.closest ? e.target.closest(".dla-tip") : null;
+    if (tip && !tip.contains(e.relatedTarget)) tip.classList.remove("is-dismissed");
+  });
+
+  window.dlaMotion = { tokens: T, reduced: reduced, swap: swap };
+
+  /* ---------- TT wiring: decorate after every render() of #tt-root ---------- */
+  function afterRender(root) {
+    tagEnter(root);
+    tweenKpis(root);
+    fadeTables(root);
+    appear(root);
+  }
+  function wireTT() {
+    var root = doc.getElementById("tt-root");
+    if (!root) return false;
+    var scheduled = false;
+    new MutationObserver(function (recs) {
+      // render() replaces #tt-root's children; ignore our own pagination edits.
+      var relevant = recs.some(function (r) { return r.target === root; });
+      if (!relevant || scheduled) return;
+      scheduled = true;
+      // Microtask: runs after render() returns (so focus restore + charts are done), before paint.
+      Promise.resolve().then(function () { scheduled = false; afterRender(root); });
+    }).observe(root, { childList: true });
+    if (root.children.length) afterRender(root);
+    return true;
+  }
+
+  /* ---------- CC wiring: frame crossfade + Filtered banner appear ---------- */
+  function wireCC() {
+    var frame = doc.getElementById("dashboardFrame");
+    if (!frame) return false;
+    var pf = doc.getElementById("periodFilterState");
+    if (pf) new MutationObserver(function () {
+      if (!pf.hidden && !reduced()) { pf.classList.remove("dla-appear"); void pf.offsetWidth; pf.classList.add("dla-appear"); }
+    }).observe(pf, { attributes: true, attributeFilter: ["hidden"] });
+    tagEnter(doc);
+    return true;
+  }
+
+  function onReady() {
+    setTimeout(endEnter, 1400);
+    patchCharts();
+    if (!wireTT()) {
+      if (!wireCC()) { // generic page (e.g. WC): entrance only
+        tagEnter(doc);
+      }
+    }
+  }
+  if (doc.readyState === "loading") doc.addEventListener("DOMContentLoaded", onReady); else onReady();
+})();
+</script>
+</head>
+<body>
+<div class="carbon-page cds--g100" data-carbon-theme="g100"><a class="skip-link" href="#main-content">Skip to main content</a><header class="carbon-page-header"><nav aria-label="Breadcrumb"><ol class="carbon-page-header__breadcrumb"><li><a href="#">Digital Lead Assistant</a></li><li><a href="#">Dashboards</a></li><li>Control Center</li></ol></nav><div class="carbon-page-header__row"><h1 class="carbon-page-header__title">Dashboard Control Center</h1><div class="carbon-page-header__actions"><button type="button" class="carbon-btn carbon-btn--ghost dla-theme-toggle" id="themeToggle" title="Switch to light theme" data-dla-theme-toggle="1"><svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 12.005a4 4 0 1 1-4 4a4.005 4.005 0 0 1 4-4m0-2a6 6 0 1 0 6 6a6 6 0 0 0-6-6zM5.394 6.813l1.414-1.415l3.506 3.506L8.9 10.318zM2 15.005h5v2H2zm3.394 10.193L8.9 21.692l1.414 1.414l-3.506 3.506zM15 25.005h2v5h-2zm6.687-1.9l1.414-1.414l3.506 3.506l-1.414 1.414zm3.313-8.1h5v2h-5zm-3.313-6.101l3.506-3.506l1.414 1.414l-3.506 3.506zM15 2.005h2v5h-2z"/></svg><span class="dla-theme-toggle__label">Switch to light theme</span></button><a class="carbon-btn carbon-btn--ghost" href=".">Open folder</a><button class="carbon-btn carbon-btn--primary" type="button" id="refreshBtn">Refresh catalog</button></div></div></header><main id="main-content" class="carbon-page__content" role="main">
+<section class="cc-catalog-section" aria-labelledby="catalogHeading">
+  <div class="cc-catalog-bar">
+    <label class="cc-catalog-label" for="dashboardCatalog" id="catalogHeading">Dashboard</label>
+    <select class="cc-catalog-select" id="dashboardCatalog" aria-label="Dashboard catalog"></select>
+    <label class="cc-catalog-label cc-period-wrap hidden" for="periodSelect" id="periodLabel">Period</label>
+    <select class="cc-period-select hidden" id="periodSelect" aria-label="Dashboard period"></select>
+    <span class="cc-period-filter" id="periodFilterState" hidden><span class="cc-period-filter__tag">Filtered:</span><span class="cc-period-filter__text" id="periodFilterText"></span><button type="button" class="cc-period-filter__reset" id="periodFilterReset" aria-label="Reset dashboard filters">Reset</button></span>
+    <span class="cc-catalog-freshness" id="catalogFreshness"></span>
+    <a class="carbon-btn carbon-btn--ghost cc-open-tab-btn" id="viewerOpen" href="#" target="_blank" rel="noopener noreferrer">Open in tab</a>
+  </div>
+</section>
+
+<section class="cc-viewer-section" id="viewer" aria-label="Dashboard preview">
+  <div class="cc-viewer-frame-wrap viewer-frame-wrap">
+    <iframe class="cc-viewer-frame viewer-frame" id="dashboardFrame" title="Dashboard preview"></iframe>
+    <div class="cc-state cc-state--loading" role="status"><span class="cc-inline-loading"><span class="cc-spinner" aria-hidden="true"></span><span id="ccLoadingText"></span></span></div>
+    <div class="cc-state cc-state--error" role="alert"><div class="cc-notification"><svg class="cc-notification__icon" width="16" height="16" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path fill="currentColor" d="M16 2a14 14 0 1 0 14 14A14 14 0 0 0 16 2Zm-1.1 6h2.2v11h-2.2ZM16 25a1.5 1.5 0 1 1 1.5-1.5A1.5 1.5 0 0 1 16 25Z"/></svg><span id="ccErrorText"></span></div></div>
+    <div class="cc-state cc-state--empty"><div class="cc-empty"><strong id="ccEmptyText"></strong></div></div>
+  </div>
+</section>
+<div class="cc-toast" id="toast" role="status" aria-live="polite"></div>
+<script id="dashboard-data" type="application/json">{"generatedAt":"31/10/2026 22:02","dashboards":[{"title":"Annotation Digital Productivity","file":"annotation_digital_productivity_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/refresh_mantis_dashboard_cache.py --start 2025-01-01 --end YYYY-MM-DD; python scripts/extract_annotation_digital_productivity.py --project-id 396 --source cache; python scripts/build_annotation_productivity_dashboard.py --data-dir data/reports/annotation_digital_productivity --output dashboard_reports/annotation_digital_productivity_dashboard.html","source":"Mantis cache project 396 (after cache refresh)","memory":"Interactive tickets count only when note, status change, and handler change come from the same actor.","exists":true,"href":"annotation_digital_productivity_dashboard.html","bytes":3488332,"size":"3.3 MB","modified":"2026-10-31T15:02:45.853879+00:00","modifiedDisplay":"31/10/2026 22:02","ageDays":0,"freshness":"watch","dataSignal":"31/10/2026 21:21","dataAsOf":"2026-10-28T07:20","freshnessBasis":"data","registered":true,"layoutId":"annotation-productivity"},{"title":"Annotation Member Workload","file":"digital_team_annotation_status_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/build_annotation_member_ticket_dashboard_html.py --cutoff 2026-W44 --output dashboard_reports/digital_team_annotation_status_dashboard.html --source cache","source":"TIDP Master Rev8 + Mantis cache project 396 (stepwise uses same cache)","memory":"COO primary member workload; active TIDP family tickets handled by Digital Team.","exists":true,"href":"digital_team_annotation_status_dashboard.html","bytes":169469,"size":"165.5 KB","modified":"2026-10-31T15:02:46.521450+00:00","modifiedDisplay":"31/10/2026 22:02","ageDays":0,"freshness":"fresh","dataSignal":"31/10/2026 21:21","dataAsOf":"2026-10-31T20:05","freshnessBasis":"data","registered":true,"layoutId":"annotation-member-workload"},{"title":"Digital Team Time Tracking","file":"digital_team_time_tracking_dashboard_2026-10.html","group":"Time Tracking","owner":"Digital Team","status":"Primary","refresh":"python -m dashboard_assistant --month 2026-10 --team digital --react --limit 20 --strict-dq --source cache","source":"Mantis cache time tracking","memory":"Generalized time tracking dashboard: pick a month/range in the Dashboard catalog; run cache refresh then rebuild with --source cache before reporting.","exists":true,"href":"digital_team_time_tracking_dashboard_2026-10.html","bytes":664539,"size":"649.0 KB","modified":"2026-10-31T15:02:46.658317+00:00","modifiedDisplay":"31/10/2026 22:02","ageDays":0,"freshness":"fresh","dataSignal":"31/10/2026 21:51","dataAsOf":"2026-10-31T20:05","freshnessBasis":"data","registered":true,"layoutId":"digital-team-time-tracking:2026-10","variants":[{"label":"01/10/2026 to 31/10/2026","file":"digital_team_time_tracking_dashboard_2026-10.html","href":"digital_team_time_tracking_dashboard_2026-10.html","layoutId":"digital-team-time-tracking:2026-10","sortKey":"2026-10","start":"2026-10-01","end":"2026-10-31","cw":"","exists":true,"bytes":664539,"size":"649.0 KB","modified":"2026-10-31T15:02:46.658317+00:00","modifiedDisplay":"31/10/2026 22:02","ageDays":0,"freshness":"fresh","dataSignal":"31/10/2026 21:51","dataAsOf":"2026-10-31T20:05","freshnessBasis":"data"}],"variantCount":1,"currentVariantFile":"digital_team_time_tracking_dashboard_2026-10.html","rangeRefreshTemplate":"python -m dashboard_assistant --month {from}..{to} --team digital --react --limit 20 --strict-dq --source cache"},{"title":"Digital Team Work Current","file":"digital_team_work_dashboard_current.html","group":"Digital Team","owner":"Digital Team","status":"Operational","refresh":"python build_digital_dashboard.py --output dashboard_reports/digital_team_work_dashboard_current.html --source cache","source":"Mantis cache open work","memory":"Open ticket dashboard grouped by project with due assessment and status badges.","exists":true,"href":"digital_team_work_dashboard_current.html","bytes":1339753,"size":"1.3 MB","modified":"2026-10-31T15:02:46.830459+00:00","modifiedDisplay":"31/10/2026 22:02","ageDays":0,"freshness":"fresh","dataSignal":"2026-10-31T21:20:49+07:00","dataAsOf":"2026-10-31T20:05","freshnessBasis":"data","registered":true,"layoutId":"digital-team-work-current"},{"title":"ANNOTATION PROJECT-SUMMARY REPORT TO COO","file":"annotation_project_summary_report_to_coo_dashboard.html","group":"Annotation","owner":"Digital Team","status":"Primary","refresh":"python scripts/refresh_revit_library_family_cache.py; python scripts/build_annotation_family_gap_dashboard.py --cutoff 2026-W44 --source cache","source":"Bridge crosswalk: AnnotationDB\u00d7Revit Library \u00d7 TIDP Master \u00d7 Mantis; counts only \u2014 metrics/annotation-family-upload-coverage.md + memory/tidp.md","memory":"Primary COO Annotation summary: 3-layer gap bridge + Catalog + Library / TIDP regions.","exists":true,"href":"annotation_project_summary_report_to_coo_dashboard.html","bytes":5417883,"size":"5.2 MB","modified":"2026-10-31T15:02:46.440729+00:00","modifiedDisplay":"31/10/2026 22:02","ageDays":0,"freshness":"fresh","dataSignal":"31/10/2026 21:21","dataAsOf":"2026-10-31T20:05","freshnessBasis":"data","registered":true,"layoutId":"annotation-project-summary-report-to-coo"}],"groups":["Annotation","Digital Team","Time Tracking"],"cache":{"generated_at":"2026-10-31T20:05:25+07:00","cache_schema_version":3,"source":"MariaDB/Mantis","database":"mantis","range":{"start":"2025-01-01","end":"2026-11-01"},"project_ids":[396,357,400,401],"digital_team_users":["hu.dam","ht.nguyen","dahn.nguyen","nd.huynh","kd.doan","lk.dang","qd.nguyen","qn.ha"],"files":{"sqlite":"data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite","manifest":"data/mantis_dashboard_cache/manifest.json","extracts":"data/mantis_dashboard_cache/extracts"},"tables":{"projects":4,"users":93,"tickets":18234,"time_entries":34901,"bug_history":299025,"bugnotes":36689,"work_dashboard_team_members":8,"work_dashboard_rows":65,"work_dashboard_notes":172,"work_dashboard_history":1814,"annotation_p396_tickets":2771,"annotation_p396_history":44799,"annotation_p396_rename":523,"annotation_p396_note_authors":10114,"annotation_p396_users":425},"usage":{"refresh":"python scripts/refresh_mantis_dashboard_cache.py --start YYYY-MM-DD --end YYYY-MM-DD","sqlite":"Read data/mantis_dashboard_cache/mantis_dashboard_cache.sqlite from dashboard builders."}},"cacheDisplay":"01/01/2025 to 01/11/2026","duplicateGroups":[],"metrics":{"total":5,"registered":5,"fresh":4,"stale":0,"missing":0,"latest":"Digital Team Work Current","cacheRows":449637},"templateSource":"https://github.com/HuyDamDCMvn/DigitalLeadAssistant.git"}</script>
+<script>
+const payload = JSON.parse(document.getElementById('dashboard-data').textContent);
+const PREFS_KEY = 'dla-control-center-v3';
+const state = { selectedFile: '', savedPerDashboard: {} };
+const $ = (id) => document.getElementById(id);
+const toast = $('toast');
+const EMPTY_TEXT = 'No dashboards available';
+const PREVIEW_FAILED_TEXT = 'Preview failed to render. Hard refresh (Ctrl+Shift+R) or use Open in tab.';
+let frameToken = 0;
+
+/* Data time from the dashboard's own Generated stamp (dataSignal), shown as dd/mm hh:mm. */
+function dataSignalShort(signal) {
+  const s = String(signal || '').trim();
+  let m = s.match(/^([0-9]+)-([0-9]+)-([0-9]+)[T ]([0-9]+):([0-9]+)/);
+  if (m) return `${m[3]}/${m[2]} ${m[4]}:${m[5]}`;
+  m = s.match(/^([0-9]+)[/]([0-9]+)[/][0-9]+ +([0-9]+):([0-9]+)/);
+  const pad = (v) => String(v).padStart(2, '0');
+  if (m) return `${pad(m[1])}/${pad(m[2])} ${pad(m[3])}:${m[4]}`;
+  return '';
+}
+
+function freshnessBadge(freshness) {
+  const map = { fresh: 'success', watch: 'warning', stale: 'warning', missing: 'error' };
+  const tone = map[freshness] || 'neutral';
+  const raw = String(freshness || 'unknown');
+  const label = raw.charAt(0).toUpperCase() + raw.slice(1);
+  return `<span class="carbon-status-badge carbon-status-badge--${tone}"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>${escapeHtml(label)}</span></span>`;
+}
+
+function saveControlCenterPrefs() {
+  const item = selectedDashboard();
+  const perDashboard = Object.assign({}, state.savedPerDashboard || {});
+  if (item?.variants?.length) {
+    perDashboard[item.file] = {
+      variantFile: item.currentVariantFile || ''
+    };
+  }
+  state.savedPerDashboard = perDashboard;
+  try {
+    localStorage.setItem(PREFS_KEY, JSON.stringify({
+      selectedFile: state.selectedFile,
+      perDashboard
+    }));
+  } catch {
+    // ignore quota / private mode
+  }
+}
+
+function restoreControlCenterPrefs() {
+  let prefs = null;
+  try {
+    prefs = JSON.parse(localStorage.getItem(PREFS_KEY) || 'null');
+  } catch {
+    prefs = null;
+  }
+  if (!prefs) {
+    try {
+      prefs = JSON.parse(localStorage.getItem('dla-control-center-v2') || 'null');
+    } catch {
+      prefs = null;
+    }
+  }
+  if (!prefs) return;
+  if (prefs.selectedFile) state.selectedFile = String(prefs.selectedFile).split('||')[0];
+  if (prefs.perDashboard && typeof prefs.perDashboard === 'object') {
+    state.savedPerDashboard = prefs.perDashboard;
+    Object.entries(prefs.perDashboard).forEach(([file, cfg]) => {
+      const item = payload.dashboards.find(row => row.file === file);
+      if (item && cfg?.variantFile) item.currentVariantFile = cfg.variantFile;
+    });
+  }
+}
+
+function init() {
+  restoreControlCenterPrefs();
+  bindEvents();
+  render();
+  fitViewer();
+}
+
+// C2: size the viewer to the remaining viewport so only the frame scrolls.
+function fitViewer() {
+  const wrap = document.querySelector('.viewer-frame-wrap');
+  if (!wrap) return;
+  const content = document.querySelector('.carbon-page__content');
+  const section = $('viewer');
+  const padBottom = content ? parseFloat(getComputedStyle(content).paddingBottom) || 0 : 0;
+  const borderBottom = section ? parseFloat(getComputedStyle(section).borderBottomWidth) || 0 : 0;
+  const top = wrap.getBoundingClientRect().top + window.scrollY;
+  wrap.style.height = Math.max(420, Math.floor(window.innerHeight - top - padBottom - borderBottom)) + 'px';
+}
+
+function bindEvents() {
+  $('dashboardCatalog').addEventListener('change', (event) => {
+    selectDashboard(event.target.value);
+  });
+  $('periodSelect').addEventListener('change', (event) => {
+    selectPeriod(event.target.value);
+  });
+  $('dashboardFrame').addEventListener('load', () => {
+    document.querySelector('.viewer-frame-wrap')?.classList.remove('is-loading');
+    $('viewer')?.removeAttribute('aria-busy');
+    setTimeout(expandFrameContent, 120);
+    setTimeout(checkIframeRenderHealth, 220);
+  });
+  $('dashboardFrame').addEventListener('load', expandFrameContent);
+  window.addEventListener('message', onFrameMessage);
+  $('periodFilterReset')?.addEventListener('click', () => {
+    try { $('dashboardFrame').contentWindow.postMessage({ type: 'dla-tt-filter-reset' }, frameOrigin()); } catch {}
+    $('periodSelect')?.focus();
+  });
+  const refreshBtn = $('refreshBtn');
+  if (refreshBtn) refreshBtn.addEventListener('click', () => location.reload());
+  window.addEventListener('resize', fitViewer);
+  window.addEventListener('load', fitViewer);
+  if (document.fonts?.ready) document.fonts.ready.then(fitViewer).catch(() => {});
+  bindFrameFocusRing();
+}
+
+// C8b: keyboard focus moving into the preview iframe blurs this window; ring the wrapper then.
+let ccLastTabAt = 0;
+function bindFrameFocusRing() {
+  const wrap = document.querySelector('.viewer-frame-wrap');
+  if (!wrap) return;
+  document.addEventListener('keydown', (event) => { if (event.key === 'Tab') ccLastTabAt = Date.now(); }, true);
+  window.addEventListener('blur', () => {
+    setTimeout(() => {
+      if (document.activeElement === $('dashboardFrame') && Date.now() - ccLastTabAt < 1000) wrap.setAttribute('data-frame-focus', '');
+    }, 0);
+  });
+  document.addEventListener('focusin', () => wrap.removeAttribute('data-frame-focus'));
+  window.addEventListener('focus', () => { if (document.activeElement !== $('dashboardFrame')) wrap.removeAttribute('data-frame-focus'); });
+}
+
+// B3: a dashboard frame reports its active filter scope; show it beside Period.
+function frameOrigin() {
+  return location.protocol === 'file:' ? '*' : location.origin;
+}
+
+function setFrameFilterState(info) {
+  const wrap = $('periodFilterState');
+  if (!wrap) return;
+  const active = Boolean(info && info.active && info.scope);
+  wrap.hidden = !active;
+  $('periodFilterText').textContent = active ? String(info.scope) : '';
+  const select = $('periodSelect');
+  if (active) select.setAttribute('aria-describedby', 'periodFilterState');
+  else select.removeAttribute('aria-describedby');
+}
+
+function onFrameMessage(event) {
+  const frame = $('dashboardFrame');
+  if (!frame || event.source !== frame.contentWindow) return;
+  if (location.protocol !== 'file:' && event.origin !== location.origin) return;
+  const data = event.data;
+  if (!data || data.type !== 'dla-tt-filter-state') return;
+  setFrameFilterState(data);
+}
+
+function filteredDashboards() {
+  return payload.dashboards.filter(item => item.exists);
+}
+
+function render() {
+  const rows = filteredDashboards();
+  ensureSelection(rows);
+  renderCatalog(rows);
+  renderPeriodSelect(selectedDashboard());
+  renderViewer();
+}
+
+function ensureSelection(rows) {
+  const stillVisible = rows.some(item => item.exists && item.file === state.selectedFile);
+  if (state.selectedFile && stillVisible) return;
+  const first = rows.find(item => item.exists);
+  state.selectedFile = first ? first.file : '';
+}
+
+function selectedDashboard() {
+  return payload.dashboards.find(item => item.file === state.selectedFile) || null;
+}
+
+function selectedVariant(item) {
+  if (!item?.variants?.length) return null;
+  return item.variants.find(row => row.file === item.currentVariantFile) || item.variants[0];
+}
+
+function renderCatalog(rows) {
+  const select = $('dashboardCatalog');
+  if (!rows.length) {
+    select.innerHTML = '<option value="" disabled selected>No dashboards available</option>';
+    select.selectedIndex = 0;
+    updateCatalogFreshness(null);
+    renderPeriodSelect(null);
+    return;
+  }
+  const groups = [...new Set(rows.map(item => item.group))];
+  let html = '';
+  for (const group of groups) {
+    const items = rows.filter(item => item.group === group);
+    html += `<optgroup label="${escapeAttr(group)}">`;
+    for (const item of items) {
+      const sel = item.file === state.selectedFile ? ' selected' : '';
+      html += `<option value="${escapeAttr(item.file)}"${sel}>${escapeHtml(item.title)}</option>`;
+    }
+    html += '</optgroup>';
+  }
+  select.innerHTML = html;
+  select.value = state.selectedFile;
+  updateCatalogFreshness(selectedDashboard());
+}
+
+function renderPeriodSelect(item) {
+  const select = $('periodSelect');
+  const label = $('periodLabel');
+  if (!item?.variants?.length) {
+    select.classList.add('hidden');
+    label?.classList.add('hidden');
+    select.innerHTML = '';
+    return;
+  }
+  select.classList.remove('hidden');
+  label?.classList.remove('hidden');
+  const current = selectedVariant(item) || item.variants[0];
+  select.innerHTML = item.variants.map(row => {
+    const sel = row.file === current.file ? ' selected' : '';
+    return `<option value="${escapeAttr(row.file)}"${sel}>${escapeHtml(row.label)}</option>`;
+  }).join('');
+  select.value = current.file;
+}
+
+function updateCatalogFreshness(item) {
+  const el = $('catalogFreshness');
+  if (!item) { el.innerHTML = ''; return; }
+  const variant = selectedVariant(item);
+  const updated = (variant || item).modifiedDisplay || item.modifiedDisplay || '';
+  const src = variant || item;
+  const asOf = src.dataAsOf || item.dataAsOf || '';
+  const asOfMatch = String(asOf).match(/^\d{4}-(\d{2})-(\d{2})(?:T(\d{2}:\d{2}))?/);
+  const asOfShort = asOfMatch ? `${asOfMatch[2]}/${asOfMatch[1]}${asOfMatch[3] ? ' ' + asOfMatch[3] : ''}` : '';
+  const dataTime = asOfShort || dataSignalShort(src.dataSignal || item.dataSignal);
+  const parts = [];
+  if (dataTime) parts.push(`<span title="${escapeAttr(updated ? 'File updated ' + updated : '')}">Data ${escapeHtml(dataTime)}</span>`);
+  else if (updated) parts.push(escapeHtml(updated));
+  parts.push(freshnessBadge(src.freshness || item.freshness));
+  el.innerHTML = parts.join(' · ');
+}
+
+function selectDashboard(file) {
+  const item = payload.dashboards.find(row => row.file === file && row.exists);
+  if (!item) return;
+  state.selectedFile = file;
+  $('dashboardCatalog').value = file;
+  renderPeriodSelect(item);
+  updateCatalogFreshness(item);
+  renderViewer();
+  saveControlCenterPrefs();
+}
+
+function selectPeriod(variantFile) {
+  const item = selectedDashboard();
+  if (!item?.variants?.length) return;
+  const variant = item.variants.find(row => row.file === variantFile);
+  if (!variant) return;
+  item.currentVariantFile = variant.file;
+  renderPeriodSelect(item);
+  updateCatalogFreshness(item);
+  renderViewer();
+  saveControlCenterPrefs();
+}
+
+function renderViewer() {
+  const frameWrap = document.querySelector('.viewer-frame-wrap');
+  const item = selectedDashboard();
+  setFrameFilterState(null);
+  frameWrap?.classList.remove('is-error', 'is-empty');
+  if (!item) {
+    $('dashboardFrame').removeAttribute('src');
+    $('viewerOpen').removeAttribute('href');
+    $('viewerOpen').setAttribute('aria-disabled', 'true');
+    frameWrap?.classList.remove('is-loading');
+    $('viewer')?.removeAttribute('aria-busy');
+    frameToken += 1;
+    if (!filteredDashboards().length) {
+      $('ccEmptyText').textContent = EMPTY_TEXT;
+      frameWrap?.classList.add('is-empty');
+    }
+    fitViewer();
+    return;
+  }
+  $('viewerOpen').removeAttribute('aria-disabled');
+  const variant = selectedVariant(item);
+  const frameItem = variant || item;
+  const bust = frameItem.modified ? String(frameItem.modified).replace(/[^0-9]/g, '').slice(0, 14) : Date.now();
+  $('ccLoadingText').textContent = `Loading ${item.title}…`;
+  $('viewer')?.setAttribute('aria-busy', 'true');
+  frameWrap?.classList.add('is-loading');
+  $('dashboardFrame').src = `${frameItem.href}?v=${bust}`;
+  $('viewerOpen').href = `${frameItem.href}?v=${bust}`;
+  probeFrame(`${frameItem.href}?v=${bust}`);
+  setTimeout(expandFrameContent, 250);
+  setTimeout(expandFrameContent, 900);
+  fitViewer();
+}
+
+// C4: same-origin HEAD check; a non-OK response shows a persistent inline error.
+function probeFrame(url) {
+  const token = ++frameToken;
+  if (typeof fetch !== 'function' || location.protocol === 'file:') return;
+  fetch(url, { method: 'HEAD', cache: 'no-store' })
+    .then(response => { if (!response.ok && token === frameToken) showFrameError(); })
+    .catch(() => {});
+}
+
+function showFrameError() {
+  const frameWrap = document.querySelector('.viewer-frame-wrap');
+  frameWrap?.classList.remove('is-loading');
+  frameWrap?.classList.add('is-error');
+  $('viewer')?.removeAttribute('aria-busy');
+  $('ccErrorText').textContent = PREVIEW_FAILED_TEXT;
+}
+
+function checkIframeRenderHealth() {
+  const frame = $('dashboardFrame');
+  try {
+    const doc = frame.contentDocument || frame.contentWindow?.document;
+    const app = doc?.getElementById('app');
+    const root = doc?.querySelector('.dashboard-grid, main.shell, #main');
+    const htmlLen = (app?.innerHTML || root?.innerHTML || doc?.body?.innerHTML || '').trim().length;
+    if (doc && htmlLen < 40) {
+      showToast(PREVIEW_FAILED_TEXT);
+      showFrameError();
+    }
+  } catch {
+    // ignore cross-origin
+  }
+}
+
+function expandFrameContent() {
+  const frame = $('dashboardFrame');
+  try {
+    const doc = frame.contentDocument || frame.contentWindow.document;
+    if (!doc || doc.getElementById('dla-full-frame-style')) return;
+    const style = doc.createElement('style');
+    style.id = 'dla-full-frame-style';
+    style.textContent = `
+      html, body { width: 100% !important; max-width: none !important; overflow-x: hidden !important; }
+      body { margin-left: 0 !important; margin-right: 0 !important; }
+      .wrap, .shell, .main, .container, .dashboard, .dashboard-shell, .page, main {
+        width: 100% !important; max-width: none !important; margin-left: 0 !important; margin-right: 0 !important;
+      }
+      .card, .panel, .section, .project-section, .chart-panel { max-width: none !important; }
+    `;
+    doc.head.appendChild(style);
+  } catch {
+    // Cross-origin or protected frame. Local dashboards should allow this.
+  }
+}
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 4200);
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
+}
+function escapeAttr(value) { return escapeHtml(value); }
+init();
+</script>
+</main></div>
+<script id="dla-theme-wire">
+(function () {
+  document.addEventListener("click", function (e) {
+    var b = e.target && e.target.closest ? e.target.closest(".dla-theme-toggle") : null;
+    if (!b || !window.dlaTheme) return;
+    window.dlaTheme.set(window.__dlaTheme === "g10" ? "g100" : "g10");
+  });
+  var frame = document.getElementById("dashboardFrame");
+  if (!frame) return;
+  function post() {
+    try { if (frame.contentWindow) frame.contentWindow.postMessage({ type: "dla-theme", theme: window.__dlaTheme }, location.origin); } catch (e) {}
+  }
+  window.addEventListener("dla-theme", post);
+  frame.addEventListener("load", post);
+})();
+</script>
+</body>
+</html>
