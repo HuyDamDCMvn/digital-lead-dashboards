@@ -428,6 +428,8 @@
       var cells = [];
       tr.querySelectorAll("th,td").forEach(function (cell) {
         if (cell.matches("th input, td input")) return;
+        /* Cells whose visible value sits in a button (TT compliance grid) carry it here. */
+        if (cell.hasAttribute("data-dla-csv-value")) { cells.push(csvCell(cell.getAttribute("data-dla-csv-value"))); return; }
         var clone = cell.cloneNode(true);
         clone.querySelectorAll("input, select, button, .member-modal__th-filter").forEach(function (n) { n.remove(); });
         cells.push(csvCell(clone.textContent));
@@ -2441,8 +2443,8 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
 </style>
 </head>
 <body class="cds--g100">
-  <script id="dashboard-data" type="application/json">{"generatedAt":"2026-11-02T11:02:35+07:00"}</script>
-  <div class="carbon-page cds--g100" data-carbon-theme="g100"><a class="skip-link" href="#main-content">Skip to main content</a><header class="carbon-page-header"><nav aria-label="Breadcrumb"><ol class="carbon-page-header__breadcrumb"><li><a href="#">Digital Team</a></li><li>Digital Team Dashboard</li></ol></nav><div class="carbon-page-header__row"><h1 class="carbon-page-header__title">Digital Team Dashboard</h1><div class="carbon-page-header__actions"><button type="button" class="carbon-btn carbon-btn--ghost dla-theme-toggle" id="themeToggle" title="Switch to light theme" data-dla-theme-toggle="1"><svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 12.005a4 4 0 1 1-4 4a4.005 4.005 0 0 1 4-4m0-2a6 6 0 1 0 6 6a6 6 0 0 0-6-6zM5.394 6.813l1.414-1.415l3.506 3.506L8.9 10.318zM2 15.005h5v2H2zm3.394 10.193L8.9 21.692l1.414 1.414l-3.506 3.506zM15 25.005h2v5h-2zm6.687-1.9l1.414-1.414l3.506 3.506l-1.414 1.414zm3.313-8.1h5v2h-5zm-3.313-6.101l3.506-3.506l1.414 1.414l-3.506 3.506zM15 2.005h2v5h-2z"/></svg><span class="dla-theme-toggle__label">Switch to light theme</span></button><span class="meta-pill dla-asof" data-dla-asof="2026-11-02T11:02">Data as of 02/11/2026 11:02<span class="dla-tip dla-tip--end"><button type="button" class="dla-tip__btn" aria-label="Data sources and times" aria-describedby="dla-tip-740352d6db" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M17 22v-8h-4v2h2v6h-3v2h8v-2h-3zM16 8a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 16 8z"/><path d="M16 30a14 14 0 1 1 14-14a14 14 0 0 1-14 14zm0-26a12 12 0 1 0 12 12A12 12 0 0 0 16 4z"/></svg></button><span class="dla-tip__body" role="tooltip" id="dla-tip-740352d6db"><span class="dla-asof__title">Sources (oldest first sets the chip)</span><span class="dla-asof__row"><span class="dla-asof__src">Mantis extract: tickets, notes, history, TimeTracking</span><span class="dla-asof__time">02/11/2026 11:02</span></span></span></span></span><span class="meta-pill">Generated 02/11/2026 11:02</span><span class="meta-pill">Source: cache</span><span class="meta-pill">Roster: dahn.nguyen, ht.nguyen, hu.dam, kd.doan, lk.dang, nd.huynh, qd.nguyen, qn.ha</span></div></div></header><main id="main-content" class="carbon-page__content" role="main">
+  <script id="dashboard-data" type="application/json">{"generatedAt":"2026-11-02T12:05:32+07:00"}</script>
+  <div class="carbon-page cds--g100" data-carbon-theme="g100"><a class="skip-link" href="#main-content">Skip to main content</a><header class="carbon-page-header"><nav aria-label="Breadcrumb"><ol class="carbon-page-header__breadcrumb"><li><a href="#">Digital Team</a></li><li>Digital Team Dashboard</li></ol></nav><div class="carbon-page-header__row"><h1 class="carbon-page-header__title">Digital Team Dashboard</h1><div class="carbon-page-header__actions"><button type="button" class="carbon-btn carbon-btn--ghost dla-theme-toggle" id="themeToggle" title="Switch to light theme" data-dla-theme-toggle="1"><svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 12.005a4 4 0 1 1-4 4a4.005 4.005 0 0 1 4-4m0-2a6 6 0 1 0 6 6a6 6 0 0 0-6-6zM5.394 6.813l1.414-1.415l3.506 3.506L8.9 10.318zM2 15.005h5v2H2zm3.394 10.193L8.9 21.692l1.414 1.414l-3.506 3.506zM15 25.005h2v5h-2zm6.687-1.9l1.414-1.414l3.506 3.506l-1.414 1.414zm3.313-8.1h5v2h-5zm-3.313-6.101l3.506-3.506l1.414 1.414l-3.506 3.506zM15 2.005h2v5h-2z"/></svg><span class="dla-theme-toggle__label">Switch to light theme</span></button><span class="meta-pill dla-asof" data-dla-asof="2026-11-02T12:04">Data as of 02/11/2026 12:04<span class="dla-tip dla-tip--end"><button type="button" class="dla-tip__btn" aria-label="Data sources and times" aria-describedby="dla-tip-d91ce4c265" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M17 22v-8h-4v2h2v6h-3v2h8v-2h-3zM16 8a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 16 8z"/><path d="M16 30a14 14 0 1 1 14-14a14 14 0 0 1-14 14zm0-26a12 12 0 1 0 12 12A12 12 0 0 0 16 4z"/></svg></button><span class="dla-tip__body" role="tooltip" id="dla-tip-d91ce4c265"><span class="dla-asof__title">Sources (oldest first sets the chip)</span><span class="dla-asof__row"><span class="dla-asof__src">Mantis extract: tickets, notes, history, TimeTracking</span><span class="dla-asof__time">02/11/2026 12:04</span></span></span></span></span><span class="meta-pill">Generated 02/11/2026 12:05</span><span class="meta-pill">Source: cache</span><span class="meta-pill">Roster: dahn.nguyen, ht.nguyen, hu.dam, kd.doan, lk.dang, nd.huynh, qd.nguyen, qn.ha</span></div></div></header><main id="main-content" class="carbon-page__content" role="main">
     <p class="carbon-scope-note">Scope: open tickets where the reporter or handler belongs to the Digital Team.</p>
     <div class="carbon-grid">
       <section class="carbon-tile carbon-tile--span-16 carbon-filter-panel">
@@ -2476,7 +2478,7 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
             <label for="dueFilter">Due Assessment</label>
             <select id="dueFilter">
               <option value="">All Due States</option>
-              <option value="overdue">Overdue</option><option value="due-today">Due Today</option><option value="on-track">On Track</option><option value="no-due-date">No Due Date</option>
+              <option value="due-today">Due Today</option><option value="on-track">On Track</option><option value="no-due-date">No Due Date</option>
             </select>
           </div>
           <div class="filter-actions">
@@ -2491,14 +2493,14 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
         <div id="filterChips" class="filter-chips" aria-label="Active filters"></div>
       </div>
       
-      <div class="kpi-cluster-label">Urgency <span class="kpi-asof">· due states as of 02/11/2026 11:02</span></div>
-      <div class="kpi-cluster kpi-cluster--5"><article class="carbon-tile carbon-kpi" data-kpi="overdue" data-status="error"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Overdue</span></p><p class="carbon-kpi__value">1</p><p class="carbon-kpi__subtitle">Tickets past their due date</p></article><article class="carbon-tile carbon-kpi" data-kpi="due-today" data-status="warning"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Due Today</span></p><p class="carbon-kpi__value">1</p><p class="carbon-kpi__subtitle">Due date = today (Asia/Bangkok)</p></article><article class="carbon-tile carbon-kpi" data-kpi="due-soon"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Due Soon</span></p><p class="carbon-kpi__value">0</p><p class="carbon-kpi__subtitle">Due within 3 days</p></article><article class="carbon-tile carbon-kpi" data-kpi="stale" data-status="warning"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Stale</span><span class="dla-tip"><button type="button" class="dla-tip__btn" aria-label="Stale definition" aria-describedby="dla-tip-38b32fad30" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M17 22v-8h-4v2h2v6h-3v2h8v-2h-3zM16 8a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 16 8z"/><path d="M16 30a14 14 0 1 1 14-14a14 14 0 0 1-14 14zm0-26a12 12 0 1 0 12 12A12 12 0 0 0 16 4z"/></svg></button><span class="dla-tip__body" role="tooltip" id="dla-tip-38b32fad30">Open ticket with no Mantis update AND no TimeTracking log for 14+ days. A ticket someone is still logging time on is not stale even if its fields have not changed.</span></span></p><p class="carbon-kpi__value">7</p><p class="carbon-kpi__subtitle">No update or time log in 14+ days</p></article><article class="carbon-tile carbon-kpi" data-kpi="no-due"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">No due date</span></p><p class="carbon-kpi__value">10</p><p class="carbon-kpi__subtitle">Open tickets without a due date</p></article></div>
+      <div class="kpi-cluster-label">Urgency <span class="kpi-asof">· due states as of 02/11/2026 12:05</span></div>
+      <div class="kpi-cluster kpi-cluster--5"><article class="carbon-tile carbon-kpi" data-kpi="overdue"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Overdue</span></p><p class="carbon-kpi__value">0</p><p class="carbon-kpi__subtitle">Tickets past their due date</p></article><article class="carbon-tile carbon-kpi" data-kpi="due-today" data-status="warning"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Due Today</span></p><p class="carbon-kpi__value">1</p><p class="carbon-kpi__subtitle">Due date = today (Asia/Bangkok)</p></article><article class="carbon-tile carbon-kpi" data-kpi="due-soon"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Due Soon</span></p><p class="carbon-kpi__value">0</p><p class="carbon-kpi__subtitle">Due within 3 days</p></article><article class="carbon-tile carbon-kpi" data-kpi="stale" data-status="warning"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Stale</span><span class="dla-tip"><button type="button" class="dla-tip__btn" aria-label="Stale definition" aria-describedby="dla-tip-38b32fad30" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M17 22v-8h-4v2h2v6h-3v2h8v-2h-3zM16 8a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 16 8z"/><path d="M16 30a14 14 0 1 1 14-14a14 14 0 0 1-14 14zm0-26a12 12 0 1 0 12 12A12 12 0 0 0 16 4z"/></svg></button><span class="dla-tip__body" role="tooltip" id="dla-tip-38b32fad30">Open ticket with no Mantis update AND no TimeTracking log for 14+ days. A ticket someone is still logging time on is not stale even if its fields have not changed.</span></span></p><p class="carbon-kpi__value">7</p><p class="carbon-kpi__subtitle">No update or time log in 14+ days</p></article><article class="carbon-tile carbon-kpi" data-kpi="no-due"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">No due date</span></p><p class="carbon-kpi__value">10</p><p class="carbon-kpi__subtitle">Open tickets without a due date</p></article></div>
       <div class="kpi-cluster-label">Effort</div>
-      <div class="kpi-cluster kpi-cluster--5"><article class="carbon-tile carbon-kpi" data-kpi="open"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Open Tickets</span></p><p class="carbon-kpi__value">30</p><p class="carbon-kpi__subtitle">Total tickets related to the Digital Team</p></article><article class="carbon-tile carbon-kpi" data-kpi="month"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Logged (Nov)</span><span class="dla-tip"><button type="button" class="dla-tip__btn" aria-label="Logged (Nov) definition" aria-describedby="dla-tip-467a7a9445" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M17 22v-8h-4v2h2v6h-3v2h8v-2h-3zM16 8a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 16 8z"/><path d="M16 30a14 14 0 1 1 14-14a14 14 0 0 1-14 14zm0-26a12 12 0 1 0 12 12A12 12 0 0 0 16 4z"/></svg></button><span class="dla-tip__body" role="tooltip" id="dla-tip-467a7a9445">Hours logged in TimeTracking on this ticket during Nov (by anyone), from the same Mantis extract as the Time Tracking page.</span></span></p><p class="carbon-kpi__value">-</p><p class="carbon-kpi__subtitle">0 tickets with Nov logs</p></article><article class="carbon-tile carbon-kpi" data-kpi="actual"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Lifetime on ticket</span><span class="dla-tip"><button type="button" class="dla-tip__btn" aria-label="Lifetime on ticket definition" aria-describedby="dla-tip-2fcdb26448" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M17 22v-8h-4v2h2v6h-3v2h8v-2h-3zM16 8a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 16 8z"/><path d="M16 30a14 14 0 1 1 14-14a14 14 0 0 1-14 14zm0-26a12 12 0 1 0 12 12A12 12 0 0 0 16 4z"/></svg></button><span class="dla-tip__body" role="tooltip" id="dla-tip-2fcdb26448">Mantis “Actual Hours” on the ticket: every hour ever logged on it, all months and all people. Rolled up under the current handler, so it is not that person’s own effort.</span></span></p><p class="carbon-kpi__value">1355.5</p><p class="carbon-kpi__subtitle">19 tickets with hours</p></article><article class="carbon-tile carbon-kpi" data-kpi="planned"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Planned Hours</span></p><p class="carbon-kpi__value">61</p><p class="carbon-kpi__subtitle">Planned on 2 / 30 tickets</p></article><article class="carbon-tile carbon-kpi" data-kpi="util"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Utilization</span><span class="dla-tip dla-tip--end"><button type="button" class="dla-tip__btn" aria-label="Utilization definition" aria-describedby="dla-tip-145f22990d" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M17 22v-8h-4v2h2v6h-3v2h8v-2h-3zM16 8a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 16 8z"/><path d="M16 30a14 14 0 1 1 14-14a14 14 0 0 1-14 14zm0-26a12 12 0 1 0 12 12A12 12 0 0 0 16 4z"/></svg></button><span class="dla-tip__body" role="tooltip" id="dla-tip-145f22990d">Lifetime hours ÷ planned hours, on tickets that have both. Read with care while fewer than 50% of open tickets have planned hours: a ratio on a handful of tickets says little about the team.</span></span></p><p class="carbon-kpi__value">60%</p><p class="carbon-kpi__subtitle">Based on 2 of 30 tickets with planned hours</p></article></div>
+      <div class="kpi-cluster kpi-cluster--5"><article class="carbon-tile carbon-kpi" data-kpi="open"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Open Tickets</span></p><p class="carbon-kpi__value">32</p><p class="carbon-kpi__subtitle">Total tickets related to the Digital Team</p></article><article class="carbon-tile carbon-kpi" data-kpi="month"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Logged (Nov)</span><span class="dla-tip"><button type="button" class="dla-tip__btn" aria-label="Logged (Nov) definition" aria-describedby="dla-tip-467a7a9445" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M17 22v-8h-4v2h2v6h-3v2h8v-2h-3zM16 8a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 16 8z"/><path d="M16 30a14 14 0 1 1 14-14a14 14 0 0 1-14 14zm0-26a12 12 0 1 0 12 12A12 12 0 0 0 16 4z"/></svg></button><span class="dla-tip__body" role="tooltip" id="dla-tip-467a7a9445">Hours logged in TimeTracking on this ticket during Nov (by anyone), from the same Mantis extract as the Time Tracking page.</span></span></p><p class="carbon-kpi__value">0.5</p><p class="carbon-kpi__subtitle">1 ticket with Nov logs</p></article><article class="carbon-tile carbon-kpi" data-kpi="actual"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Lifetime on ticket</span><span class="dla-tip"><button type="button" class="dla-tip__btn" aria-label="Lifetime on ticket definition" aria-describedby="dla-tip-2fcdb26448" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M17 22v-8h-4v2h2v6h-3v2h8v-2h-3zM16 8a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 16 8z"/><path d="M16 30a14 14 0 1 1 14-14a14 14 0 0 1-14 14zm0-26a12 12 0 1 0 12 12A12 12 0 0 0 16 4z"/></svg></button><span class="dla-tip__body" role="tooltip" id="dla-tip-2fcdb26448">Mantis “Actual Hours” on the ticket: every hour ever logged on it, all months and all people. Rolled up under the current handler, so it is not that person’s own effort.</span></span></p><p class="carbon-kpi__value">1356</p><p class="carbon-kpi__subtitle">19 tickets with hours</p></article><article class="carbon-tile carbon-kpi" data-kpi="planned"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Planned Hours</span></p><p class="carbon-kpi__value">61</p><p class="carbon-kpi__subtitle">Planned on 2 / 32 tickets</p></article><article class="carbon-tile carbon-kpi" data-kpi="util"><p class="carbon-kpi__label"><span class="carbon-kpi__label-text">Utilization</span><span class="dla-tip dla-tip--end"><button type="button" class="dla-tip__btn" aria-label="Utilization definition" aria-describedby="dla-tip-145f22990d" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M17 22v-8h-4v2h2v6h-3v2h8v-2h-3zM16 8a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 16 8z"/><path d="M16 30a14 14 0 1 1 14-14a14 14 0 0 1-14 14zm0-26a12 12 0 1 0 12 12A12 12 0 0 0 16 4z"/></svg></button><span class="dla-tip__body" role="tooltip" id="dla-tip-145f22990d">Lifetime hours ÷ planned hours, on tickets that have both. Read with care while fewer than 50% of open tickets have planned hours: a ratio on a handful of tickets says little about the team.</span></span></p><p class="carbon-kpi__value">60%</p><p class="carbon-kpi__subtitle">Based on 2 of 32 tickets with planned hours</p></article></div>
       <div class="kpi-provenance">
         <span><strong>Scope:</strong> open Digital Team tickets (status &lt; 80)</span>
         <span><strong>Source:</strong> cache</span>
-        <span><strong>Generated:</strong> 02/11/2026 11:02</span>
+        <span><strong>Generated:</strong> 02/11/2026 12:05</span>
         <span><strong>Overdue:</strong> due_date &lt; today (Asia/Bangkok)</span>
         <span><strong>Stale:</strong> no update and no time log ≥ 14 days</span>
       </div>
@@ -2507,7 +2509,7 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
     <section class="action-queue carbon-tile carbon-tile--span-16">
       <section class="carbon-data-table-container">
         <div class="carbon-data-table-container__head">
-          <h2 class="carbon-data-table-container__title">⚠ Tickets Requiring Attention (9)</h2>
+          <h2 class="carbon-data-table-container__title">⚠ Tickets Requiring Attention (8)</h2>
         </div>
         <div class="carbon-data-table-wrap table-wrap">
           <table class="carbon-data-table cds--data-table">
@@ -2523,26 +2525,6 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
               <th scope="col">Last Updated</th>
             </tr></thead>
             <tbody>
-            <tr class="ticket-row" data-ticket-id="67116"
-                tabindex="0"
-                role="button"
-                aria-label="View ticket #67116: Annotation_DIG_Question and Answer Meeting Support"
-                data-project="dcmvn_annotation-project"
-                data-handler="huy-duc-dam"
-                data-status="acknowledged"
-                data-due-assessment="overdue"
-                data-search="67116 annotation_dig_question and answer meeting support huy duc dam huy duc dam">
-              <td data-label="ID">67116</td>
-              <td data-label="Summary">Annotation_DIG_Question and Answer Meeting Support</td>
-              <td data-label="Handler">Huy Duc Dam</td>
-              <td data-label="Project">DCMvn_Annotation Project</td>
-              <td data-label="Due">30/10/2026</td>
-              <td data-label="Overdue"><span class="days-overdue">+3d</span></td>
-              <td data-label="Assessment"><span class="carbon-status-badge carbon-status-badge--error"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Overdue</span></span></td>
-              <td data-label="Stale"></td>
-              <td data-label="Updated">05/10/2026 11:39</td>
-            </tr>
-        
             <tr class="ticket-row" data-ticket-id="76928"
                 tabindex="0"
                 role="button"
@@ -2639,7 +2621,7 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
               <td data-label="Due">-</td>
               <td data-label="Overdue"></td>
               <td data-label="Assessment"><span class="carbon-status-badge carbon-status-badge--neutral"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>No Due Date</span></span></td>
-              <td data-label="Stale"><span class="days-stale" title="Days since the last Mantis update or time log, whichever is more recent">93d</span></td>
+              <td data-label="Stale"><span class="days-stale" title="Days since the last Mantis update or time log, whichever is more recent">94d</span></td>
               <td data-label="Updated">31/07/2026 11:03</td>
             </tr>
         
@@ -2663,6 +2645,26 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
               <td data-label="Updated">08/09/2026 15:37</td>
             </tr>
         
+            <tr class="ticket-row" data-ticket-id="71557"
+                tabindex="0"
+                role="button"
+                aria-label="View ticket #71557: Activate the developer Function on ChatGPT"
+                data-project="dcmvn_it_issues/tasks"
+                data-handler="thomas-schäfer"
+                data-status="confirmed"
+                data-due-assessment="no-due-date"
+                data-search="71557 activate the developer function on chatgpt huy duc dam thomas schäfer">
+              <td data-label="ID">71557</td>
+              <td data-label="Summary">Activate the developer Function on ChatGPT</td>
+              <td data-label="Handler">Thomas Schäfer</td>
+              <td data-label="Project">DCMvn_IT_Issues/Tasks</td>
+              <td data-label="Due">-</td>
+              <td data-label="Overdue"></td>
+              <td data-label="Assessment"><span class="carbon-status-badge carbon-status-badge--neutral"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>No Due Date</span></span></td>
+              <td data-label="Stale"><span class="days-stale" title="Days since the last Mantis update or time log, whichever is more recent">25d</span></td>
+              <td data-label="Updated">08/10/2026 11:17</td>
+            </tr>
+        
             <tr class="ticket-row" data-ticket-id="68144"
                 tabindex="0"
                 role="button"
@@ -2682,26 +2684,6 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
               <td data-label="Stale"><span class="days-stale" title="Days since the last Mantis update or time log, whichever is more recent">24d</span></td>
               <td data-label="Updated">09/10/2026 08:27</td>
             </tr>
-        
-            <tr class="ticket-row" data-ticket-id="71557"
-                tabindex="0"
-                role="button"
-                aria-label="View ticket #71557: Activate the developer Function on ChatGPT"
-                data-project="dcmvn_it_issues/tasks"
-                data-handler="thomas-schäfer"
-                data-status="confirmed"
-                data-due-assessment="no-due-date"
-                data-search="71557 activate the developer function on chatgpt huy duc dam thomas schäfer">
-              <td data-label="ID">71557</td>
-              <td data-label="Summary">Activate the developer Function on ChatGPT</td>
-              <td data-label="Handler">Thomas Schäfer</td>
-              <td data-label="Project">DCMvn_IT_Issues/Tasks</td>
-              <td data-label="Due">-</td>
-              <td data-label="Overdue"></td>
-              <td data-label="Assessment"><span class="carbon-status-badge carbon-status-badge--neutral"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>No Due Date</span></span></td>
-              <td data-label="Stale"><span class="days-stale" title="Days since the last Mantis update or time log, whichever is more recent">24d</span></td>
-              <td data-label="Updated">08/10/2026 11:17</td>
-            </tr>
         </tbody>
           </table>
         </div>
@@ -2720,7 +2702,7 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
             <div class="carbon-data-table-wrap">
               <table class="carbon-data-table cds--data-table" id="due-legend-table">
                 <thead><tr><th></th><th>Assessment</th><th class="num">Count</th><th class="num">%</th></tr></thead>
-                <tbody><tr class="clickable" data-filter-due="overdue"><td><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#fa4d56"></span></td><td>Overdue</td><td class="num">1</td><td class="num">3.3%</td></tr><tr class="clickable" data-filter-due="due-today"><td><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#f1c21b"></span></td><td>Due Today</td><td class="num">1</td><td class="num">3.3%</td></tr><tr class="clickable" data-filter-due="on-track"><td><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#42be65"></span></td><td>On Track</td><td class="num">18</td><td class="num">60.0%</td></tr><tr class="clickable" data-filter-due="no-due-date"><td><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#8d8d8d"></span></td><td>No Due Date</td><td class="num">10</td><td class="num">33.3%</td></tr></tbody>
+                <tbody><tr class="clickable" data-filter-due="due-today"><td><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#f1c21b"></span></td><td>Due Today</td><td class="num">1</td><td class="num">3.1%</td></tr><tr class="clickable" data-filter-due="on-track"><td><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#42be65"></span></td><td>On Track</td><td class="num">21</td><td class="num">65.6%</td></tr><tr class="clickable" data-filter-due="no-due-date"><td><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#8d8d8d"></span></td><td>No Due Date</td><td class="num">10</td><td class="num">31.2%</td></tr></tbody>
               </table>
             </div>
           </section>
@@ -2769,9 +2751,9 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
               <th>Handler</th><th class="num">Tickets</th><th class="num">Overdue</th>
               <th class="num">Stale</th><th class="num">Planned</th>
               <th class="num">Logged (Nov)</th><th class="num">Lifetime on ticket</th>
-              <th class="num">Util%</th><th><span class="wc-th-tip">Balance<span class="dla-tip dla-tip--end"><button type="button" class="dla-tip__btn" aria-label="Balance basis" aria-describedby="dla-tip-5c10866a13" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M17 22v-8h-4v2h2v6h-3v2h8v-2h-3zM16 8a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 16 8z"/><path d="M16 30a14 14 0 1 1 14-14a14 14 0 0 1-14 14zm0-26a12 12 0 1 0 12 12A12 12 0 0 0 16 4z"/></svg></button><span class="dla-tip__body" role="tooltip" id="dla-tip-5c10866a13">Balance compares each handler with the team average by ticket count. Only 2 of 30 open tickets have planned hours, so ticket count is used. Hours are shown beside it for context.</span></span></span><span class="wc-basis">by ticket count · tickets / h</span></th>
+              <th class="num">Util%</th><th><span class="wc-th-tip">Balance<span class="dla-tip dla-tip--end"><button type="button" class="dla-tip__btn" aria-label="Balance basis" aria-describedby="dla-tip-c6608ce841" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M17 22v-8h-4v2h2v6h-3v2h8v-2h-3zM16 8a1.5 1.5 0 1 0 1.5 1.5A1.5 1.5 0 0 0 16 8z"/><path d="M16 30a14 14 0 1 1 14-14a14 14 0 0 1-14 14zm0-26a12 12 0 1 0 12 12A12 12 0 0 0 16 4z"/></svg></button><span class="dla-tip__body" role="tooltip" id="dla-tip-c6608ce841">Balance compares each handler with the team average by ticket count. Only 2 of 32 open tickets have planned hours, so ticket count is used. Hours are shown beside it for context.</span></span></span><span class="wc-basis">by ticket count · tickets / h</span></th>
             </tr></thead>
-            <tbody><tr><td>Huy Duc Dam</td><td class="num">7</td><td class="num"><span class="days-overdue">1</span></td><td class="num"><span class="days-stale">2</span></td><td class="num">-</td><td class="num">-</td><td class="num">582.75</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--error"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>High</span></span><span class="wc-load" title="7 tickets, lifetime hours on them">7 / 582.75 h</span></span></td></tr><tr><td>Long Kim Dang</td><td class="num">2</td><td class="num">0</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">10</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Balanced</span></span><span class="wc-load" title="2 tickets, lifetime hours on them">2 / 10 h</span></span></td></tr><tr><td>Quy Ngoc Ha</td><td class="num">2</td><td class="num">0</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">56</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Balanced</span></span><span class="wc-load" title="2 tickets, lifetime hours on them">2 / 56 h</span></span></td></tr><tr><td>Khoa Dang Doan</td><td class="num">3</td><td class="num">0</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">393</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Balanced</span></span><span class="wc-load" title="3 tickets, lifetime hours on them">3 / 393 h</span></span></td></tr><tr><td>Hung Tien Nguyen</td><td class="num">2</td><td class="num">0</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">69</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Balanced</span></span><span class="wc-load" title="2 tickets, lifetime hours on them">2 / 69 h</span></span></td></tr><tr><td>Quan Dinh Nguyen</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">64.5</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--info"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Low</span></span><span class="wc-load" title="1 ticket, lifetime hours on them">1 / 64.5 h</span></span></td></tr><tr><td>Danh Hong Nguyen</td><td class="num">3</td><td class="num">0</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Balanced</span></span><span class="wc-load" title="3 tickets, lifetime hours on them">3 / 0 h</span></span></td></tr><tr><td>Thomas Schäfer</td><td class="num">3</td><td class="num">0</td><td class="num"><span class="days-stale">3</span></td><td class="num">-</td><td class="num">-</td><td class="num">23.5</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Balanced</span></span><span class="wc-load" title="3 tickets, lifetime hours on them">3 / 23.5 h</span></span></td></tr><tr><td>Nhan Danh Huynh</td><td class="num">2</td><td class="num">0</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">120</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Balanced</span></span><span class="wc-load" title="2 tickets, lifetime hours on them">2 / 120 h</span></span></td></tr><tr><td>Thuong Van Huynh</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">50</td><td class="num">-</td><td class="num">22.5</td><td class="num">45%</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--info"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Low</span></span><span class="wc-load" title="1 ticket, lifetime hours on them">1 / 22.5 h</span></span></td></tr><tr><td>Lam Truong</td><td class="num">1</td><td class="num">0</td><td class="num"><span class="days-stale">1</span></td><td class="num">11</td><td class="num">-</td><td class="num">14.25</td><td class="num">130%</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--info"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Low</span></span><span class="wc-load" title="1 ticket, lifetime hours on them">1 / 14.25 h</span></span></td></tr><tr><td>Nhut Le</td><td class="num">1</td><td class="num">0</td><td class="num"><span class="days-stale">1</span></td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--info"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Low</span></span><span class="wc-load" title="1 ticket, lifetime hours on them">1 / 0 h</span></span></td></tr><tr><td>Linh Trinh</td><td class="num">2</td><td class="num">0</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Balanced</span></span><span class="wc-load" title="2 tickets, lifetime hours on them">2 / 0 h</span></span></td></tr></tbody>
+            <tbody><tr><td>Long Kim Dang</td><td class="num">2</td><td class="num">0</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">10</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Balanced</span></span><span class="wc-load" title="2 tickets, lifetime hours on them">2 / 10 h</span></span></td></tr><tr><td>Huy Duc Dam</td><td class="num">9</td><td class="num">0</td><td class="num"><span class="days-stale">2</span></td><td class="num">-</td><td class="num">0.5</td><td class="num">583.25</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--error"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>High</span></span><span class="wc-load" title="9 tickets, lifetime hours on them">9 / 583.25 h</span></span></td></tr><tr><td>Quy Ngoc Ha</td><td class="num">2</td><td class="num">0</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">56</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Balanced</span></span><span class="wc-load" title="2 tickets, lifetime hours on them">2 / 56 h</span></span></td></tr><tr><td>Khoa Dang Doan</td><td class="num">3</td><td class="num">0</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">393</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Balanced</span></span><span class="wc-load" title="3 tickets, lifetime hours on them">3 / 393 h</span></span></td></tr><tr><td>Hung Tien Nguyen</td><td class="num">2</td><td class="num">0</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">69</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Balanced</span></span><span class="wc-load" title="2 tickets, lifetime hours on them">2 / 69 h</span></span></td></tr><tr><td>Quan Dinh Nguyen</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">64.5</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--info"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Low</span></span><span class="wc-load" title="1 ticket, lifetime hours on them">1 / 64.5 h</span></span></td></tr><tr><td>Danh Hong Nguyen</td><td class="num">3</td><td class="num">0</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Balanced</span></span><span class="wc-load" title="3 tickets, lifetime hours on them">3 / 0 h</span></span></td></tr><tr><td>Thomas Schäfer</td><td class="num">3</td><td class="num">0</td><td class="num"><span class="days-stale">3</span></td><td class="num">-</td><td class="num">-</td><td class="num">23.5</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Balanced</span></span><span class="wc-load" title="3 tickets, lifetime hours on them">3 / 23.5 h</span></span></td></tr><tr><td>Nhan Danh Huynh</td><td class="num">2</td><td class="num">0</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">120</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Balanced</span></span><span class="wc-load" title="2 tickets, lifetime hours on them">2 / 120 h</span></span></td></tr><tr><td>Thuong Van Huynh</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">50</td><td class="num">-</td><td class="num">22.5</td><td class="num">45%</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--info"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Low</span></span><span class="wc-load" title="1 ticket, lifetime hours on them">1 / 22.5 h</span></span></td></tr><tr><td>Lam Truong</td><td class="num">1</td><td class="num">0</td><td class="num"><span class="days-stale">1</span></td><td class="num">11</td><td class="num">-</td><td class="num">14.25</td><td class="num">130%</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--info"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Low</span></span><span class="wc-load" title="1 ticket, lifetime hours on them">1 / 14.25 h</span></span></td></tr><tr><td>Nhut Le</td><td class="num">1</td><td class="num">0</td><td class="num"><span class="days-stale">1</span></td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--info"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Low</span></span><span class="wc-load" title="1 ticket, lifetime hours on them">1 / 0 h</span></span></td></tr><tr><td>Linh Trinh</td><td class="num">2</td><td class="num">0</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td class="num">N/A</td><td><span class="wc-balance"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Balanced</span></span><span class="wc-load" title="2 tickets, lifetime hours on them">2 / 0 h</span></span></td></tr></tbody>
           </table>
         </div>
       </section>
@@ -2791,7 +2773,7 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
               <th class="num">Logged (Nov)</th><th class="num">Lifetime on ticket</th>
               <th>Health</th>
             </tr></thead>
-            <tbody><tr><td>DCMvn_Digital</td><td class="num">19</td><td class="num">0%</td><td class="num">4</td><td class="num">-</td><td class="num">-</td><td class="num">725.5</td><td><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>94</span></span></td></tr><tr><td>DCMvn_Annotation Project</td><td class="num">6</td><td class="num">17%</td><td class="num">2</td><td class="num">61</td><td class="num">-</td><td class="num">615</td><td><span class="carbon-status-badge carbon-status-badge--error"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>0</span></span></td></tr><tr><td>DCMvn_PRD</td><td class="num">2</td><td class="num">0%</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>100</span></span></td></tr><tr><td>DCMvn_English_Training</td><td class="num">1</td><td class="num">0%</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">9</td><td><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>100</span></span></td></tr><tr><td>DCMvn_IT_Issues/Tasks</td><td class="num">1</td><td class="num">0%</td><td class="num">1</td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>70</span></span></td></tr><tr><td>DCMvn_Team Leads</td><td class="num">1</td><td class="num">0%</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">6</td><td><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>100</span></span></td></tr></tbody>
+            <tbody><tr><td>DCMvn_Digital</td><td class="num">19</td><td class="num">0%</td><td class="num">4</td><td class="num">-</td><td class="num">0.5</td><td class="num">726</td><td><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>94</span></span></td></tr><tr><td>DCMvn_Annotation Project</td><td class="num">8</td><td class="num">0%</td><td class="num">2</td><td class="num">61</td><td class="num">-</td><td class="num">615</td><td><span class="carbon-status-badge carbon-status-badge--error"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>0</span></span></td></tr><tr><td>DCMvn_PRD</td><td class="num">2</td><td class="num">0%</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>100</span></span></td></tr><tr><td>DCMvn_English_Training</td><td class="num">1</td><td class="num">0%</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">9</td><td><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>100</span></span></td></tr><tr><td>DCMvn_IT_Issues/Tasks</td><td class="num">1</td><td class="num">0%</td><td class="num">1</td><td class="num">-</td><td class="num">-</td><td class="num">-</td><td><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>70</span></span></td></tr><tr><td>DCMvn_Team Leads</td><td class="num">1</td><td class="num">0%</td><td class="num">0</td><td class="num">-</td><td class="num">-</td><td class="num">6</td><td><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>100</span></span></td></tr></tbody>
           </table>
         </div>
       </section>
@@ -2807,8 +2789,8 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
                       <p><span class="project-ticket-count">19</span> tickets</p>
                     </div>
                     <div class="meta-row">
-                      <span class="meta-pill">Logged (Nov): -</span>
-                      <span class="meta-pill">Lifetime on ticket: 725.5</span>
+                      <span class="meta-pill">Logged (Nov): 0.5</span>
+                      <span class="meta-pill">Lifetime on ticket: 726</span>
                       <span class="meta-pill">Planned: -</span>
                     </div>
                   </div>
@@ -2822,8 +2804,8 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
                       <p><span class="member-ticket-count">5</span> tickets</p>
                     </div>
                     <div class="meta-row">
-                      <span class="meta-pill">Logged (Nov): -</span>
-                      <span class="meta-pill">Lifetime on ticket: 118.5</span>
+                      <span class="meta-pill">Logged (Nov): 0.5</span>
+                      <span class="meta-pill">Lifetime on ticket: 119</span>
                       <span class="meta-pill">Planned: -</span>
                     </div>
                   </div>
@@ -2915,8 +2897,8 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
                 data-due-assessment="on-track"
                 data-ticket-id="76302"
                 data-planned="0.0"
-                data-actual="96.5"
-                data-month="0.0"
+                data-actual="97.0"
+                data-month="0.5"
                 data-due-none="0"
                 data-stale="0"
                 data-search="76302 internal manage task of digital team 2025_q4 huy duc dam huy duc dam hu.dam hu.dam">
@@ -2929,8 +2911,8 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
               <td data-label="Due Assessment"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>On Track</span></span></td>
               <td data-label="Status"><span class="carbon-status-badge carbon-status-badge--warning"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Acknowledged</span></span></td>
               <td data-label="Planned Hours" class="num">-</td>
-              <td data-label="Logged (Nov)" class="num">-</td>
-              <td data-label="Lifetime on ticket" class="num">96.5</td>
+              <td data-label="Logged (Nov)" class="num">0.5</td>
+              <td data-label="Lifetime on ticket" class="num">97</td>
             </tr>
             
             <tr class="ticket-row stale"
@@ -3693,7 +3675,7 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
                   <div class="project-head">
                     <div>
                       <h2>DCMvn_Annotation Project</h2>
-                      <p><span class="project-ticket-count">6</span> tickets <span class="meta-pill meta-pill--overdue">1 overdue</span></p>
+                      <p><span class="project-ticket-count">8</span> tickets</p>
                     </div>
                     <div class="meta-row">
                       <span class="meta-pill">Logged (Nov): -</span>
@@ -3704,6 +3686,132 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
                 </summary>
                 <div class="member-stack">
                   
+                <section class="member-section" data-member-section="huy-duc-dam">
+                  <div class="member-head">
+                    <div>
+                      <h3>Huy Duc Dam</h3>
+                      <p><span class="member-ticket-count">3</span> tickets</p>
+                    </div>
+                    <div class="meta-row">
+                      <span class="meta-pill">Logged (Nov): -</span>
+                      <span class="meta-pill">Lifetime on ticket: 458.25</span>
+                      <span class="meta-pill">Planned: -</span>
+                    </div>
+                  </div>
+                  <div class="table-wrap">
+                    
+    <section class="carbon-data-table-container">
+      <div class="carbon-data-table-wrap table-wrap">
+        <table class="carbon-data-table cds--data-table">
+          <thead>
+            <tr>
+              <th scope="col" aria-sort="none">ID</th>
+              <th scope="col" aria-sort="none">Summary</th>
+              <th scope="col" aria-sort="none">Reporter</th>
+              <th scope="col" aria-sort="none">Handler</th>
+              <th scope="col" aria-sort="none">Start Date</th>
+              <th scope="col" aria-sort="none">Due Date</th>
+              <th scope="col" aria-sort="none">Due Assessment</th>
+              <th scope="col" aria-sort="none">Status</th>
+              <th scope="col" aria-sort="none" class="num">Planned Hours</th>
+              <th scope="col" aria-sort="none" class="num">Logged (Nov)</th>
+              <th scope="col" aria-sort="none" class="num">Lifetime on ticket</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="ticket-row"
+                tabindex="0"
+                role="button"
+                aria-label="View ticket #76979: DIG_Template_RLT_Layout_LPH3_Retrieve the graphical configur"
+                data-project="dcmvn_annotation-project"
+                data-handler="huy-duc-dam"
+                data-status="new"
+                data-due-assessment="on-track"
+                data-ticket-id="76979"
+                data-planned="0.0"
+                data-actual="0.0"
+                data-month="0.0"
+                data-due-none="0"
+                data-stale="0"
+                data-search="76979 dig_template_rlt_layout_lph3_retrieve the graphical configuration huy duc dam huy duc dam hu.dam hu.dam">
+              <td data-label="ID"><span class="ticket-toggle" aria-hidden="true">▸</span> 76979</td>
+              <td data-label="Summary">DIG_Template_RLT_Layout_LPH3_Retrieve the graphical configuration</td>
+              <td data-label="Reporter">Huy Duc Dam</td>
+              <td data-label="Handler">Huy Duc Dam</td>
+              <td data-label="Start Date">01/11/2026</td>
+              <td data-label="Due Date">06/11/2026</td>
+              <td data-label="Due Assessment"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>On Track</span></span></td>
+              <td data-label="Status"><span class="carbon-status-badge carbon-status-badge--info"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>New</span></span></td>
+              <td data-label="Planned Hours" class="num">0</td>
+              <td data-label="Logged (Nov)" class="num">-</td>
+              <td data-label="Lifetime on ticket" class="num">-</td>
+            </tr>
+            
+            <tr class="ticket-row"
+                tabindex="0"
+                role="button"
+                aria-label="View ticket #76980: DIG_Template_RLT_Schematic_LPH3_Retrieve the graphical confi"
+                data-project="dcmvn_annotation-project"
+                data-handler="huy-duc-dam"
+                data-status="new"
+                data-due-assessment="on-track"
+                data-ticket-id="76980"
+                data-planned="0.0"
+                data-actual="0.0"
+                data-month="0.0"
+                data-due-none="0"
+                data-stale="0"
+                data-search="76980 dig_template_rlt_schematic_lph3_retrieve the graphical configuration huy duc dam huy duc dam hu.dam hu.dam">
+              <td data-label="ID"><span class="ticket-toggle" aria-hidden="true">▸</span> 76980</td>
+              <td data-label="Summary">DIG_Template_RLT_Schematic_LPH3_Retrieve the graphical configuration</td>
+              <td data-label="Reporter">Huy Duc Dam</td>
+              <td data-label="Handler">Huy Duc Dam</td>
+              <td data-label="Start Date">-</td>
+              <td data-label="Due Date">06/11/2026</td>
+              <td data-label="Due Assessment"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>On Track</span></span></td>
+              <td data-label="Status"><span class="carbon-status-badge carbon-status-badge--info"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>New</span></span></td>
+              <td data-label="Planned Hours" class="num">0</td>
+              <td data-label="Logged (Nov)" class="num">-</td>
+              <td data-label="Lifetime on ticket" class="num">-</td>
+            </tr>
+            
+            <tr class="ticket-row"
+                tabindex="0"
+                role="button"
+                aria-label="View ticket #67116: Annotation_DIG_Question and Answer Meeting Support"
+                data-project="dcmvn_annotation-project"
+                data-handler="huy-duc-dam"
+                data-status="acknowledged"
+                data-due-assessment="on-track"
+                data-ticket-id="67116"
+                data-planned="0.0"
+                data-actual="458.25"
+                data-month="0.0"
+                data-due-none="0"
+                data-stale="0"
+                data-search="67116 annotation_dig_question and answer meeting support huy duc dam huy duc dam hu.dam hu.dam">
+              <td data-label="ID"><span class="ticket-toggle" aria-hidden="true">▸</span> 67116</td>
+              <td data-label="Summary">Annotation_DIG_Question and Answer Meeting Support</td>
+              <td data-label="Reporter">Huy Duc Dam</td>
+              <td data-label="Handler">Huy Duc Dam</td>
+              <td data-label="Start Date">01/12/2025</td>
+              <td data-label="Due Date">31/12/2026</td>
+              <td data-label="Due Assessment"><span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>On Track</span></span></td>
+              <td data-label="Status"><span class="carbon-status-badge carbon-status-badge--warning"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Acknowledged</span></span></td>
+              <td data-label="Planned Hours" class="num">0</td>
+              <td data-label="Logged (Nov)" class="num">-</td>
+              <td data-label="Lifetime on ticket" class="num">458.25</td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </section>
+    
+                  </div>
+                </section>
+                
                 <section class="member-section" data-member-section="nhan-danh-huynh">
                   <div class="member-head">
                     <div>
@@ -3792,76 +3900,6 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
               <td data-label="Planned Hours" class="num">0</td>
               <td data-label="Logged (Nov)" class="num">-</td>
               <td data-label="Lifetime on ticket" class="num">66.75</td>
-            </tr>
-            
-          </tbody>
-        </table>
-      </div>
-    </section>
-    
-                  </div>
-                </section>
-                
-                <section class="member-section" data-member-section="huy-duc-dam">
-                  <div class="member-head">
-                    <div>
-                      <h3>Huy Duc Dam</h3>
-                      <p><span class="member-ticket-count">1</span> ticket</p>
-                    </div>
-                    <div class="meta-row">
-                      <span class="meta-pill">Logged (Nov): -</span>
-                      <span class="meta-pill">Lifetime on ticket: 458.25</span>
-                      <span class="meta-pill">Planned: -</span>
-                    </div>
-                  </div>
-                  <div class="table-wrap">
-                    
-    <section class="carbon-data-table-container">
-      <div class="carbon-data-table-wrap table-wrap">
-        <table class="carbon-data-table cds--data-table">
-          <thead>
-            <tr>
-              <th scope="col" aria-sort="none">ID</th>
-              <th scope="col" aria-sort="none">Summary</th>
-              <th scope="col" aria-sort="none">Reporter</th>
-              <th scope="col" aria-sort="none">Handler</th>
-              <th scope="col" aria-sort="none">Start Date</th>
-              <th scope="col" aria-sort="none">Due Date</th>
-              <th scope="col" aria-sort="none">Due Assessment</th>
-              <th scope="col" aria-sort="none">Status</th>
-              <th scope="col" aria-sort="none" class="num">Planned Hours</th>
-              <th scope="col" aria-sort="none" class="num">Logged (Nov)</th>
-              <th scope="col" aria-sort="none" class="num">Lifetime on ticket</th>
-            </tr>
-          </thead>
-          <tbody>
-            
-            <tr class="ticket-row highlight-overdue"
-                tabindex="0"
-                role="button"
-                aria-label="View ticket #67116: Annotation_DIG_Question and Answer Meeting Support"
-                data-project="dcmvn_annotation-project"
-                data-handler="huy-duc-dam"
-                data-status="acknowledged"
-                data-due-assessment="overdue"
-                data-ticket-id="67116"
-                data-planned="0.0"
-                data-actual="458.25"
-                data-month="0.0"
-                data-due-none="0"
-                data-stale="0"
-                data-search="67116 annotation_dig_question and answer meeting support huy duc dam huy duc dam hu.dam hu.dam">
-              <td data-label="ID"><span class="ticket-toggle" aria-hidden="true">▸</span> 67116</td>
-              <td data-label="Summary">Annotation_DIG_Question and Answer Meeting Support</td>
-              <td data-label="Reporter">Huy Duc Dam</td>
-              <td data-label="Handler">Huy Duc Dam</td>
-              <td data-label="Start Date">01/12/2025</td>
-              <td data-label="Due Date">30/10/2026</td>
-              <td data-label="Due Assessment"><span class="carbon-status-badge carbon-status-badge--error"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Overdue</span></span></td>
-              <td data-label="Status"><span class="carbon-status-badge carbon-status-badge--warning"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Acknowledged</span></span></td>
-              <td data-label="Planned Hours" class="num">0</td>
-              <td data-label="Logged (Nov)" class="num">-</td>
-              <td data-label="Lifetime on ticket" class="num">458.25</td>
             </tr>
             
           </tbody>
@@ -9003,17 +9041,17 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
             
             <div class="detail-card">
               <div class="detail-label">Logged (Nov)</div>
-              <div class="detail-value">-</div>
+              <div class="detail-value">0.5</div>
             </div>
             
             <div class="detail-card">
               <div class="detail-label">Lifetime on ticket (Actual Hours)</div>
-              <div class="detail-value">96.5</div>
+              <div class="detail-value">97</div>
             </div>
             
             <div class="detail-card">
               <div class="detail-label">Last time log</div>
-              <div class="detail-value">30/10/2026</div>
+              <div class="detail-value">02/11/2026</div>
             </div>
             
             <div class="detail-card">
@@ -9059,6 +9097,18 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
           <div class="detail-section-title">History</div>
           <div class="timeline-list">
             
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Huy Duc Dam</strong>
+                    <span>@hu.dam</span>
+                    <span>02/11/2026 11:32</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">2.11.2026: 0.5 h. -> set</span>
+                  </div>
+                </div>
+                
                 <div class="timeline-item">
                   <div class="timeline-head">
                     <strong>Long Kim Dang</strong>
@@ -16049,6 +16099,1037 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
       </div>
     </template>
     
+    <template id="ticket-detail-76979">
+      <div class="ticket-detail-panel">
+        <div class="detail-header">
+          <div>
+            <div class="detail-ticket-id">Ticket #76979</div>
+            <h3>DIG_Template_RLT_Layout_LPH3_Retrieve the graphical configuration</h3>
+          </div>
+          <div class="detail-badges">
+            <span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>On Track</span></span>
+            <span class="carbon-status-badge carbon-status-badge--info"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>New</span></span>
+          </div>
+        </div>
+        <div class="detail-grid">
+          
+            <div class="detail-card">
+              <div class="detail-label">Project</div>
+              <div class="detail-value">DCMvn_Annotation Project</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Project ID</div>
+              <div class="detail-value">396</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Category</div>
+              <div class="detail-value">General</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Reporter Username</div>
+              <div class="detail-value">hu.dam</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Handler Username</div>
+              <div class="detail-value">hu.dam</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Priority</div>
+              <div class="detail-value">Normal</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Severity</div>
+              <div class="detail-value">Minor</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Reproducibility</div>
+              <div class="detail-value">Have Not Tried</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Projection</div>
+              <div class="detail-value">None</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">ETA</div>
+              <div class="detail-value">None</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Resolution</div>
+              <div class="detail-value">Open</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">View State</div>
+              <div class="detail-value">Public</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Submitted</div>
+              <div class="detail-value">02/11/2026</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Last Updated</div>
+              <div class="detail-value">02/11/2026 11:14</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Target Version</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Fixed In Version</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Platform</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">OS</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">OS Build</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Planned Hours</div>
+              <div class="detail-value">0</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Logged (Nov)</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Lifetime on ticket (Actual Hours)</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Last time log</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Bugnotes</div>
+              <div class="detail-value">0</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Attachments</div>
+              <div class="detail-value">0</div>
+            </div>
+            
+        </div>
+        <div class="detail-block">
+          <div class="detail-section-title">Description</div>
+          <div class="detail-text">1. Target<br>Retrieve the graphical configuration of the view:<br>Model: DCM-LIB-RLT-M3-M-001<br>View name: 01_FloorPlan_L1_SYS_RLT Layout_WIP_Sample LPH3<br><br>2. Requirement<br>- Retrieve all configurations of the view<br>- Arrange it in the spreadsheet<br>- Ensure the data structure fits with the SQL database architecture and is ready to change the values in the cells<br>- All elements in the view have to be retrieved to the latest level (for instance: the tag needs to have text size, text fonts,...)</div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-section-title">Steps To Reproduce</div>
+          <div class="detail-text empty">-</div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-section-title">Additional Information</div>
+          <div class="detail-text empty">-</div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-section-title">Bugnotes / Comments</div>
+          <div class="timeline-list">
+            <div class="detail-text empty">No data.</div>
+          </div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-section-title">History</div>
+          <div class="timeline-list">
+            
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Huy Duc Dam</strong>
+                    <span>@hu.dam</span>
+                    <span>02/11/2026 11:14</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">-</span>
+                    <span class="change-arrow">1 -> 76946</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Huy Duc Dam</strong>
+                    <span>@hu.dam</span>
+                    <span>02/11/2026 11:11</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">-</span>
+                    <span class="change-arrow">- -> 76980</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Huy Duc Dam</strong>
+                    <span>@hu.dam</span>
+                    <span>02/11/2026 11:11</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">handler_id</span>
+                    <span class="change-arrow">0 -> 347</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Huy Duc Dam</strong>
+                    <span>@hu.dam</span>
+                    <span>02/11/2026 11:11</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">-</span>
+                    <span class="change-arrow">- -> -</span>
+                  </div>
+                </div>
+                
+          </div>
+        </div>
+      </div>
+    </template>
+    
+    <template id="ticket-detail-76980">
+      <div class="ticket-detail-panel">
+        <div class="detail-header">
+          <div>
+            <div class="detail-ticket-id">Ticket #76980</div>
+            <h3>DIG_Template_RLT_Schematic_LPH3_Retrieve the graphical configuration</h3>
+          </div>
+          <div class="detail-badges">
+            <span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>On Track</span></span>
+            <span class="carbon-status-badge carbon-status-badge--info"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>New</span></span>
+          </div>
+        </div>
+        <div class="detail-grid">
+          
+            <div class="detail-card">
+              <div class="detail-label">Project</div>
+              <div class="detail-value">DCMvn_Annotation Project</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Project ID</div>
+              <div class="detail-value">396</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Category</div>
+              <div class="detail-value">General</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Reporter Username</div>
+              <div class="detail-value">hu.dam</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Handler Username</div>
+              <div class="detail-value">hu.dam</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Priority</div>
+              <div class="detail-value">Normal</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Severity</div>
+              <div class="detail-value">Minor</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Reproducibility</div>
+              <div class="detail-value">Have Not Tried</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Projection</div>
+              <div class="detail-value">None</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">ETA</div>
+              <div class="detail-value">None</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Resolution</div>
+              <div class="detail-value">Open</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">View State</div>
+              <div class="detail-value">Public</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Submitted</div>
+              <div class="detail-value">02/11/2026</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Last Updated</div>
+              <div class="detail-value">02/11/2026 11:14</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Target Version</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Fixed In Version</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Platform</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">OS</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">OS Build</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Planned Hours</div>
+              <div class="detail-value">0</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Logged (Nov)</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Lifetime on ticket (Actual Hours)</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Last time log</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Bugnotes</div>
+              <div class="detail-value">0</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Attachments</div>
+              <div class="detail-value">0</div>
+            </div>
+            
+        </div>
+        <div class="detail-block">
+          <div class="detail-section-title">Description</div>
+          <div class="detail-text">1. Target<br>Retrieve the graphical configuration of the view:<br>Model: DCM-LIB-RLT-M3-M-001<br>View name: 001_Schematic Z1_RLT_XXX_LPH3_PUB_Schematic_ Sample<br><br>2. Requirement<br>- Retrieve all configurations of the view<br>- Arrange it in the spreadsheet<br>- Ensure the data structure fits with the SQL database architecture and is ready to change the values in the cells<br>- All elements in the view have to be retrieved to the latest level (for instance: the tag needs to have text size, text fonts,...)</div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-section-title">Steps To Reproduce</div>
+          <div class="detail-text empty">-</div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-section-title">Additional Information</div>
+          <div class="detail-text empty">-</div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-section-title">Bugnotes / Comments</div>
+          <div class="timeline-list">
+            <div class="detail-text empty">No data.</div>
+          </div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-section-title">History</div>
+          <div class="timeline-list">
+            
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Huy Duc Dam</strong>
+                    <span>@hu.dam</span>
+                    <span>02/11/2026 11:14</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">-</span>
+                    <span class="change-arrow">1 -> 76946</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Huy Duc Dam</strong>
+                    <span>@hu.dam</span>
+                    <span>02/11/2026 11:11</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">-</span>
+                    <span class="change-arrow">- -> 76979</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Huy Duc Dam</strong>
+                    <span>@hu.dam</span>
+                    <span>02/11/2026 11:11</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">handler_id</span>
+                    <span class="change-arrow">0 -> 347</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Huy Duc Dam</strong>
+                    <span>@hu.dam</span>
+                    <span>02/11/2026 11:11</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">-</span>
+                    <span class="change-arrow">- -> -</span>
+                  </div>
+                </div>
+                
+          </div>
+        </div>
+      </div>
+    </template>
+    
+    <template id="ticket-detail-76104">
+      <div class="ticket-detail-panel">
+        <div class="detail-header">
+          <div>
+            <div class="detail-ticket-id">Ticket #76104</div>
+            <h3>Digital_Research_Upgrade the DCMvn Tool</h3>
+          </div>
+          <div class="detail-badges">
+            <span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>On Track</span></span>
+            <span class="carbon-status-badge carbon-status-badge--warning"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Acknowledged</span></span>
+          </div>
+        </div>
+        <div class="detail-grid">
+          
+            <div class="detail-card">
+              <div class="detail-label">Project</div>
+              <div class="detail-value">DCMvn_Annotation Project</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Project ID</div>
+              <div class="detail-value">396</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Category</div>
+              <div class="detail-value">General</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Reporter Username</div>
+              <div class="detail-value">hu.dam</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Handler Username</div>
+              <div class="detail-value">nd.huynh</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Priority</div>
+              <div class="detail-value">Normal</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Severity</div>
+              <div class="detail-value">Minor</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Reproducibility</div>
+              <div class="detail-value">Have Not Tried</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Projection</div>
+              <div class="detail-value">None</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">ETA</div>
+              <div class="detail-value">None</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Resolution</div>
+              <div class="detail-value">Open</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">View State</div>
+              <div class="detail-value">Public</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Submitted</div>
+              <div class="detail-value">18/09/2026</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Last Updated</div>
+              <div class="detail-value">29/10/2026 10:10</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Target Version</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Fixed In Version</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Platform</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">OS</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">OS Build</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Planned Hours</div>
+              <div class="detail-value">0</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Logged (Nov)</div>
+              <div class="detail-value">-</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Lifetime on ticket (Actual Hours)</div>
+              <div class="detail-value">53.25</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Last time log</div>
+              <div class="detail-value">30/10/2026</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Bugnotes</div>
+              <div class="detail-value">5</div>
+            </div>
+            
+            <div class="detail-card">
+              <div class="detail-label">Attachments</div>
+              <div class="detail-value">1</div>
+            </div>
+            
+        </div>
+        <div class="detail-block">
+          <div class="detail-section-title">Description</div>
+          <div class="detail-text">The goal: integrate the Web App into the DCMvn tool.<br>- Add the tool to download and load rfa to Revit model from the web app directly<br>- Embed the MCP to control the Revit model from the web app</div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-section-title">Steps To Reproduce</div>
+          <div class="detail-text empty">-</div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-section-title">Additional Information</div>
+          <div class="detail-text">1. Overview of the goal<br>2. Set up the outline and program<br>3. Implement the task<br>4. Review and inspect<br>5. Delivery</div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-section-title">Bugnotes / Comments</div>
+          <div class="timeline-list">
+            
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>25/09/2026 07:33</span>
+                    <span>Public</span>
+                  </div>
+                  <div class="timeline-body"><div class="detail-text"># Revit Family Manager Web Library Delivery Plan<br><br>## Delivery Strategy<br><br>The work will be delivered in two separate phases:<br><br>1. **Phase 1 — Web Library and Revit C# Add-in**<br>2. **Phase 2 — MCP-Based Revit Model Control**<br><br>Phase 1 must be completed and stabilized before Phase 2 begins. MCP is not a dependency of the Web Library workflow.<br><br># Phase 1 — Web Library and Revit C# Add-in<br><br>## Objective<br><br>Add **Web Library** as the third source in the existing Family Manager:<br><br>- Current Project<br>- Local Library<br>- Web Library<br><br>Users authenticate with their Web account. The backend verifies that `Revit Application.LoginUserId` is mapped to the same Web user before issuing an add-in token.<br><br>Authenticated users can browse, search, download, and load Web-managed families into the active Revit project.<br><br>## Included Scope<br><br>- Web email and password authentication.<br>- Revit `LoginUserId` and Web user matching.<br>- Secure bearer-token issuance and revocation.<br>- Web family listing, searching, filtering, and pagination.<br>- Revit version compatibility validation.<br>- Active `.rfa` download over HTTPS.<br>- Loading one family into the active Revit document.<br>- Structured load results.<br>- Download tracking with `source=&#x27;addin&#x27;`.<br>- Authentication, download, and load-failure auditing.<br>- Revit 2024/net48 and Revit 2025/net8 validation.<br>- Regression validation for Current Project and Local Library.<br><br>## Excluded Scope<br><br>- MCP integration.<br>- Web-based Revit model control.<br>- Family upload from Revit.<br>- Family version management from Revit.<br>- Batch loading.<br>- Offline synchronization.<br>- Autodesk OAuth/SSO.<br>- Complete Revit 2020–2026 validation.<br>- Complex administrator identity-mapping UI.<br><br>## Technical Direction<br><br>- Preserve Current Project and Local Library.<br>- Add Web Library as a separate Family Manager source.<br>- Do not represent Web Library as a local `ProjectEntity`.<br>- Do not reuse SQLite entities as Web API DTOs.<br>- Reuse the existing Revit loading path where appropriate.<br>- Keep HTTP, authentication and temporary-file concerns inside Web Library.<br>- Route Revit operations through `ExternalEvent` and `Transaction`.<br>- Never connect the add-in directly to PostgreSQL.<br>- Never expose server filesystem paths to the add-in.<br><br>## Identity and Security<br><br>- Authenticate email and password against the Web database.<br>- Require `Application.LoginUserId` to be mapped to the same Web user.<br>- Use `Application.Username` only for display and auditing.<br>- Store only token hashes on the server.<br>- Protect the local token with Windows DPAPI or Credential Manager.<br>- Never store the user’s password.<br>- Invalidate the local token when the Autodesk user changes.<br>- Apply rate limiting to the authentication endpoint.<br>- Recheck user activity and identity mapping for authenticated requests.<br><br>`LoginUserId` is client-supplied. It is acceptable for internal identity matching in Phase 1 but does not provide the same assurance as Autodesk OAuth verification.<br><br>## Web Repository Work<br><br>### `DCMvn_RevitLibrary`<br><br>- Add `user_external_identities`.<br>- Add `addin_tokens`.<br>- Add add-in authentication and token revocation.<br>- Add `AddinAuthGuard`.<br>- Add add-in family list, detail, and file endpoints.<br>- Refactor family downloads so the server determines the source.<br>- Record downloads with `source=&#x27;addin&#x27;`.<br>- Add rate limiting and token expiry.<br>- Add add-in context to audit metadata.<br>- Add load-failure telemetry.<br>- Add integration and contract tests.<br>- Update E07 contracts and the test matrix.<br><br>## Revit Repository Work<br><br>### `DCMvn_CS`<br><br>- Preserve Current Project and Local Library.<br>- Add Web Library as the third Family Manager source.<br>- Add Web API DTOs and HTTP client.<br>- Add login, logout, and authentication state.<br>- Add secure token storage.<br>- Add search, filters, pagination, and error states.<br>- Add Revit compatibility validation.<br>- Add temporary-file download and cleanup.<br>- Connect downloaded files to the existing Revit loader.<br>- Add structured results:<br>  - `Loaded`<br>  - `AlreadyPresent`<br>  - `Replaced`<br>  - `Incompatible`<br>  - `Cancelled`<br>  - `Failed`<br>- Add dependency-injection registrations.<br>- Validate net48 and net8 targets.<br><br>## Phase 1 Work Schedule<br><br>Planning assumptions:<br><br>- Start date: **28 September 2026**.<br>- Backend and Revit development can proceed in parallel.<br>- QA is available part-time.<br>- Stabilization and contingency time are included.<br>- External approval and environment-access delays are excluded.<br><br>| Work item | Main activities | Owner | Start date | Due date |<br>|---|---|---|---|---|<br>| Contract alignment and preparation | Finalize identity, token, endpoint, error and validation contracts; prepare isolated working branches | TL + Backend + Revit | 28 Sep 2026 | 2 Oct 2026 |<br>| Database and identity foundation | Identity mapping and token schema, migrations and mapping workflow | Backend | 5 Oct 2026 | 16 Oct 2026 |<br>| Add-in authentication | Login, token hashing, guard, revoke, expiry, rate limiting and audit | Backend | 5 Oct 2026 | 16 Oct 2026 |<br>| Add-in Family APIs | List, detail, filters, pagination, download and source tracking | Backend | 12 Oct 2026 | 23 Oct 2026 |<br>| C# cloud foundation | HTTP adapter, DTOs, configuration, secure token storage, login and logout | Revit | 5 Oct 2026 | 16 Oct 2026 |<br>| Web Library UI | Third source, search, filters, pagination, connection and error states | Revit | 19 Oct 2026 | 30 Oct 2026 |<br>| Download and Revit loading | Compatibility, temporary files, `ExternalEvent`, transaction and structured results | Revit | 19 Oct 2026 | 30 Oct 2026 |<br>| Cross-repository integration | Integrate authentication, APIs, downloads, audit and failure reporting | Backend + Revit | 2 Nov 2026 | 6 Nov 2026 |<br>| Revit and security validation | Revit 2024/net48, Revit 2025/net8, HTTPS and negative cases | Backend + Revit + QA | 9 Nov 2026 | 13 Nov 2026 |<br>| UAT and stabilization | Regression testing, fixes, documentation and release smoke | TL + Backend + Revit + QA | 16 Nov 2026 | 20 Nov 2026 |<br><br>**Phase 1 target completion: 20 November 2026.**<br><br>## Estimate<br><br>- Expected effort: **20–30 person-days**.<br>- Expected calendar duration: approximately **eight weeks**.<br>- The estimate assumes parallel Backend and Revit development.<br>- Additional effort may be required for identity data preparation, workstation TLS, proxies, or net48/net8 dependency differences.<br><br>## Acceptance Criteria<br><br>- A mapped user can authenticate from Revit.<br>- An unmapped or mismatched Revit user receives a clear error.<br>- The user can switch between all three Family Manager sources.<br>- The user can search, filter, and paginate Web families.<br>- A compatible Web family can be downloaded and loaded.<br>- Families created with a newer Revit version are blocked.<br>- Download is prevented without a valid active project document.<br>- Existing-family scenarios return structured results.<br>- Add-in downloads are recorded with `source=&#x27;addin&#x27;`.<br>- Login, logout, token expiry, and revocation work correctly.<br>- Network, `401`, `403`, missing-file, and loading errors have clear UI states.<br>- Temporary files are safely removed.<br>- Current Project and Local Library do not regress.<br>- The workflow is validated in Revit 2024 and Revit 2025.<br><br># Phase 2 — MCP-Based Revit Model Control<br><br>## Objective<br><br>Allow an authenticated Web user or AI application to invoke a restricted set of Revit tools against the user’s active Revit session.<br><br>MCP will be treated as a separate tool-invocation adapter. It will not replace the Phase 1 Family API, authentication flow, or Family Manager loading workflow.<br><br>## Prerequisites<br><br>Phase 2 starts only after Phase 1 provides:<br><br>- Stable Web and Revit authentication.<br>- Verified Web-to-Revit identity mapping.<br>- Secure token handling.<br>- Registered Revit device and session context.<br>- A proven `ExternalEvent` and transaction path.<br>- Structured operation results.<br>- Reliable auditing and correlation.<br><br>## Technical Direction<br><br>- Keep MCP separate from the Family Manager source implementations.<br>- Introduce a restricted command interface between MCP and Revit.<br>- Maintain an allowlist of supported Revit tools.<br>- Route all Revit operations through the add-in.<br>- Execute model changes through `ExternalEvent` and `Transaction`.<br>- Require Revit-side confirmation for model modifications.<br>- Bind commands to a user, workstation, Revit session, and document.<br>- Apply command expiry and idempotency controls.<br>- Do not automatically retry model mutations.<br>- Record command request, confirmation, execution, and result.<br>- Do not expose a public port directly from a Revit workstation.<br>- Do not allow arbitrary C# or script execution.<br><br>## Initial Discovery Scope<br><br>| Tool | Type | Revit confirmation |<br>|---|---|---|<br>| `get_active_document` | Read-only | Not required |<br>| `list_loaded_families` | Read-only | Not required |<br>| `load_family` | Model modification | Required |<br><br>The discovery should also determine whether MCP provides sufficient value over a deterministic command channel using SignalR, WebSocket, or an equivalent secure transport.<br><br>## Excluded From the Initial MCP Scope<br><br>- Arbitrary model editing.<br>- Arbitrary script execution.<br>- Batch element creation or deletion.<br>- Automatic Save or Sync with Central.<br>- Controlling Revit without an active user session.<br>- Model mutations without Revit-side confirmation.<br>- Direct Web access to workstation localhost.<br>- Direct MCP access to PostgreSQL or Revit internals.</div></div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>16/10/2026 08:14</span>
+                    <span>Public</span>
+                  </div>
+                  <div class="timeline-body"><div class="detail-text">## Progress Report — DCMvn Revit Library (Add-in Cloud)<br><br>**Date:** 15–16 October 2026  <br>**Scope:** Family Manager add-in — Cloud library (browse from web)  <br>**Test environment:** Revit 2023 only (other versions deferred)<br><br>---<br><br>### 1. Executive summary<br><br>The Cloud tab in Family Manager can now open on Revit 2023, sign in quietly, load the full family list from the company web library (about **2,216** families), show thumbnails in a smooth scrollable grid, and filter the list. The work is still on a **feature branch / test package** only. It is **not** merged into the official release, **not** copied into the normal Revit Add-ins install folder, and **not** deployed as a web change.<br><br>Clicking a family to download and place it into the open project is **not** done yet (planned as Part 5).<br><br>---<br><br>### 2. Web (library service)<br><br>| Item | Status |<br>|------|--------|<br>| Production library | Healthy and in use |<br>| Family count (approx.) | 2,200+ (live add-in load: **2,216** across **23** pages) |<br>| Ready-but-held update | Adds Discipline and last-updated fields for better filtering |<br>| Deploy of that update | **Deferred** on purpose — to save time and cost; will bundle with a later web change |<br><br>**Decision already agreed:** avoid extra web deploys for small improvements. The add-in already does search and most filters on the user’s machine. Discipline will work automatically once that held web update is deployed later.<br><br>---<br><br>### 3. Add-in progress (what is done)<br><br>Work is organized in parts. Parts **1–4** are complete and were verified by a real open of the test window inside Revit 2023.<br><br>#### Part 1–2 — Foundation and quiet sign-in<br>- Opens a **test-only** Family Manager window (not the final docked panel yet).<br>- Signs in using the Revit username; if the name has no `@`, the add-in appends `@dcmvn.com` so it can match the web account.<br>- Connection status is clear (connecting / success / failure). Live test showed **Success**.<br>- Session is stored securely on the Windows user profile; tokens are not written into normal logs.<br><br>#### Part 3–3.1 — List, thumbnails, and freeze fix<br>- Loads the full Cloud list from the web (read-only).<br>- Thumbnails download in the background, scale to **~130px** cards (same style as the existing tool), and stay cached on the PC.<br>- Early builds froze when building thousands of cards at once. That was fixed by only building what is on screen while scrolling.<br>- Result after fix: list and thumbnails stay responsive.<br><br>#### Part 4 — Real Family Manager look + filters + local list cache<br>- **Project / Cloud** switch on the same Family Manager screen (English UI only).<br>- Reuses the look and feel of the existing Family Manager (layout, filters, card style).<br>- Filters: name search, category, Revit year, “Compatible only” (on by default).<br>- Shows filtered count (e.g. “Showing X of 2216 families”) and a clear empty-state / clear-filters control.<br>- Families newer than the running Revit are greyed out.<br>- Saves the family list on the machine so the next open can show the cached list first, then refresh in the background.<br>- **Discipline** dropdown is present but empty/disabled until the held web update is deployed — expected, not a bug in the add-in.<br><br><br>---<br><br><br><br>### 4. Explicitly out of scope right now<br>- Merge of the feature branch into the main release line  <br>- Copying test DLLs into the production Revit Add-ins folder  <br>- Any web production deploy (including the Discipline field update)  <br>- Download / place-into-project on click (**Part 5**)  <br>- Recording download counts on the server (**Part 6**, needs web)  <br>- Building and testing Revit versions other than **2023**  <br>- Final docked panel registration as the long-term shipping UI (still using the test window for validation)<br><br><br><br><br>---<br><br><br><br><br>### 5. Recommended next step<br>**Start Part 5 — click to load into the project** (Revit 2023 test package only):<br>1. On card click, download the family file, with clear progress and error messages.  <br>2. Load into the open project without freezing the UI.  <br>3. If a family with the same name already exists, **ask first**; overwrite only if the user agrees.  <br>4. Keep incompatible (newer) families greyed out and not loadable.  <br>5. Prove with a real load into a project from the test package before calling the part done.<br>**Still defer:** web deploy for Discipline + download counting (bundle later as Part 6).  <br>**Still hold:** merge and official install until Part 5 (and agreed release checks) pass.<br>---</div></div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>22/10/2026 10:46</span>
+                    <span>Public</span>
+                  </div>
+                  <div class="timeline-body"><div class="detail-text"># Progress Report - DCMvn Revit Library (Add-in Cloud / Family Manager)<br><br>## 1. Summary<br>This period focused on the **Family Manager Cloud** add-in: it now uses the web add-in API, supports **Detail Items as a real Cloud category**, overwrites families the same way Revit does, and shows the family detail **inline under the selected card** in the DCMvn UI style. The latest test build passed UAT in Revit 2023.<br><br>## 2. Add-in updates<br><br>| # | Update | What it means for the user | Status |<br>|---|--------|----------------------------|--------|<br>| 2.1 | Web add-in API integration | The Detail Items filter, catalogue download, version labels and device ID (Windows user name) now come from the web add-in API. | Code review accepted; UAT issues fixed in 2.2 |<br>| 2.2 | Detail Items as a Cloud category | Detail Item cards show the companion DI families with their own name and thumbnail. **Download &amp; Load** loads the DI `.rfa` itself. Loading a 3D family never auto-loads its DI. | UAT passed (Revit 2023, production web) |<br>| 2.3 | Revit-like overwrite | An unchanged file shows &quot;Family is already up to date.&quot; A changed file overwrites same-named types and keeps project-only or duplicated types. Manual V1 → V2 overwrite through the web works. | UAT passed |<br>| 2.4 | Catalogue file name | The catalogue saves with its real file name and extension (PDF or image), no longer `.bin`. | UAT passed |<br>| 2.5 | Inline family detail | The detail opens directly under the clicked card, restyled to the Project tab look (HandyControl / DCMvn.UI, Light and Dark themes). Clicking the selected card again closes it. | UAT passed |<br>| 2.6 | Performance and UI polish | Smooth scrolling with virtualization (out of 2,229 cards only about 9 are rendered on screen), the detail opens under the correct card, the duplicate thumbnail is removed, and the Revit year badge is high-contrast. | UAT passed |<br><br>## 3. Web support for the add-in (`/api/addin/*`)<br><br>| # | Change | Purpose | Status |<br>|---|--------|---------|--------|<br>| 3.1 | `GET /api/addin/families` returns `hasDetailItem` | Lets the add-in know which families have a Detail Item | Merged and deployed to production |<br>| 3.2 | List items return `detailItem { filename, thumbnailStatus }` | Powers the Detail Items cards in the add-in. Additive change, older add-in versions are unaffected. | Merged and deployed to production (rfa.dcm-vn.com) |<br><br>## 4. Validation<br><br>| Check | Result |<br>|-------|--------|<br>| Build for Revit 2023 (net48) | 0 errors |<br>| FamilyManager unit tests | 245/245 passed (3 runs) |<br>| Packaged-resource smoke test | 3/3 passed |<br>| UAT in Revit 2023 | Passed all items |<br>| Manual overwrite V1 → V2 via production web | Works |<br><br>## 5. Open items / Next steps<br>- **Multi-version build and test** (Revit 2020–2026, net48 + net8): planned after the feature set is complete.<br>- **Publish add-in source** to the GitHub repository (push + pull request): held until the add-in is complete. Code is kept on local branches.<br>- **Automated overwrite self-test**: closed without merging, because the manual overwrite test passed. Code is kept on a local branch for later.<br>- **Web CI**: the pull request that moves the CI admin password to a GitHub secret and runs CI on `develop` is waiting for the secret to be created and the GitHub Actions billing to be fixed. In the meantime the quality gates were run locally before each merge.<br>- **3D preview of families**: requested by the team lead, not started yet, waiting on design decisions.</div></div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>22/10/2026 14:12</span>
+                    <span>Public</span>
+                  </div>
+                  <div class="timeline-body"><div class="detail-text"># Plan — 3D Preview &amp; 3D Thumbnail for DCMvn Revit Library (Web, Add-in)<br><br>## 1. Summary<br>We plan to add 3D previews for Revit families in the DCMvn Revit Library. Each family will get one GLB file and one static image. The web will show an interactive 3D view in the family detail section. The static image will be used in the web family list and as the thumbnail in the Revit add-in. Web and admin will share one pipeline.<br><br>## 2. MVP scope<br><br>| # | Item | Planned behaviour |<br>|---|------|-------------------|<br>| 2.1 | Source view | Only the existing 3D view named &quot;Thumbnail&quot; in each family (detail level Fine, geometry only). No plan, section or full-model views. |<br>| 2.2 | GLB export | The add-in exports one GLB per family (default type) from the &quot;Thumbnail&quot; view. |<br>| 2.3 | Interactive 3D on the web | A rotatable 3D view of the GLB in the family detail section on the web. |<br>| 2.4 | Static 3D image | A static image generated from the GLB, used in the web family list and as the thumbnail in the Revit add-in. |<br>| 2.5 | Shared pipeline | Web and admin use one pipeline: one set of GLB and PNG per family version, with no separate admin pipeline. |<br>| 2.6 | Fallback | The current 2D preview extracted from the `.rfa` stays as the fallback when no 3D image exists yet. |<br><br>**Out of scope for the MVP (not planned):** plan and section views, 2D Detail Items, an interactive 3D viewer inside the add-in, real Revit materials or colours, an automated export agent, and a backfill of the whole library.<br><br>## 3. Admin (on the shared pipeline)<br>- Upload or replace GLB/PNG.<br>- Regenerate the static image.<br>- View items that are missing or failed.<br>- Approve before publishing, if an approval step is chosen.<br><br>## 4. Planned steps<br>1. Batch export of GLB from the &quot;Thumbnail&quot; view, with a per-family log.<br>2. Decide the static image source (see section 6).<br>3. Agree on the web API and `/api/addin/*` contract for GLB/PNG (WEB first).<br>4. Storage and migration for the GLB/PNG status of each family version.<br>5. Upload and download endpoints.<br>6. Web UI: interactive 3D in the family detail, static image in the family list; admin tools.<br>7. Add-in: upload GLB/PNG together with the family, and show the static thumbnail in the Family Manager Cloud list.<br>8. Multi-version support for Revit 2024–2026.<br><br>**Dependencies:** the WEB contract must be approved before the ADDIN part starts, and the add-in thumbnail depends on the Cloud list update being completed first. Generating a GLB always requires Revit.<br><br><br>## 5. Risks<br>- `.rfa` files uploaded through the web will have no GLB until an export agent with Revit is in place.<br>- If server-side rendering is chosen, the server has no GPU, so rendering is slower and needs Chromium.<br>- Families saved in versions newer than 2023 need the multi-version build.<br>- Storage usage will grow.<br>- Long, slender families can look small in the thumbnail, so the framing needs tuning.<br>- Families without a &quot;Thumbnail&quot; view will be skipped.</div></div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>29/10/2026 10:10</span>
+                    <span>Public</span>
+                  </div>
+                  <div class="timeline-body"><div class="detail-text"># Progress Report: Family Manager Cloud Add-in<br><br>## 1. Summary<br><br>This period focused on the GLB export used by the web library. The export DLL now writes a &quot;family metadata v1&quot; JSON file next to each GLB, and several fixes were made so the metadata matches the web contract. A Revit 2023 export of the test families was run and the export log was reviewed.<br><br>All add-in work remains as local commits on branch `feat/glb-family-metadata` (repo `DCMvn_CS`). Nothing has been pushed yet.<br><br>## 2. Work Completed<br><br>| # | Item | Result | Commit |<br>|---|------|--------|--------|<br>| 1 | GLB export review | The current colour output was reviewed and accepted. Material and colour work is out of scope. | n/a |<br>| 2 | Family metadata v1 sidecar | The export DLL writes a metadata JSON file next to each exported GLB. | `7e19dbc4` |<br>| 3 | Metadata fixes: units, domains, build, isShared | Values for units, parameter domains, Revit build and the shared-parameter flag are now correct. | `6ea85cca` |<br>| 4 | Share-aware RFA hash | The RFA hash now accounts for shared families. | `9a4126b1` |<br>| 5 | Contract alignment | Values and names now follow the web metadata contract. This adds type identity and dataType fallbacks and ordinal matching of the representative type. | `158c924a`, `df8ee23c`, `cddeff36` |<br><br>## 3. Testing and Verification<br><br>| Check | Result |<br>|-------|--------|<br>| Revit 2023 export of the test families | Done. The export log was reviewed. |<br>| GLB colour output | Accepted as is. |<br><br>## 4. Open Items<br><br>| Item | Status |<br>|------|--------|<br>| Push and pull request for the add-in | On hold by decision until the add-in is complete. |<br>| PR #178 conflict | Still open. |<br><br>## 5. Next Steps<br><br>1. The Digital team will use this export DLL to upload the GLB and metadata together with each family to the web library.<br>2. The add-in will read the new web metadata. This is the last item in the roadmap, after the web work.<br>3. The add-in will not be pushed and no PR will be opened until the add-in is complete.</div></div>
+                </div>
+                
+          </div>
+        </div>
+        <div class="detail-block">
+          <div class="detail-section-title">History</div>
+          <div class="timeline-list">
+            
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>30/10/2026 09:49</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">30.10.2026: 5 h. -> set</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>29/10/2026 10:10</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">-</span>
+                    <span class="change-arrow">0784488 -> -</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>27/10/2026 07:49</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">27.10.2026: 6.5 h. -> set</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>26/10/2026 08:34</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">26.10.2026: 2 h. -> set</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>23/10/2026 13:03</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">23.10.2026: 4.5 h. -> set</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>22/10/2026 14:12</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">-</span>
+                    <span class="change-arrow">0784038 -> -</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>22/10/2026 10:53</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">22.10.2026: 4.5 h. -> set</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>22/10/2026 10:52</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">21.10.2026: 4.5 h. -> set</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>22/10/2026 10:46</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">-</span>
+                    <span class="change-arrow">0783966 -> -</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>16/10/2026 08:15</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">-</span>
+                    <span class="change-arrow">0783281 -> 76733</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>16/10/2026 08:14</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">-</span>
+                    <span class="change-arrow">0076104_Weekly Progress Report_261016.png -> 783281</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>16/10/2026 08:14</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">-</span>
+                    <span class="change-arrow">0783281 -> -</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>16/10/2026 08:00</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">16.10.2026: 6.5 h. -> set</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>15/10/2026 14:03</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">15.10.2026: 5.5 h. -> set</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>15/10/2026 14:03</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated Deleted</span>
+                    <span class="change-arrow">15/10/2026 -> deleted</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>15/10/2026 09:17</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">15.10.2026: 6.5 h. -> set</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>14/10/2026 08:38</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">14.10.2026: 6.5 h. -> set</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Huy Duc Dam</strong>
+                    <span>@hu.dam</span>
+                    <span>09/10/2026 15:15</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Client Completion Date</span>
+                    <span class="change-arrow">30/09/2026 -> 1790701200</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>09/10/2026 12:12</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">9.10.2026: 1 h. -> set</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>09/10/2026 12:12</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated Deleted</span>
+                    <span class="change-arrow">09/10/2026 -> deleted</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>09/10/2026 12:10</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">9.10.2026: 1.5 h. -> set</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>05/10/2026 15:15</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">5.10.2026: 2.75 h. -> set</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Huy Duc Dam</strong>
+                    <span>@hu.dam</span>
+                    <span>30/09/2026 12:58</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">due_date</span>
+                    <span class="change-arrow">- -> 1798671600</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>30/09/2026 08:49</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">30.9.2026: 1 h. -> set</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Huy Duc Dam</strong>
+                    <span>@hu.dam</span>
+                    <span>29/09/2026 15:53</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Client Completion Date</span>
+                    <span class="change-arrow">- -> 30/09/2026</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>25/09/2026 07:33</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">-</span>
+                    <span class="change-arrow">0779667 -> -</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>24/09/2026 08:16</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">23.9.2026: 1 h. -> set</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>22/09/2026 08:20</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">22.9.2026: 1 h. -> set</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>21/09/2026 08:43</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Time allocated</span>
+                    <span class="change-arrow">21.9.2026: 1 h. -> set</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>18/09/2026 13:37</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">status</span>
+                    <span class="change-arrow">10 -> 30</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Huy Duc Dam</strong>
+                    <span>@hu.dam</span>
+                    <span>18/09/2026 13:36</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">handler_id</span>
+                    <span class="change-arrow">0 -> 356</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Huy Duc Dam</strong>
+                    <span>@hu.dam</span>
+                    <span>18/09/2026 13:36</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">-</span>
+                    <span class="change-arrow">- -> -</span>
+                  </div>
+                </div>
+                
+          </div>
+        </div>
+      </div>
+    </template>
+    
     <template id="ticket-detail-67116">
       <div class="ticket-detail-panel">
         <div class="detail-header">
@@ -16057,7 +17138,7 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
             <h3>Annotation_DIG_Question and Answer Meeting Support</h3>
           </div>
           <div class="detail-badges">
-            <span class="carbon-status-badge carbon-status-badge--error"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Overdue</span></span>
+            <span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>On Track</span></span>
             <span class="carbon-status-badge carbon-status-badge--warning"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Acknowledged</span></span>
           </div>
         </div>
@@ -16130,7 +17211,7 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
             
             <div class="detail-card">
               <div class="detail-label">Last Updated</div>
-              <div class="detail-value">05/10/2026 11:39</div>
+              <div class="detail-value">02/11/2026 11:12</div>
             </div>
             
             <div class="detail-card">
@@ -16211,6 +17292,30 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
           <div class="detail-section-title">History</div>
           <div class="timeline-list">
             
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Huy Duc Dam</strong>
+                    <span>@hu.dam</span>
+                    <span>02/11/2026 11:12</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">Total No. of Program Days</span>
+                    <span class="change-arrow">239 -> 283</span>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Huy Duc Dam</strong>
+                    <span>@hu.dam</span>
+                    <span>02/11/2026 11:12</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">due_date</span>
+                    <span class="change-arrow">1793379599 -> 1798736399</span>
+                  </div>
+                </div>
+                
                 <div class="timeline-item">
                   <div class="timeline-head">
                     <strong>Huy Duc Dam</strong>
@@ -19288,607 +20393,6 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
       </div>
     </template>
     
-    <template id="ticket-detail-76104">
-      <div class="ticket-detail-panel">
-        <div class="detail-header">
-          <div>
-            <div class="detail-ticket-id">Ticket #76104</div>
-            <h3>Digital_Research_Upgrade the DCMvn Tool</h3>
-          </div>
-          <div class="detail-badges">
-            <span class="carbon-status-badge carbon-status-badge--success"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>On Track</span></span>
-            <span class="carbon-status-badge carbon-status-badge--warning"><span class="carbon-status-badge__icon" aria-hidden="true"></span><span>Acknowledged</span></span>
-          </div>
-        </div>
-        <div class="detail-grid">
-          
-            <div class="detail-card">
-              <div class="detail-label">Project</div>
-              <div class="detail-value">DCMvn_Annotation Project</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Project ID</div>
-              <div class="detail-value">396</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Category</div>
-              <div class="detail-value">General</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Reporter Username</div>
-              <div class="detail-value">hu.dam</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Handler Username</div>
-              <div class="detail-value">nd.huynh</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Priority</div>
-              <div class="detail-value">Normal</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Severity</div>
-              <div class="detail-value">Minor</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Reproducibility</div>
-              <div class="detail-value">Have Not Tried</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Projection</div>
-              <div class="detail-value">None</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">ETA</div>
-              <div class="detail-value">None</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Resolution</div>
-              <div class="detail-value">Open</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">View State</div>
-              <div class="detail-value">Public</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Submitted</div>
-              <div class="detail-value">18/09/2026</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Last Updated</div>
-              <div class="detail-value">29/10/2026 10:10</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Target Version</div>
-              <div class="detail-value">-</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Fixed In Version</div>
-              <div class="detail-value">-</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Platform</div>
-              <div class="detail-value">-</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">OS</div>
-              <div class="detail-value">-</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">OS Build</div>
-              <div class="detail-value">-</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Planned Hours</div>
-              <div class="detail-value">0</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Logged (Nov)</div>
-              <div class="detail-value">-</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Lifetime on ticket (Actual Hours)</div>
-              <div class="detail-value">53.25</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Last time log</div>
-              <div class="detail-value">30/10/2026</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Bugnotes</div>
-              <div class="detail-value">5</div>
-            </div>
-            
-            <div class="detail-card">
-              <div class="detail-label">Attachments</div>
-              <div class="detail-value">1</div>
-            </div>
-            
-        </div>
-        <div class="detail-block">
-          <div class="detail-section-title">Description</div>
-          <div class="detail-text">The goal: integrate the Web App into the DCMvn tool.<br>- Add the tool to download and load rfa to Revit model from the web app directly<br>- Embed the MCP to control the Revit model from the web app</div>
-        </div>
-        <div class="detail-block">
-          <div class="detail-section-title">Steps To Reproduce</div>
-          <div class="detail-text empty">-</div>
-        </div>
-        <div class="detail-block">
-          <div class="detail-section-title">Additional Information</div>
-          <div class="detail-text">1. Overview of the goal<br>2. Set up the outline and program<br>3. Implement the task<br>4. Review and inspect<br>5. Delivery</div>
-        </div>
-        <div class="detail-block">
-          <div class="detail-section-title">Bugnotes / Comments</div>
-          <div class="timeline-list">
-            
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>25/09/2026 07:33</span>
-                    <span>Public</span>
-                  </div>
-                  <div class="timeline-body"><div class="detail-text"># Revit Family Manager Web Library Delivery Plan<br><br>## Delivery Strategy<br><br>The work will be delivered in two separate phases:<br><br>1. **Phase 1 — Web Library and Revit C# Add-in**<br>2. **Phase 2 — MCP-Based Revit Model Control**<br><br>Phase 1 must be completed and stabilized before Phase 2 begins. MCP is not a dependency of the Web Library workflow.<br><br># Phase 1 — Web Library and Revit C# Add-in<br><br>## Objective<br><br>Add **Web Library** as the third source in the existing Family Manager:<br><br>- Current Project<br>- Local Library<br>- Web Library<br><br>Users authenticate with their Web account. The backend verifies that `Revit Application.LoginUserId` is mapped to the same Web user before issuing an add-in token.<br><br>Authenticated users can browse, search, download, and load Web-managed families into the active Revit project.<br><br>## Included Scope<br><br>- Web email and password authentication.<br>- Revit `LoginUserId` and Web user matching.<br>- Secure bearer-token issuance and revocation.<br>- Web family listing, searching, filtering, and pagination.<br>- Revit version compatibility validation.<br>- Active `.rfa` download over HTTPS.<br>- Loading one family into the active Revit document.<br>- Structured load results.<br>- Download tracking with `source=&#x27;addin&#x27;`.<br>- Authentication, download, and load-failure auditing.<br>- Revit 2024/net48 and Revit 2025/net8 validation.<br>- Regression validation for Current Project and Local Library.<br><br>## Excluded Scope<br><br>- MCP integration.<br>- Web-based Revit model control.<br>- Family upload from Revit.<br>- Family version management from Revit.<br>- Batch loading.<br>- Offline synchronization.<br>- Autodesk OAuth/SSO.<br>- Complete Revit 2020–2026 validation.<br>- Complex administrator identity-mapping UI.<br><br>## Technical Direction<br><br>- Preserve Current Project and Local Library.<br>- Add Web Library as a separate Family Manager source.<br>- Do not represent Web Library as a local `ProjectEntity`.<br>- Do not reuse SQLite entities as Web API DTOs.<br>- Reuse the existing Revit loading path where appropriate.<br>- Keep HTTP, authentication and temporary-file concerns inside Web Library.<br>- Route Revit operations through `ExternalEvent` and `Transaction`.<br>- Never connect the add-in directly to PostgreSQL.<br>- Never expose server filesystem paths to the add-in.<br><br>## Identity and Security<br><br>- Authenticate email and password against the Web database.<br>- Require `Application.LoginUserId` to be mapped to the same Web user.<br>- Use `Application.Username` only for display and auditing.<br>- Store only token hashes on the server.<br>- Protect the local token with Windows DPAPI or Credential Manager.<br>- Never store the user’s password.<br>- Invalidate the local token when the Autodesk user changes.<br>- Apply rate limiting to the authentication endpoint.<br>- Recheck user activity and identity mapping for authenticated requests.<br><br>`LoginUserId` is client-supplied. It is acceptable for internal identity matching in Phase 1 but does not provide the same assurance as Autodesk OAuth verification.<br><br>## Web Repository Work<br><br>### `DCMvn_RevitLibrary`<br><br>- Add `user_external_identities`.<br>- Add `addin_tokens`.<br>- Add add-in authentication and token revocation.<br>- Add `AddinAuthGuard`.<br>- Add add-in family list, detail, and file endpoints.<br>- Refactor family downloads so the server determines the source.<br>- Record downloads with `source=&#x27;addin&#x27;`.<br>- Add rate limiting and token expiry.<br>- Add add-in context to audit metadata.<br>- Add load-failure telemetry.<br>- Add integration and contract tests.<br>- Update E07 contracts and the test matrix.<br><br>## Revit Repository Work<br><br>### `DCMvn_CS`<br><br>- Preserve Current Project and Local Library.<br>- Add Web Library as the third Family Manager source.<br>- Add Web API DTOs and HTTP client.<br>- Add login, logout, and authentication state.<br>- Add secure token storage.<br>- Add search, filters, pagination, and error states.<br>- Add Revit compatibility validation.<br>- Add temporary-file download and cleanup.<br>- Connect downloaded files to the existing Revit loader.<br>- Add structured results:<br>  - `Loaded`<br>  - `AlreadyPresent`<br>  - `Replaced`<br>  - `Incompatible`<br>  - `Cancelled`<br>  - `Failed`<br>- Add dependency-injection registrations.<br>- Validate net48 and net8 targets.<br><br>## Phase 1 Work Schedule<br><br>Planning assumptions:<br><br>- Start date: **28 September 2026**.<br>- Backend and Revit development can proceed in parallel.<br>- QA is available part-time.<br>- Stabilization and contingency time are included.<br>- External approval and environment-access delays are excluded.<br><br>| Work item | Main activities | Owner | Start date | Due date |<br>|---|---|---|---|---|<br>| Contract alignment and preparation | Finalize identity, token, endpoint, error and validation contracts; prepare isolated working branches | TL + Backend + Revit | 28 Sep 2026 | 2 Oct 2026 |<br>| Database and identity foundation | Identity mapping and token schema, migrations and mapping workflow | Backend | 5 Oct 2026 | 16 Oct 2026 |<br>| Add-in authentication | Login, token hashing, guard, revoke, expiry, rate limiting and audit | Backend | 5 Oct 2026 | 16 Oct 2026 |<br>| Add-in Family APIs | List, detail, filters, pagination, download and source tracking | Backend | 12 Oct 2026 | 23 Oct 2026 |<br>| C# cloud foundation | HTTP adapter, DTOs, configuration, secure token storage, login and logout | Revit | 5 Oct 2026 | 16 Oct 2026 |<br>| Web Library UI | Third source, search, filters, pagination, connection and error states | Revit | 19 Oct 2026 | 30 Oct 2026 |<br>| Download and Revit loading | Compatibility, temporary files, `ExternalEvent`, transaction and structured results | Revit | 19 Oct 2026 | 30 Oct 2026 |<br>| Cross-repository integration | Integrate authentication, APIs, downloads, audit and failure reporting | Backend + Revit | 2 Nov 2026 | 6 Nov 2026 |<br>| Revit and security validation | Revit 2024/net48, Revit 2025/net8, HTTPS and negative cases | Backend + Revit + QA | 9 Nov 2026 | 13 Nov 2026 |<br>| UAT and stabilization | Regression testing, fixes, documentation and release smoke | TL + Backend + Revit + QA | 16 Nov 2026 | 20 Nov 2026 |<br><br>**Phase 1 target completion: 20 November 2026.**<br><br>## Estimate<br><br>- Expected effort: **20–30 person-days**.<br>- Expected calendar duration: approximately **eight weeks**.<br>- The estimate assumes parallel Backend and Revit development.<br>- Additional effort may be required for identity data preparation, workstation TLS, proxies, or net48/net8 dependency differences.<br><br>## Acceptance Criteria<br><br>- A mapped user can authenticate from Revit.<br>- An unmapped or mismatched Revit user receives a clear error.<br>- The user can switch between all three Family Manager sources.<br>- The user can search, filter, and paginate Web families.<br>- A compatible Web family can be downloaded and loaded.<br>- Families created with a newer Revit version are blocked.<br>- Download is prevented without a valid active project document.<br>- Existing-family scenarios return structured results.<br>- Add-in downloads are recorded with `source=&#x27;addin&#x27;`.<br>- Login, logout, token expiry, and revocation work correctly.<br>- Network, `401`, `403`, missing-file, and loading errors have clear UI states.<br>- Temporary files are safely removed.<br>- Current Project and Local Library do not regress.<br>- The workflow is validated in Revit 2024 and Revit 2025.<br><br># Phase 2 — MCP-Based Revit Model Control<br><br>## Objective<br><br>Allow an authenticated Web user or AI application to invoke a restricted set of Revit tools against the user’s active Revit session.<br><br>MCP will be treated as a separate tool-invocation adapter. It will not replace the Phase 1 Family API, authentication flow, or Family Manager loading workflow.<br><br>## Prerequisites<br><br>Phase 2 starts only after Phase 1 provides:<br><br>- Stable Web and Revit authentication.<br>- Verified Web-to-Revit identity mapping.<br>- Secure token handling.<br>- Registered Revit device and session context.<br>- A proven `ExternalEvent` and transaction path.<br>- Structured operation results.<br>- Reliable auditing and correlation.<br><br>## Technical Direction<br><br>- Keep MCP separate from the Family Manager source implementations.<br>- Introduce a restricted command interface between MCP and Revit.<br>- Maintain an allowlist of supported Revit tools.<br>- Route all Revit operations through the add-in.<br>- Execute model changes through `ExternalEvent` and `Transaction`.<br>- Require Revit-side confirmation for model modifications.<br>- Bind commands to a user, workstation, Revit session, and document.<br>- Apply command expiry and idempotency controls.<br>- Do not automatically retry model mutations.<br>- Record command request, confirmation, execution, and result.<br>- Do not expose a public port directly from a Revit workstation.<br>- Do not allow arbitrary C# or script execution.<br><br>## Initial Discovery Scope<br><br>| Tool | Type | Revit confirmation |<br>|---|---|---|<br>| `get_active_document` | Read-only | Not required |<br>| `list_loaded_families` | Read-only | Not required |<br>| `load_family` | Model modification | Required |<br><br>The discovery should also determine whether MCP provides sufficient value over a deterministic command channel using SignalR, WebSocket, or an equivalent secure transport.<br><br>## Excluded From the Initial MCP Scope<br><br>- Arbitrary model editing.<br>- Arbitrary script execution.<br>- Batch element creation or deletion.<br>- Automatic Save or Sync with Central.<br>- Controlling Revit without an active user session.<br>- Model mutations without Revit-side confirmation.<br>- Direct Web access to workstation localhost.<br>- Direct MCP access to PostgreSQL or Revit internals.</div></div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>16/10/2026 08:14</span>
-                    <span>Public</span>
-                  </div>
-                  <div class="timeline-body"><div class="detail-text">## Progress Report — DCMvn Revit Library (Add-in Cloud)<br><br>**Date:** 15–16 October 2026  <br>**Scope:** Family Manager add-in — Cloud library (browse from web)  <br>**Test environment:** Revit 2023 only (other versions deferred)<br><br>---<br><br>### 1. Executive summary<br><br>The Cloud tab in Family Manager can now open on Revit 2023, sign in quietly, load the full family list from the company web library (about **2,216** families), show thumbnails in a smooth scrollable grid, and filter the list. The work is still on a **feature branch / test package** only. It is **not** merged into the official release, **not** copied into the normal Revit Add-ins install folder, and **not** deployed as a web change.<br><br>Clicking a family to download and place it into the open project is **not** done yet (planned as Part 5).<br><br>---<br><br>### 2. Web (library service)<br><br>| Item | Status |<br>|------|--------|<br>| Production library | Healthy and in use |<br>| Family count (approx.) | 2,200+ (live add-in load: **2,216** across **23** pages) |<br>| Ready-but-held update | Adds Discipline and last-updated fields for better filtering |<br>| Deploy of that update | **Deferred** on purpose — to save time and cost; will bundle with a later web change |<br><br>**Decision already agreed:** avoid extra web deploys for small improvements. The add-in already does search and most filters on the user’s machine. Discipline will work automatically once that held web update is deployed later.<br><br>---<br><br>### 3. Add-in progress (what is done)<br><br>Work is organized in parts. Parts **1–4** are complete and were verified by a real open of the test window inside Revit 2023.<br><br>#### Part 1–2 — Foundation and quiet sign-in<br>- Opens a **test-only** Family Manager window (not the final docked panel yet).<br>- Signs in using the Revit username; if the name has no `@`, the add-in appends `@dcmvn.com` so it can match the web account.<br>- Connection status is clear (connecting / success / failure). Live test showed **Success**.<br>- Session is stored securely on the Windows user profile; tokens are not written into normal logs.<br><br>#### Part 3–3.1 — List, thumbnails, and freeze fix<br>- Loads the full Cloud list from the web (read-only).<br>- Thumbnails download in the background, scale to **~130px** cards (same style as the existing tool), and stay cached on the PC.<br>- Early builds froze when building thousands of cards at once. That was fixed by only building what is on screen while scrolling.<br>- Result after fix: list and thumbnails stay responsive.<br><br>#### Part 4 — Real Family Manager look + filters + local list cache<br>- **Project / Cloud** switch on the same Family Manager screen (English UI only).<br>- Reuses the look and feel of the existing Family Manager (layout, filters, card style).<br>- Filters: name search, category, Revit year, “Compatible only” (on by default).<br>- Shows filtered count (e.g. “Showing X of 2216 families”) and a clear empty-state / clear-filters control.<br>- Families newer than the running Revit are greyed out.<br>- Saves the family list on the machine so the next open can show the cached list first, then refresh in the background.<br>- **Discipline** dropdown is present but empty/disabled until the held web update is deployed — expected, not a bug in the add-in.<br><br><br>---<br><br><br><br>### 4. Explicitly out of scope right now<br>- Merge of the feature branch into the main release line  <br>- Copying test DLLs into the production Revit Add-ins folder  <br>- Any web production deploy (including the Discipline field update)  <br>- Download / place-into-project on click (**Part 5**)  <br>- Recording download counts on the server (**Part 6**, needs web)  <br>- Building and testing Revit versions other than **2023**  <br>- Final docked panel registration as the long-term shipping UI (still using the test window for validation)<br><br><br><br><br>---<br><br><br><br><br>### 5. Recommended next step<br>**Start Part 5 — click to load into the project** (Revit 2023 test package only):<br>1. On card click, download the family file, with clear progress and error messages.  <br>2. Load into the open project without freezing the UI.  <br>3. If a family with the same name already exists, **ask first**; overwrite only if the user agrees.  <br>4. Keep incompatible (newer) families greyed out and not loadable.  <br>5. Prove with a real load into a project from the test package before calling the part done.<br>**Still defer:** web deploy for Discipline + download counting (bundle later as Part 6).  <br>**Still hold:** merge and official install until Part 5 (and agreed release checks) pass.<br>---</div></div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>22/10/2026 10:46</span>
-                    <span>Public</span>
-                  </div>
-                  <div class="timeline-body"><div class="detail-text"># Progress Report - DCMvn Revit Library (Add-in Cloud / Family Manager)<br><br>## 1. Summary<br>This period focused on the **Family Manager Cloud** add-in: it now uses the web add-in API, supports **Detail Items as a real Cloud category**, overwrites families the same way Revit does, and shows the family detail **inline under the selected card** in the DCMvn UI style. The latest test build passed UAT in Revit 2023.<br><br>## 2. Add-in updates<br><br>| # | Update | What it means for the user | Status |<br>|---|--------|----------------------------|--------|<br>| 2.1 | Web add-in API integration | The Detail Items filter, catalogue download, version labels and device ID (Windows user name) now come from the web add-in API. | Code review accepted; UAT issues fixed in 2.2 |<br>| 2.2 | Detail Items as a Cloud category | Detail Item cards show the companion DI families with their own name and thumbnail. **Download &amp; Load** loads the DI `.rfa` itself. Loading a 3D family never auto-loads its DI. | UAT passed (Revit 2023, production web) |<br>| 2.3 | Revit-like overwrite | An unchanged file shows &quot;Family is already up to date.&quot; A changed file overwrites same-named types and keeps project-only or duplicated types. Manual V1 → V2 overwrite through the web works. | UAT passed |<br>| 2.4 | Catalogue file name | The catalogue saves with its real file name and extension (PDF or image), no longer `.bin`. | UAT passed |<br>| 2.5 | Inline family detail | The detail opens directly under the clicked card, restyled to the Project tab look (HandyControl / DCMvn.UI, Light and Dark themes). Clicking the selected card again closes it. | UAT passed |<br>| 2.6 | Performance and UI polish | Smooth scrolling with virtualization (out of 2,229 cards only about 9 are rendered on screen), the detail opens under the correct card, the duplicate thumbnail is removed, and the Revit year badge is high-contrast. | UAT passed |<br><br>## 3. Web support for the add-in (`/api/addin/*`)<br><br>| # | Change | Purpose | Status |<br>|---|--------|---------|--------|<br>| 3.1 | `GET /api/addin/families` returns `hasDetailItem` | Lets the add-in know which families have a Detail Item | Merged and deployed to production |<br>| 3.2 | List items return `detailItem { filename, thumbnailStatus }` | Powers the Detail Items cards in the add-in. Additive change, older add-in versions are unaffected. | Merged and deployed to production (rfa.dcm-vn.com) |<br><br>## 4. Validation<br><br>| Check | Result |<br>|-------|--------|<br>| Build for Revit 2023 (net48) | 0 errors |<br>| FamilyManager unit tests | 245/245 passed (3 runs) |<br>| Packaged-resource smoke test | 3/3 passed |<br>| UAT in Revit 2023 | Passed all items |<br>| Manual overwrite V1 → V2 via production web | Works |<br><br>## 5. Open items / Next steps<br>- **Multi-version build and test** (Revit 2020–2026, net48 + net8): planned after the feature set is complete.<br>- **Publish add-in source** to the GitHub repository (push + pull request): held until the add-in is complete. Code is kept on local branches.<br>- **Automated overwrite self-test**: closed without merging, because the manual overwrite test passed. Code is kept on a local branch for later.<br>- **Web CI**: the pull request that moves the CI admin password to a GitHub secret and runs CI on `develop` is waiting for the secret to be created and the GitHub Actions billing to be fixed. In the meantime the quality gates were run locally before each merge.<br>- **3D preview of families**: requested by the team lead, not started yet, waiting on design decisions.</div></div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>22/10/2026 14:12</span>
-                    <span>Public</span>
-                  </div>
-                  <div class="timeline-body"><div class="detail-text"># Plan — 3D Preview &amp; 3D Thumbnail for DCMvn Revit Library (Web, Add-in)<br><br>## 1. Summary<br>We plan to add 3D previews for Revit families in the DCMvn Revit Library. Each family will get one GLB file and one static image. The web will show an interactive 3D view in the family detail section. The static image will be used in the web family list and as the thumbnail in the Revit add-in. Web and admin will share one pipeline.<br><br>## 2. MVP scope<br><br>| # | Item | Planned behaviour |<br>|---|------|-------------------|<br>| 2.1 | Source view | Only the existing 3D view named &quot;Thumbnail&quot; in each family (detail level Fine, geometry only). No plan, section or full-model views. |<br>| 2.2 | GLB export | The add-in exports one GLB per family (default type) from the &quot;Thumbnail&quot; view. |<br>| 2.3 | Interactive 3D on the web | A rotatable 3D view of the GLB in the family detail section on the web. |<br>| 2.4 | Static 3D image | A static image generated from the GLB, used in the web family list and as the thumbnail in the Revit add-in. |<br>| 2.5 | Shared pipeline | Web and admin use one pipeline: one set of GLB and PNG per family version, with no separate admin pipeline. |<br>| 2.6 | Fallback | The current 2D preview extracted from the `.rfa` stays as the fallback when no 3D image exists yet. |<br><br>**Out of scope for the MVP (not planned):** plan and section views, 2D Detail Items, an interactive 3D viewer inside the add-in, real Revit materials or colours, an automated export agent, and a backfill of the whole library.<br><br>## 3. Admin (on the shared pipeline)<br>- Upload or replace GLB/PNG.<br>- Regenerate the static image.<br>- View items that are missing or failed.<br>- Approve before publishing, if an approval step is chosen.<br><br>## 4. Planned steps<br>1. Batch export of GLB from the &quot;Thumbnail&quot; view, with a per-family log.<br>2. Decide the static image source (see section 6).<br>3. Agree on the web API and `/api/addin/*` contract for GLB/PNG (WEB first).<br>4. Storage and migration for the GLB/PNG status of each family version.<br>5. Upload and download endpoints.<br>6. Web UI: interactive 3D in the family detail, static image in the family list; admin tools.<br>7. Add-in: upload GLB/PNG together with the family, and show the static thumbnail in the Family Manager Cloud list.<br>8. Multi-version support for Revit 2024–2026.<br><br>**Dependencies:** the WEB contract must be approved before the ADDIN part starts, and the add-in thumbnail depends on the Cloud list update being completed first. Generating a GLB always requires Revit.<br><br><br>## 5. Risks<br>- `.rfa` files uploaded through the web will have no GLB until an export agent with Revit is in place.<br>- If server-side rendering is chosen, the server has no GPU, so rendering is slower and needs Chromium.<br>- Families saved in versions newer than 2023 need the multi-version build.<br>- Storage usage will grow.<br>- Long, slender families can look small in the thumbnail, so the framing needs tuning.<br>- Families without a &quot;Thumbnail&quot; view will be skipped.</div></div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>29/10/2026 10:10</span>
-                    <span>Public</span>
-                  </div>
-                  <div class="timeline-body"><div class="detail-text"># Progress Report: Family Manager Cloud Add-in<br><br>## 1. Summary<br><br>This period focused on the GLB export used by the web library. The export DLL now writes a &quot;family metadata v1&quot; JSON file next to each GLB, and several fixes were made so the metadata matches the web contract. A Revit 2023 export of the test families was run and the export log was reviewed.<br><br>All add-in work remains as local commits on branch `feat/glb-family-metadata` (repo `DCMvn_CS`). Nothing has been pushed yet.<br><br>## 2. Work Completed<br><br>| # | Item | Result | Commit |<br>|---|------|--------|--------|<br>| 1 | GLB export review | The current colour output was reviewed and accepted. Material and colour work is out of scope. | n/a |<br>| 2 | Family metadata v1 sidecar | The export DLL writes a metadata JSON file next to each exported GLB. | `7e19dbc4` |<br>| 3 | Metadata fixes: units, domains, build, isShared | Values for units, parameter domains, Revit build and the shared-parameter flag are now correct. | `6ea85cca` |<br>| 4 | Share-aware RFA hash | The RFA hash now accounts for shared families. | `9a4126b1` |<br>| 5 | Contract alignment | Values and names now follow the web metadata contract. This adds type identity and dataType fallbacks and ordinal matching of the representative type. | `158c924a`, `df8ee23c`, `cddeff36` |<br><br>## 3. Testing and Verification<br><br>| Check | Result |<br>|-------|--------|<br>| Revit 2023 export of the test families | Done. The export log was reviewed. |<br>| GLB colour output | Accepted as is. |<br><br>## 4. Open Items<br><br>| Item | Status |<br>|------|--------|<br>| Push and pull request for the add-in | On hold by decision until the add-in is complete. |<br>| PR #178 conflict | Still open. |<br><br>## 5. Next Steps<br><br>1. The Digital team will use this export DLL to upload the GLB and metadata together with each family to the web library.<br>2. The add-in will read the new web metadata. This is the last item in the roadmap, after the web work.<br>3. The add-in will not be pushed and no PR will be opened until the add-in is complete.</div></div>
-                </div>
-                
-          </div>
-        </div>
-        <div class="detail-block">
-          <div class="detail-section-title">History</div>
-          <div class="timeline-list">
-            
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>30/10/2026 09:49</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated</span>
-                    <span class="change-arrow">30.10.2026: 5 h. -> set</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>29/10/2026 10:10</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">-</span>
-                    <span class="change-arrow">0784488 -> -</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>27/10/2026 07:49</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated</span>
-                    <span class="change-arrow">27.10.2026: 6.5 h. -> set</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>26/10/2026 08:34</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated</span>
-                    <span class="change-arrow">26.10.2026: 2 h. -> set</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>23/10/2026 13:03</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated</span>
-                    <span class="change-arrow">23.10.2026: 4.5 h. -> set</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>22/10/2026 14:12</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">-</span>
-                    <span class="change-arrow">0784038 -> -</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>22/10/2026 10:53</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated</span>
-                    <span class="change-arrow">22.10.2026: 4.5 h. -> set</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>22/10/2026 10:52</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated</span>
-                    <span class="change-arrow">21.10.2026: 4.5 h. -> set</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>22/10/2026 10:46</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">-</span>
-                    <span class="change-arrow">0783966 -> -</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>16/10/2026 08:15</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">-</span>
-                    <span class="change-arrow">0783281 -> 76733</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>16/10/2026 08:14</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">-</span>
-                    <span class="change-arrow">0076104_Weekly Progress Report_261016.png -> 783281</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>16/10/2026 08:14</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">-</span>
-                    <span class="change-arrow">0783281 -> -</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>16/10/2026 08:00</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated</span>
-                    <span class="change-arrow">16.10.2026: 6.5 h. -> set</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>15/10/2026 14:03</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated</span>
-                    <span class="change-arrow">15.10.2026: 5.5 h. -> set</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>15/10/2026 14:03</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated Deleted</span>
-                    <span class="change-arrow">15/10/2026 -> deleted</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>15/10/2026 09:17</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated</span>
-                    <span class="change-arrow">15.10.2026: 6.5 h. -> set</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>14/10/2026 08:38</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated</span>
-                    <span class="change-arrow">14.10.2026: 6.5 h. -> set</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Huy Duc Dam</strong>
-                    <span>@hu.dam</span>
-                    <span>09/10/2026 15:15</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Client Completion Date</span>
-                    <span class="change-arrow">30/09/2026 -> 1790701200</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>09/10/2026 12:12</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated</span>
-                    <span class="change-arrow">9.10.2026: 1 h. -> set</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>09/10/2026 12:12</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated Deleted</span>
-                    <span class="change-arrow">09/10/2026 -> deleted</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>09/10/2026 12:10</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated</span>
-                    <span class="change-arrow">9.10.2026: 1.5 h. -> set</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>05/10/2026 15:15</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated</span>
-                    <span class="change-arrow">5.10.2026: 2.75 h. -> set</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Huy Duc Dam</strong>
-                    <span>@hu.dam</span>
-                    <span>30/09/2026 12:58</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">due_date</span>
-                    <span class="change-arrow">- -> 1798671600</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>30/09/2026 08:49</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated</span>
-                    <span class="change-arrow">30.9.2026: 1 h. -> set</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Huy Duc Dam</strong>
-                    <span>@hu.dam</span>
-                    <span>29/09/2026 15:53</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Client Completion Date</span>
-                    <span class="change-arrow">- -> 30/09/2026</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>25/09/2026 07:33</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">-</span>
-                    <span class="change-arrow">0779667 -> -</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>24/09/2026 08:16</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated</span>
-                    <span class="change-arrow">23.9.2026: 1 h. -> set</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>22/09/2026 08:20</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated</span>
-                    <span class="change-arrow">22.9.2026: 1 h. -> set</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>21/09/2026 08:43</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">Time allocated</span>
-                    <span class="change-arrow">21.9.2026: 1 h. -> set</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Nhan Danh Huynh</strong>
-                    <span>@nd.huynh</span>
-                    <span>18/09/2026 13:37</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">status</span>
-                    <span class="change-arrow">10 -> 30</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Huy Duc Dam</strong>
-                    <span>@hu.dam</span>
-                    <span>18/09/2026 13:36</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">handler_id</span>
-                    <span class="change-arrow">0 -> 356</span>
-                  </div>
-                </div>
-                
-                <div class="timeline-item">
-                  <div class="timeline-head">
-                    <strong>Huy Duc Dam</strong>
-                    <span>@hu.dam</span>
-                    <span>18/09/2026 13:36</span>
-                  </div>
-                  <div class="timeline-change">
-                    <span class="change-field">-</span>
-                    <span class="change-arrow">- -> -</span>
-                  </div>
-                </div>
-                
-          </div>
-        </div>
-      </div>
-    </template>
-    
     <template id="ticket-detail-72724">
       <div class="ticket-detail-panel">
         <div class="detail-header">
@@ -19970,7 +20474,7 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
             
             <div class="detail-card">
               <div class="detail-label">Last Updated</div>
-              <div class="detail-value">29/10/2026 10:11</div>
+              <div class="detail-value">02/11/2026 11:38</div>
             </div>
             
             <div class="detail-card">
@@ -20020,7 +20524,7 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
             
             <div class="detail-card">
               <div class="detail-label">Bugnotes</div>
-              <div class="detail-value">19</div>
+              <div class="detail-value">20</div>
             </div>
             
             <div class="detail-card">
@@ -20235,12 +20739,34 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
                   <div class="timeline-body"><div class="detail-text"># Progress Report: Revit Family Library Web (rfa.dcm-vn.com)<br><br>## 1. Summary<br><br>This period built the family metadata foundation on the web. Storage, an API and an Upload tab were added so each family can carry its GLB 3D file and metadata JSON. Both parts are merged into `develop` and have passed full testing, but they are not deployed yet.<br><br>Two other pieces of work started:<br>- a rename feature that keeps every file of a family in sync, now paused for a change in scope;<br>- a read-only check of DIN Code and Discipline data on production.<br><br>## 2. Work Completed<br><br>| # | Item | Result | Reference |<br>|---|------|--------|-----------|<br>| 1 | Family metadata foundation | Adds storage for GLB and metadata JSON, database migration 033, the `/api/addin` metadata API and the upload service. It also adds the backend for the family detail page: metadata, GLB, Detail Item 2D thumbnail, and Discipline taken from Graphical data. | PR #32, merged into `develop` (`4723f55`) |<br>| 2 | Upload tab for GLB and metadata (US-029) | Creating or overwriting a 3D family now requires the GLB and the metadata JSON together. The 5 upload cards share the same size, and each has its own icon. | PR #34, merged (`8453eab`) |<br>| 3 | Test suite fix | Tests that were being skipped silently now run. | Included in PR #34 |<br>| 4 | Family file-set rule (documentation) | Documents the rule that rename, category change, overwrite, trash/restore and delete must update the GLB, metadata, Detail Item/Annotation files and thumbnails together. | PR #33, merged (`864c390`) |<br>| 5 | DIN Code vs Discipline check (read-only, production) | 172 families listed and 126 have a suggested correction. Most mismatches came from earlier renames that did not update DIN Code or Discipline. The Excel list was handed over for review. Production data has not been changed. | n/a |<br>| 6 | Family rename keeps the file set in sync (in progress) | Covers renaming the GLB and metadata of the active version, rewriting the metadata JSON, audit events on the Log page, and a fix to the MM → ML → DL rename request flow. The scope then grew: DC may change the DIN Code of uploaded families, and a changelog becomes mandatory for DC field edits, new versions and overwrites. The review found gaps in rollback, audit and tests, so the work is paused until the scope is redefined. | WIP commit `d690c34` |<br><br>## 3. Testing and Verification<br><br>| Check | Result |<br>|-------|--------|<br>| Metadata foundation: validate, build, e2e | Passed (e2e 131 passed) |<br>| Full test run after Upload tab (`69d57b3`) | e2e 145 passed, 0 failed, 0 skipped |<br>| Rename feature | Not accepted yet. Rollback, audit and test coverage still need work. |<br><br>## 4. Deployment Status<br><br>| Item | Status |<br>|------|--------|<br>| Metadata foundation, Upload tab, migration 033 | Merged, not deployed. They will not be deployed before the rename feature, and deployment needs a separate approval. |<br><br>## 5. Next Steps<br><br>1. **Redefine the rename feature scope:**<br>   - DC edits to fields or the name on the family detail page become a request that DL approves or rejects, without the ML step. This needs a new request type and migration 034.<br>   - On approval, all files of the family are renamed.<br>   - DC file replacements (catalogue, Detail Item) stay direct.<br>   - DL&#x27;s own edits apply immediately and are recorded in the Log.<br>2. **Confirmation dialog:** one English dialog before every submit. It lists each change as &quot;Field: A → B&quot;, the affected files and the changelog.<br>3. **Later items:**<br>   - backfill of legacy families;<br>   - GLB thumbnail rendered on the web;<br>   - the remaining MVP items.<br>4. **Deferred until the web work is done:**<br>   - Discipline grouping by DIN group 2 (410 … 490);<br>   - cleanup of the DIN Code and Discipline data, which needs approval before any production data is changed.<br>5. **Deployment:** the metadata foundation and Upload tab need a separate deployment approval.</div></div>
                 </div>
                 
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>02/11/2026 11:38</span>
+                    <span>Public</span>
+                  </div>
+                  <div class="timeline-body"><div class="detail-text"># [#TODO: ticket] DCMvn Revit Family Library (rfa.dcm-vn.com) – Graphical vs WEB discrepancy review<br><br>## 1. Summary<br>A read-only comparison between the graphical annotation DB and the WEB library found **210 open discrepancies**. Most related tickets are already closed or resolved, but the data has not been corrected yet.<br><br>## 2. Typical issues<br>| # | Typical issue | Count |<br>|---|---|---|<br>| 1 | Detail Item (DI) missing where required, or present where not required | 11 |<br>| 2 | Name prefix does not match the family category | 66 |<br>| 3 | Rename approved but not applied consistently between graphical DB and WEB | 4 |<br>| 4 | Duplicate families / duplicate entries | 56 |<br>| 5 | Other data mismatches (single cases) | 73 |<br>| | **Total** | **210** |<br><br>In addition:<br>- some names were changed directly in the database, outside the approved change-request workflow, with no audit record (about 90 rows);<br>- 142 related tickets are closed/resolved although the data is still wrong.<br><br>## 3. Root causes<br>- Renames and fixes are not always synchronised between the graphical DB and WEB.<br>- Some changes were made directly in the database instead of through the change-request workflow, so they cannot be traced.<br>- The annotation table has no audit trail (no change log or timestamps).<br>- Tickets were closed without a final check of the data on both sides.<br><br>## 4. Solution<br>- Fix the listed discrepancies per issue group and verify them in both the graphical DB and WEB.<br>- All renames and data fixes go only through the approved change-request / audited data-fix workflow; no direct database edits.<br>- Add an audit trail to the annotation table.<br>- Close a ticket only after the data check on both sides is confirmed.<br>- Re-run the discrepancy check after the fixes.<br><br>I will coordinate with the related teams (Graphical team, WEB/dev team and the ticket owners) to resolve these issues.</div></div>
+                </div>
+                
           </div>
         </div>
         <div class="detail-block">
           <div class="detail-section-title">History</div>
           <div class="timeline-list">
             
+                <div class="timeline-item">
+                  <div class="timeline-head">
+                    <strong>Nhan Danh Huynh</strong>
+                    <span>@nd.huynh</span>
+                    <span>02/11/2026 11:38</span>
+                  </div>
+                  <div class="timeline-change">
+                    <span class="change-field">-</span>
+                    <span class="change-arrow">0784704 -> -</span>
+                  </div>
+                </div>
+                
                 <div class="timeline-item">
                   <div class="timeline-head">
                     <strong>Nhan Danh Huynh</strong>
@@ -26232,13 +26758,13 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
         (function() {
           const el = document.getElementById('chart-by-due');
           if (!el || !window.Charts) return;
-          const colorMap = {"Overdue":"#fa4d56","Due Today":"#f1c21b","On Track":"#42be65","No Due Date":"#8d8d8d"};
+          const colorMap = {"Due Today":"#f1c21b","On Track":"#42be65","No Due Date":"#8d8d8d"};
           const chart = new Charts.DonutChart(el, {
-            data: [{"group":"Overdue","value":1},{"group":"Due Today","value":1},{"group":"On Track","value":18},{"group":"No Due Date","value":10}],
+            data: [{"group":"Due Today","value":1},{"group":"On Track","value":21},{"group":"No Due Date","value":10}],
             options: {
               theme: (window.__dlaTheme || "g100"),
               resizable: true,
-              donut: { center: { label: 'Total', number: 30 }, alignment: 'center' },
+              donut: { center: { label: 'Total', number: 32 }, alignment: 'center' },
               height: '280px',
               legend: { enabled: false },
               color: { scale: colorMap },
@@ -26262,9 +26788,9 @@ html.dla-embedded .tt-filtered-banner { display: none !important; }
           });
         })();
     
-        window.__projectStackData = [{"group":"Huy Duc Dam","key":"DCMvn_Digital","value":5},{"group":"Thomas Schäfer","key":"DCMvn_Digital","value":2},{"group":"Khoa Dang Doan","key":"DCMvn_Digital","value":3},{"group":"Danh Hong Nguyen","key":"DCMvn_Digital","value":3},{"group":"Long Kim Dang","key":"DCMvn_Digital","value":2},{"group":"Quy Ngoc Ha","key":"DCMvn_Digital","value":2},{"group":"Hung Tien Nguyen","key":"DCMvn_Digital","value":1},{"group":"Quan Dinh Nguyen","key":"DCMvn_Digital","value":1},{"group":"Huy Duc Dam","key":"DCMvn_Annotation Project","value":1},{"group":"Nhan Danh Huynh","key":"DCMvn_Annotation Project","value":2},{"group":"Thuong Van Huynh","key":"DCMvn_Annotation Project","value":1},{"group":"Nhut Le","key":"DCMvn_Annotation Project","value":1},{"group":"Lam Truong","key":"DCMvn_Annotation Project","value":1},{"group":"Linh Trinh","key":"DCMvn_PRD","value":2},{"group":"Hung Tien Nguyen","key":"DCMvn_English_Training","value":1},{"group":"Thomas Schäfer","key":"DCMvn_IT_Issues/Tasks","value":1},{"group":"Huy Duc Dam","key":"DCMvn_Team Leads","value":1}];
-        window.__statusStackData = [{"group":"Huy Duc Dam","key":"Acknowledged","value":7},{"group":"Khoa Dang Doan","key":"Acknowledged","value":1},{"group":"Danh Hong Nguyen","key":"Acknowledged","value":1},{"group":"Nhan Danh Huynh","key":"Acknowledged","value":2},{"group":"Long Kim Dang","key":"Acknowledged","value":2},{"group":"Hung Tien Nguyen","key":"Acknowledged","value":1},{"group":"Nhut Le","key":"Acknowledged","value":1},{"group":"Lam Truong","key":"Acknowledged","value":1},{"group":"Quan Dinh Nguyen","key":"Acknowledged","value":1},{"group":"Khoa Dang Doan","key":"New","value":2},{"group":"Danh Hong Nguyen","key":"New","value":2},{"group":"Quy Ngoc Ha","key":"New","value":2},{"group":"Hung Tien Nguyen","key":"New","value":1},{"group":"Linh Trinh","key":"New","value":2},{"group":"Thomas Schäfer","key":"Assigned","value":1},{"group":"Thuong Van Huynh","key":"Assigned","value":1},{"group":"Thomas Schäfer","key":"Confirmed","value":2}];
-        window.__handlerStackData = [{"group":"DCMvn_Digital","key":"Huy Duc Dam","value":5},{"group":"DCMvn_Annotation Project","key":"Huy Duc Dam","value":1},{"group":"DCMvn_Team Leads","key":"Huy Duc Dam","value":1},{"group":"DCMvn_Digital","key":"Thomas Schäfer","value":2},{"group":"DCMvn_IT_Issues/Tasks","key":"Thomas Schäfer","value":1},{"group":"DCMvn_Digital","key":"Khoa Dang Doan","value":3},{"group":"DCMvn_Digital","key":"Danh Hong Nguyen","value":3},{"group":"DCMvn_Annotation Project","key":"Nhan Danh Huynh","value":2},{"group":"DCMvn_Digital","key":"Long Kim Dang","value":2},{"group":"DCMvn_Digital","key":"Quy Ngoc Ha","value":2},{"group":"DCMvn_Digital","key":"Hung Tien Nguyen","value":1},{"group":"DCMvn_English_Training","key":"Hung Tien Nguyen","value":1},{"group":"DCMvn_PRD","key":"Linh Trinh","value":2},{"group":"DCMvn_Annotation Project","key":"Thuong Van Huynh","value":1},{"group":"DCMvn_Annotation Project","key":"Nhut Le","value":1},{"group":"DCMvn_Annotation Project","key":"Lam Truong","value":1},{"group":"DCMvn_Digital","key":"Quan Dinh Nguyen","value":1}];
+        window.__projectStackData = [{"group":"Huy Duc Dam","key":"DCMvn_Digital","value":5},{"group":"Thomas Schäfer","key":"DCMvn_Digital","value":2},{"group":"Khoa Dang Doan","key":"DCMvn_Digital","value":3},{"group":"Danh Hong Nguyen","key":"DCMvn_Digital","value":3},{"group":"Long Kim Dang","key":"DCMvn_Digital","value":2},{"group":"Quy Ngoc Ha","key":"DCMvn_Digital","value":2},{"group":"Hung Tien Nguyen","key":"DCMvn_Digital","value":1},{"group":"Quan Dinh Nguyen","key":"DCMvn_Digital","value":1},{"group":"Huy Duc Dam","key":"DCMvn_Annotation Project","value":3},{"group":"Nhan Danh Huynh","key":"DCMvn_Annotation Project","value":2},{"group":"Thuong Van Huynh","key":"DCMvn_Annotation Project","value":1},{"group":"Nhut Le","key":"DCMvn_Annotation Project","value":1},{"group":"Lam Truong","key":"DCMvn_Annotation Project","value":1},{"group":"Linh Trinh","key":"DCMvn_PRD","value":2},{"group":"Hung Tien Nguyen","key":"DCMvn_English_Training","value":1},{"group":"Thomas Schäfer","key":"DCMvn_IT_Issues/Tasks","value":1},{"group":"Huy Duc Dam","key":"DCMvn_Team Leads","value":1}];
+        window.__statusStackData = [{"group":"Huy Duc Dam","key":"Acknowledged","value":7},{"group":"Khoa Dang Doan","key":"Acknowledged","value":1},{"group":"Danh Hong Nguyen","key":"Acknowledged","value":1},{"group":"Nhan Danh Huynh","key":"Acknowledged","value":2},{"group":"Long Kim Dang","key":"Acknowledged","value":2},{"group":"Hung Tien Nguyen","key":"Acknowledged","value":1},{"group":"Nhut Le","key":"Acknowledged","value":1},{"group":"Lam Truong","key":"Acknowledged","value":1},{"group":"Quan Dinh Nguyen","key":"Acknowledged","value":1},{"group":"Huy Duc Dam","key":"New","value":2},{"group":"Khoa Dang Doan","key":"New","value":2},{"group":"Danh Hong Nguyen","key":"New","value":2},{"group":"Quy Ngoc Ha","key":"New","value":2},{"group":"Hung Tien Nguyen","key":"New","value":1},{"group":"Linh Trinh","key":"New","value":2},{"group":"Thomas Schäfer","key":"Assigned","value":1},{"group":"Thuong Van Huynh","key":"Assigned","value":1},{"group":"Thomas Schäfer","key":"Confirmed","value":2}];
+        window.__handlerStackData = [{"group":"DCMvn_Digital","key":"Huy Duc Dam","value":5},{"group":"DCMvn_Annotation Project","key":"Huy Duc Dam","value":3},{"group":"DCMvn_Team Leads","key":"Huy Duc Dam","value":1},{"group":"DCMvn_Digital","key":"Thomas Schäfer","value":2},{"group":"DCMvn_IT_Issues/Tasks","key":"Thomas Schäfer","value":1},{"group":"DCMvn_Digital","key":"Khoa Dang Doan","value":3},{"group":"DCMvn_Digital","key":"Danh Hong Nguyen","value":3},{"group":"DCMvn_Annotation Project","key":"Nhan Danh Huynh","value":2},{"group":"DCMvn_Digital","key":"Long Kim Dang","value":2},{"group":"DCMvn_Digital","key":"Quy Ngoc Ha","value":2},{"group":"DCMvn_Digital","key":"Hung Tien Nguyen","value":1},{"group":"DCMvn_English_Training","key":"Hung Tien Nguyen","value":1},{"group":"DCMvn_PRD","key":"Linh Trinh","value":2},{"group":"DCMvn_Annotation Project","key":"Thuong Van Huynh","value":1},{"group":"DCMvn_Annotation Project","key":"Nhut Le","value":1},{"group":"DCMvn_Annotation Project","key":"Lam Truong","value":1},{"group":"DCMvn_Digital","key":"Quan Dinh Nguyen","value":1}];
         window.__handlerColors = {"Huy Duc Dam":"#6929c4","Thomas Schäfer":"#1192e8","Khoa Dang Doan":"#005d5d","Danh Hong Nguyen":"#9f1853","Nhan Danh Huynh":"#fa4d56","Long Kim Dang":"#198038","Quy Ngoc Ha":"#002d9c","Hung Tien Nguyen":"#b28600","Linh Trinh":"#6929c4","Thuong Van Huynh":"#1192e8","Nhut Le":"#005d5d","Lam Truong":"#9f1853","Quan Dinh Nguyen":"#fa4d56"};
         window.__projectColors = {"DCMvn_Digital":"#1192e8","DCMvn_Annotation Project":"#6929c4","DCMvn_PRD":"#005d5d","DCMvn_English_Training":"#9f1853","DCMvn_IT_Issues/Tasks":"#fa4d56","DCMvn_Team Leads":"#198038"};
         window.__hiddenHandlers = window.__hiddenHandlers || new Set();
