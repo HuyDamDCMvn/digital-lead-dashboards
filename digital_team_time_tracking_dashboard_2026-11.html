@@ -2354,6 +2354,7 @@ th.tt-th-filterable {
 }
 
 </style>
+
   <style id="dla-full-frame-style">
 html, body {
   width: 100% !important;
@@ -3779,7 +3780,11 @@ function bindDdMmDateInput(el, onChange, options) {
     }
 
     function alphaProjectRows(rows) {
-      return rows.slice().sort((a, b) => String(a.label).localeCompare(String(b.label)));
+      return rows.slice().sort((a, b) =>
+        String(a.label).localeCompare(String(b.label), undefined, { sensitivity: "base" })
+        || String(a.label).localeCompare(String(b.label))
+        || String(a.value).localeCompare(String(b.value))
+      );
     }
 
     function memberRows(rows) {
@@ -4384,9 +4389,10 @@ function bindDdMmDateInput(el, onChange, options) {
       ttCsvPeriod = csvPeriodToken(filters);
       const entries = DATA.timeEntries.filter((row) => matches(row, filters));
       const totalHours = entries.reduce((sum, row) => sum + asNumber(row.hours), 0);
-      /* TT4: hours by project sorted by value, like hours by member. */
+      /* TT4: donut/colors stay hours-desc so a project keeps the same color; table + CSV are A→Z (case-insensitive). */
       const projects = projectRows(entries);
-      const projectTableRows = projects;
+      const projectColorByValue = Object.fromEntries(projects.map((row, i) => [row.value, CHART_COLORS[i % CHART_COLORS.length]]));
+      const projectTableRows = alphaProjectRows(projects);
       const members = memberRows(entries);
       const days = dayRows(entries);
       const tickets = ticketRows(entries);
@@ -4505,7 +4511,7 @@ function bindDdMmDateInput(el, onChange, options) {
 
       const projectTableHead = `<tr><th scope="col">Project</th><th scope="col" class="num">Hours</th><th scope="col" class="num">% of total</th></tr>`;
       const projectTableBody = projectTableRows.length
-        ? projectTableRows.map((row, i) => { const c = CHART_COLORS[i % CHART_COLORS.length]; return `<tr class="clickable ${filters.project === row.value ? "active-row" : ""}" data-project-row="${esc(row.value)}" style="border-left:4px solid ${c};background:${c}18"><td>${esc(row.label)}</td><td class="num">${fmtHours(row.amount)}</td><td class="num">${fmtPct(row.percent)}</td></tr>`; }).join("")
+        ? projectTableRows.map((row) => { const c = projectColorByValue[row.value] || CHART_COLORS[0]; return `<tr class="clickable ${filters.project === row.value ? "active-row" : ""}" data-project-row="${esc(row.value)}" style="border-left:4px solid ${c};background:${c}18"><td>${esc(row.label)}</td><td class="num">${fmtHours(row.amount)}</td><td class="num">${fmtPct(row.percent)}</td></tr>`; }).join("")
         : `<tr><td colspan="3">${carbonEmptyState("No project hours in scope", "Clear chart or table filters to widen the scope.")}</td></tr>`;
 
       function projectHeaderSelect(id) {
